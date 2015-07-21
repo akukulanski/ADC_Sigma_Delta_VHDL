@@ -22,7 +22,7 @@ architecture RTL of integrator is
 	signal output_ii : std_logic_vector(M-1 downto 0):= (others=> '0');
 	
 begin
-	output <= output_i;
+	output <= output_ii;
 	
 	process (clk) is
 	begin
