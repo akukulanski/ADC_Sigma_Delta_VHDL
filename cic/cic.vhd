@@ -29,21 +29,23 @@ entity cic is
 end cic;
 
 architecture RTL of cic is
-	type signal_t is array(0 to N-1) of std_logic_vector(B(0) downto 0); 
+	type signal_t is array(0 to N-1) of std_logic_vector(B(0)-1 downto 0); 
 		
 	signal senI : signal_t; -- señales integrador
 	signal senC : signal_t; -- señales comb
 	signal ce_out_i: std_logic;
+	signal output_i: std_logic_vector(B(2*N-1)-1 downto 0);
 	
 begin
 	
-	senC(0)<=senI(N-1); --último integrator directo a primer comb (hay que bufferear seguro)
+	senC(0)(B(N)-1 downto 0)<=senI(N-1)(B(N)-1 downto 0); --último integrator directo a primer comb (hay que bufferear seguro)
 	ce_out<=ce_out_i;
+	output<= output_i(B(2*N)-1 downto 0);
 	
 	acu1: entity work.integrator generic map( N=>1, M=>B(0)	)--primer acumulador
 	port map (
 		input => vectorize(input),
-		output => senI(0)(B(0) downto 0),		
+		output => senI(0)(B(0)-1 downto 0),		
 		ce => ce_in,
 		clk => clk,
 		rst => rst
@@ -53,8 +55,8 @@ begin
 		
 		acu: entity work.integrator generic map( N=>B(i+1), M=>B(i+1)	)--del segundo al N-esimo acumulador
 		port map (
-			input => senI(i)(B(i+1) downto 0),
-			output => senI(i+1)(B(i+1) downto 0),		
+			input => senI(i)(B(i+1)-1 downto 0),
+			output => senI(i+1)(B(i+1)-1 downto 0),		
 			ce => ce_in,
 			clk => clk,
 			rst => rst
@@ -63,8 +65,8 @@ begin
 
 		comb: entity work.comb generic map( N=>B(i +N), DELAY=>DELAY	)--del primer al (N-1)-esimo comb
 		port map (
-			input => senC(i)(B(i+N) downto 0),
-			output => senC(i+1)(B(i+N) downto 0),		
+			input => senC(i)(B(i+N)-1 downto 0),
+			output => senC(i+1)(B(i+N)-1 downto 0),		
 			ce => ce_out_i,
 			clk => clk,
 			rst => rst
@@ -74,8 +76,8 @@ begin
 		
 	comb1: entity work.comb generic map( N=>B(2*N-1), DELAY=>DELAY	)-- ultimo comb
 	port map (
-		input => senC(N-1)(B(2*N-1) downto 0),
-		output => output(B(2*N) downto 0),		
+		input => senC(N-1)(B(2*N-1)-1 downto 0),
+		output => output_i(B(2*N-1)-1 downto 0),		
 		ce => ce_out_i,
 		clk => clk,
 		rst => rst
@@ -85,8 +87,6 @@ begin
 	
 	dec: entity work.decimator generic map (R=>R)--decimador
 	port map (
-		--input => senI(N-1),
-		--output => senC(0),
 		ce_in => ce_in,
 		ce_out =>ce_out_i,
 		clk => clk,
