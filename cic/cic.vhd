@@ -7,6 +7,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 use work.mytypes_pkg.all;
+use work.extra_functions.all;
 
 entity cic is
 
@@ -32,12 +33,16 @@ architecture RTL of cic is
 		
 	signal senI : signal_t; -- señales integrador
 	signal senC : signal_t; -- señales comb
+	signal ce_out_i: std_logic;
 	
 begin
 	
-	acu1: entity work.integrator generic map( N=>1, M=>B(0)	)
+	senC(0)<=senI(N-1); --último integrator directo a primer comb (hay que bufferear seguro)
+	ce_out<=ce_out_i;
+	
+	acu1: entity work.integrator generic map( N=>1, M=>B(0)	)--primer acumulador
 	port map (
-		input => STD_LOGIC_VECTOR(input),
+		input => vectorize(input),
 		output => senI(0)(B(0) downto 0),		
 		ce => ce_in,
 		clk => clk,
@@ -46,7 +51,7 @@ begin
 	
 	g1: for i in 0 to N-2 generate
 		
-		acu: entity work.integrator generic map( N=>B(i+1), M=>B(i+1)	)
+		acu: entity work.integrator generic map( N=>B(i+1), M=>B(i+1)	)--del segundo al N-esimo acumulador
 		port map (
 			input => senI(i)(B(i+1) downto 0),
 			output => senI(i+1)(B(i+1) downto 0),		
@@ -56,34 +61,34 @@ begin
 		);
 		
 
-		comb: entity work.comb generic map( N=>B(i +N), DELAY=>DELAY	)
+		comb: entity work.comb generic map( N=>B(i +N), DELAY=>DELAY	)--del primer al (N-1)-esimo comb
 		port map (
 			input => senC(i)(B(i+N) downto 0),
 			output => senC(i+1)(B(i+N) downto 0),		
-			ce => ce_out,
+			ce => ce_out_i,
 			clk => clk,
 			rst => rst
 		);
 	end generate g1;
 	
 		
-	comb1: entity work.comb generic map( N=>B(2*N-1), DELAY=>DELAY	)
+	comb1: entity work.comb generic map( N=>B(2*N-1), DELAY=>DELAY	)-- ultimo comb
 	port map (
 		input => senC(N-1)(B(2*N-1) downto 0),
 		output => output(B(2*N) downto 0),		
-		ce => ce_out,
+		ce => ce_out_i,
 		clk => clk,
 		rst => rst
 	);
 	
 	
 	
-	dec: entity work.decimator generic map ( N=>B(N),R=>R)
+	dec: entity work.decimator generic map (R=>R)--decimador
 	port map (
-		input => senI(N),
-		output => senC(0),
+		--input => senI(N-1),
+		--output => senC(0),
 		ce_in => ce_in,
-		ce_out =>ce_out,
+		ce_out =>ce_out_i,
 		clk => clk,
 		rst => rst
 		);
