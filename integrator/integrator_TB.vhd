@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TestBench is
-end entity TestBench;
+entity integrator_TB is
+end entity integrator_TB;
 
-architecture RTL of TestBench is
+architecture RTL of integrator_TB is
 	constant N : integer := 2;
 	constant M : integer := 20;
 	

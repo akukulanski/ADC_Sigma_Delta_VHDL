@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TestBench is
-end entity TestBench;
+entity comb_TB is
+end entity comb_TB;
 
-architecture RTL of TestBench is
+architecture RTL of comb_TB is
 	constant N : integer := 10;
 	
 	signal input : std_logic_vector(N-1 downto 0) := std_logic_vector(to_unsigned(0,N));
