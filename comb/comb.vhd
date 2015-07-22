@@ -25,8 +25,7 @@ architecture RTL of comb is
 
 begin
 	input_i <= input;
-
-	process(clk) is                     --FF
+	process(clk) is
 	begin
 		if rising_edge(clk) then
 			if (rst = '1') then

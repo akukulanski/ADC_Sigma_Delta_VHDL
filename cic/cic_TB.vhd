@@ -40,14 +40,14 @@ begin
 		rst <= '0';
 		wait for 10 ns;
 		ce_in <= '1';
-
+		
 		loop
-			input <= '0';
-			wait for 10 ns;
+			wait for 10000 us;
 			input <= '1';
-			wait for 10 ns;
+			wait for 10000 us;
+			input<= '0';
 		end loop;
-
+	
 		wait;
 	end process;
 end architecture RTL;

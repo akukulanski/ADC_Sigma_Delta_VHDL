@@ -36,18 +36,16 @@ architecture RTL of cic is
 	signal output_i : std_logic_vector(B(2 * N - 1) - 1 downto 0);
 
 begin
-	senC(0)(B(N) - 1 downto 0) <= senI(N - 1)(B(N) - 1 downto 0); --último integrator directo a primer comb
-	ce_out                     <= ce_out_i;
-	output                     <= output_i(B(2 * N) - 1 downto 0);
-	
-	g0: for i in 0 to N-1 generate --limpiando bits no usados
-		i0:if B(i) /=B(0) generate
-			senI(i)(B(0)-1 downto B(i)) <= (others => '0');
-			senC(i)(B(0)-1 downto B(i+N)) <= (others => '0');
-		end generate i0; 
-	end generate g0;
-	
-	acu1 : entity work.integrator generic map(N => 1, M => B(0)) --primer acumulador
+	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --último integrator directo a primer comb
+	ce_out                         <= ce_out_i;
+	output                         <= output_i(B(2 * N - 1) - 1 downto B(2 * N - 1) - B(2 * N));
+
+	g_limpia_bits : for i in 0 to N - 1 generate --limpiando bits no usados
+		senI(i)(B(0) - 1 downto B(i))         <= (others => '0');
+		senC(i)(B(0) - 1 downto B(i + N - 1)) <= (others => '0');
+	end generate g_limpia_bits;
+
+	acu0 : entity work.integrator generic map(N => 1, M => B(0)) --primer acumulador
 		port map(
 			input  => vectorize(input),
 			output => senI(0)(B(0) - 1 downto 0),
@@ -56,11 +54,11 @@ begin
 			rst    => rst
 		);
 
-	g1 : for i in 0 to N - 2 generate
-		--del segundo al N-esimo acumulador
+	g_acu_comb : for i in 0 to N - 2 generate
+		--del uno al N-esimo acumulador
 		acu : entity work.integrator generic map(N => B(i + 1), M => B(i + 1))
 			port map(
-				input  => senI(i)(B(i + 1) - 1 downto 0),
+				input  => senI(i)(B(i) - 1 downto B(i) - B(i + 1)),
 				output => senI(i + 1)(B(i + 1) - 1 downto 0),
 				ce     => ce_in,
 				clk    => clk,
@@ -70,17 +68,17 @@ begin
 		--del primer al (N-1)-esimo comb
 		comb : entity work.comb generic map(N => B(i + N), DELAY => DELAY)
 			port map(
-				input  => senC(i)(B(i + N) - 1 downto 0),
+				input  => senC(i)(B(i + N - 1) - 1 downto B(i + N - 1) - B(i + N)),
 				output => senC(i + 1)(B(i + N) - 1 downto 0),
 				ce     => ce_out_i,
 				clk    => clk,
 				rst    => rst
 			);
-	end generate g1;
+	end generate g_acu_comb;
 
-	comb1 : entity work.comb generic map(N => B(2 * N - 1), DELAY => DELAY) -- ultimo comb
+	combN_1 : entity work.comb generic map(N => B(2 * N - 1), DELAY => DELAY) -- ultimo comb
 		port map(
-			input  => senC(N - 1)(B(2 * N - 1) - 1 downto 0),
+			input  => senC(N - 1)(B(2 * N - 2) - 1 downto B(2 * N - 2) - B(2 * N - 1)),
 			output => output_i(B(2 * N - 1) - 1 downto 0),
 			ce     => ce_out_i,
 			clk    => clk,
