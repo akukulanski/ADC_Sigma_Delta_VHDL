@@ -1,8 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.log2;                --log2
-use ieee.math_real.ceil;                --ceil
+use work.extra_functions.all;
 
 entity decimator is
 	generic(
@@ -17,7 +16,7 @@ entity decimator is
 end entity decimator;
 
 architecture RTL of decimator is
-	constant B      : natural := natural(ceil(log2(Real(R)))); -- se redondea log2(R) para arriba
+	constant B      : natural := log2(R); -- se redondea log2(R) para arriba
 	signal count    : unsigned(B - 1 downto 0); --counter
 	signal ce_out_i : std_logic;
 begin
