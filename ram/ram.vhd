@@ -32,13 +32,14 @@ architecture RTL of delayline is
 	signal RAM      : ram_type := (others => (others => '0'));
 	signal ram_add1 : std_logic_vector(log2(TAPS) - 1 downto 0);
 	signal ram_add2 : std_logic_vector(log2(TAPS) - 1 downto 0);
-
+	signal ram_add1_i : std_logic_vector(log2(TAPS) - 1 downto 0);
+	
 begin
 	process(clk)
 	begin
 		if rising_edge(clk) then
 			if (we = '1') then
-				RAM(to_integer(unsigned(ram_add1))) <= input;
+				RAM(to_integer(unsigned(ram_add1_i))) <= input;
 			end if;
 		end if;
 	end process;
@@ -51,19 +52,17 @@ begin
 				ram_add2 <= (others => '0');
 			else
 				if (ce = '1') then
-					if (we = '0') then
-						ram_add1 <= i_add;
-					else
-						ram_add1 <= o_add1;
-						ram_add2 <= o_add2;
-					end if;
+					ram_add1 <= o_add1;
+					ram_add2 <= o_add2;
 				end if;
 			end if;
 
 		end if;
 	end process;
 
-	output1 <= RAM(to_integer(unsigned(ram_add1)));
+	ram_add1_i <= i_add when we='1' else ram_add1;
+	
+	output1 <= RAM(to_integer(unsigned(ram_add1_i)));
 	output2 <= RAM(to_integer(unsigned(ram_add2)));
 
 end architecture;
