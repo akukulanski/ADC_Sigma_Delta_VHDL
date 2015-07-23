@@ -77,4 +77,5 @@ architecture RTL of preadd_mac is
 		end if;
 	end process;
 	
+	output <= std_logic_vector(acc);
 end architecture RTL;
