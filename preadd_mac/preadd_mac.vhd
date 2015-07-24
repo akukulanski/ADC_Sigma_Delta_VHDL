@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity preadd_mac is
 	generic(
-			N : integer := 17;
+			N : integer := 16;
 			N_PREADD : integer := 18;
 			N_ADD : integer := 48
 	);
@@ -13,7 +13,7 @@ entity preadd_mac is
 		pre_input1 : in std_logic_vector(N-1 downto 0);
 		pre_input2 : in std_logic_vector(N-1 downto 0);
 		
-		mul_input : in std_logic_vector(N downto 0);
+		mul_input : in std_logic_vector(N_PREADD-1 downto 0);
 		
 		output : out std_logic_vector (N_ADD -1 downto 0);
 		oe : out std_logic; -- outpue enable
@@ -25,39 +25,32 @@ entity preadd_mac is
 end entity preadd_mac;
 
 architecture RTL of preadd_mac is
-	signal pi1_resized : signed(N_PREADD-1 downto 0);
-	signal pi2_resized : signed(N_PREADD-1 downto 0);
-	signal pre: signed(N_PREADD-1 downto 0);
-	signal mul: signed(N+N_PREADD-1 downto 0);
-	signal mul_input_i: signed(N+N_PREADD-1 downto 0);
-	signal mul_input_ii: signed(N+N_PREADD-1 downto 0);
+	signal pi1_resized : std_logic_vector(N_PREADD-1 downto 0);
+	signal pi2_resized : std_logic_vector(N_PREADD-1 downto 0);
+	signal pre: std_logic_vector(N_PREADD-1 downto 0);
+	signal mul: std_logic_vector(N_PREADD*2-1 downto 0);
+	signal mul_input_i: std_logic_vector(N_PREADD-1 downto 0);
+	signal mul_input_ii: std_logic_vector(N_PREADD-1 downto 0);
 	
-	signal acc: signed(N+N_PREADD-1 downto 0);
+	signal acc: std_logic_vector(N_ADD-1 downto 0);
 	
 	begin
+	pi1_resized(N_PREADD-1 downto N)<=(others=>'0');
+	pi2_resized(N_PREADD-1 downto N)<=(others=>'0');
 	
 	process (clk)
-		variable cnt : integer range 0 to 4:=0;
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
-				pi1_resized<= (others => '0');
-				pi2_resized <= (others => '0');
+				pi1_resized(N-1 downto 0) <= (others => '0');
+				pi2_resized(N-1 downto 0) <= (others => '0');
 				mul_input_i <= (others => '0');
 				mul_input_ii <= (others => '0');
-				cnt := 0;
-				oe <= '0';
 			elsif ce = '1' then
-				pi1_resized <= signed((N_PREADD downto N => '0')&pre_input1 );
-				pi2_resized <= signed((N_PREADD downto N => '0')&pre_input2);
-				mul_input_i <= signed(mul_input);
+				pi1_resized(N-1 downto 0) <= pre_input1;
+				pi2_resized(N-1 downto 0) <= pre_input2;
+				mul_input_i <= mul_input;
 				mul_input_ii <= mul_input_i;
-				if (cnt /= 4) then
-					cnt := cnt + 1;
-					oe <= '0';
-				else
-					oe <= '1';
-				end if;
 			end if;
 		end if;
 	end process;
@@ -70,9 +63,9 @@ architecture RTL of preadd_mac is
 				mul <= (others => '0');
 				acc <= (others => '0');
 			elsif ce = '1' then
-				pre <= pi1_resized + pi2_resized;
-				mul <= pre * mul_input_ii;
-				acc <= mul + acc;
+				pre <= std_logic_vector(signed(pi1_resized) + signed(pi2_resized));
+				mul <= std_logic_vector(signed(pre) * signed(mul_input_ii));
+				acc <= std_logic_vector(signed(mul) + signed(acc));
 			end if;
 		end if;
 	end process;
