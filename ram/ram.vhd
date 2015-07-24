@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;
 
-entity delayline is
+entity ram is
 	generic(
 		N    : natural := 6;            --ancho de palabra
 		TAPS : natural := 200           --cantidad de palabras
@@ -25,9 +25,9 @@ entity delayline is
 		rst     : in  std_logic
 	);
 
-end delayline;
+end ram;
 
-architecture RTL of delayline is
+architecture RTL of ram is
 	type ram_type is array (TAPS downto 0) of std_logic_vector(N - 1 downto 0);
 	signal RAM      : ram_type := (others => (others => '0'));
 	signal ram_add1 : std_logic_vector(log2(TAPS) - 1 downto 0);
