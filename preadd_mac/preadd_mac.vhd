@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity preadd_mac is
 	generic(
-			N : integer := 16;
+			N : integer := 17; -- SE DEBE CONVERTIR a CA2!!!
 			N_PREADD : integer := 18;
 			N_ADD : integer := 48
 	);
@@ -16,7 +16,6 @@ entity preadd_mac is
 		mul_input : in std_logic_vector(N_PREADD-1 downto 0);
 		
 		output : out std_logic_vector (N_ADD -1 downto 0);
-		oe : out std_logic; -- outpue enable
 		
 		ce : in std_logic;
 		clk : in std_logic;

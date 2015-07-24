@@ -12,7 +12,7 @@ architecture RTL of preadd_mac_TB is
 	signal pre_input1, pre_input2 : std_logic_vector(N - 1 downto 0):=(others=>'0');
 	signal mul_input              : std_logic_vector(N_PREADD - 1 downto 0):=(others=>'0');
 	signal output           : std_logic_vector(N_ADD - 1 downto 0);
-	signal oe, ce, clk, rst : std_logic:= '0'; -- outpue enable
+	signal ce, clk, rst : std_logic:= '0'; -- outpue enable
 
 begin
 	
@@ -27,7 +27,6 @@ begin
 			pre_input2 => pre_input2,
 			mul_input  => mul_input,
 			output     => output,
-			oe         => oe,
 			ce         => ce,
 			clk        => clk,
 			rst        => rst

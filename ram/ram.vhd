@@ -6,7 +6,7 @@ use work.extra_functions.all;
 entity ram is
 	generic(
 		N    : natural := 6;            --ancho de palabra
-		TAPS : natural := 200           --cantidad de palabras
+		TAPS : natural := 128           --cantidad de palabras
 	);
 	port(
 		input   : in  std_logic_vector(N - 1 downto 0);
