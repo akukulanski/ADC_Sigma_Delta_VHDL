@@ -5,17 +5,19 @@ use ieee.numeric_std.all;
 entity preadd_mac is
 	generic(
 			N : integer := 17; -- SE DEBE CONVERTIR a CA2!!!
-			N_PREADD : integer := 18;
-			N_ADD : integer := 48
+			--N_PREADD : integer := 18;
+			N_OUT : integer := 48
 	);
 	
 	port (
 		pre_input1 : in std_logic_vector(N-1 downto 0);
 		pre_input2 : in std_logic_vector(N-1 downto 0);
+		--mul_input : in std_logic_vector(N_PREADD-1 downto 0);
+		mul_input : in std_logic_vector(N downto 0); --N+1 bits
 		
-		mul_input : in std_logic_vector(N_PREADD-1 downto 0);
+		output : out std_logic_vector (N_OUT -1 downto 0);
 		
-		output : out std_logic_vector (N_ADD -1 downto 0);
+		oe:		out std_logic:='0';
 		
 		ce : in std_logic;
 		clk : in std_logic;
@@ -24,18 +26,20 @@ entity preadd_mac is
 end entity preadd_mac;
 
 architecture RTL of preadd_mac is
-	signal pi1_resized : std_logic_vector(N_PREADD-1 downto 0);
-	signal pi2_resized : std_logic_vector(N_PREADD-1 downto 0);
-	signal pre: std_logic_vector(N_PREADD-1 downto 0);
-	signal mul: std_logic_vector(N_PREADD*2-1 downto 0);
-	signal mul_input_i: std_logic_vector(N_PREADD-1 downto 0);
-	signal mul_input_ii: std_logic_vector(N_PREADD-1 downto 0);
+	signal pi1_resized : std_logic_vector(N downto 0);
+	signal pi2_resized : std_logic_vector(N downto 0);
+	signal pre: std_logic_vector(N downto 0);
+	--signal mul: std_logic_vector(N_PREADD*2-1 downto 0);
+	--signal mul: std_logic_vector((N+1)*2-1 downto 0);
+	signal mul: std_logic_vector(2*N+1 downto 0);
+	signal mul_input_i: std_logic_vector(N downto 0);
+	signal mul_input_ii: std_logic_vector(N downto 0);
 	
-	signal acc: std_logic_vector(N_ADD-1 downto 0);
+	signal acc: std_logic_vector(N_OUT-1 downto 0);
 	
 	begin
-	pi1_resized(N_PREADD-1 downto N)<=(others=>'0');
-	pi2_resized(N_PREADD-1 downto N)<=(others=>'0');
+	pi1_resized(N downto N)<=(others=>'0');
+	pi2_resized(N downto N)<=(others=>'0');
 	
 	process (clk)
 	begin

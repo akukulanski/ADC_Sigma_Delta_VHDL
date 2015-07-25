@@ -23,28 +23,32 @@ end entity fir;
 
 architecture RTL of fir is
 	signal data_in_i: std_logic_vector(N-1 downto 0) := (others=>'0');
-	signal i_add,o_addr1,o_addr2: std_logic_vector(log2(TAPS)-1 downto 0) := (others=>'0');
-	signal o_1,o_2: std_logic_vector(N-1 downto 0) := (others=>'0');
-	signal soutput: std_logic_vector(M-1 downto 0) := (others=>'0');
-	signal soe: std_logic := '0';
-	signal c_add: std_logic_vector(log2(TAPS/2)-1 downto 0):= (others=>'0');
-	signal o_we: std_logic := '0';
+	signal write_address,read_address1,read_address2: std_logic_vector(log2(TAPS)-1 downto 0) := (others=>'0');
+	signal adder_input1,adder_input2: std_logic_vector(N-1 downto 0) := (others=>'0');
+	signal coef_input: std_logic_vector(N downto 0) := (others=>'0');
+	signal s_output: std_logic_vector(M-1 downto 0) := (others=>'0');
+	signal s_oe: std_logic := '0';
+	signal coef_address: std_logic_vector(log2(TAPS/2)-1 downto 0):= (others=>'0');
+	signal ram_we: std_logic := '0';
+	signal rst_mac: std_logic := '0';
+	
 begin
 	
-	address_gen: entity work.add_gen --address generator
+	address_gen: entity work.address_generator --address generator
 		generic map(
 			TAPS => TAPS
 		)
 		port map(
-			i_add  => i_add,
-			o_add1 => o_addr1,
-			o_add2 => o_addr2,
-			c_add  => c_add,
+			write_address  => write_address,
+			read_address1 => read_address1,
+			read_address2 => read_address2,
+			coef_address  => coef_address,
 			we     => we,
-			o_we   => o_we,
+			o_we   => ram_we,
 			ce     => ce,
 			clk    => clk,
-			rst    => rst
+			rst    => rst,
+			rst_mac => rst_mac
 		);
 		
 	ram: entity work.RAM
@@ -57,33 +61,32 @@ begin
 			-- NOTA: se convirtió de binario
 			-- desplazado a CA2 para luego usar
 			-- el signo en el multiplicador
-			i_add   => i_add,
-			output1 => o_1,
-			output2 => o_2,
-			o_add1  => o_addr1,
-			o_add2  => o_addr2,
-			we      => o_we,
+			write_address   => write_address,
+			output1 => adder_input1,
+			output2 => adder_input2,
+			read_address1  => read_address1,
+			read_address2  => read_address2,
+			we      => ram_we,
 			ce      => ce,
 			clk     => clk,
 			rst		=> rst
 		);
 
 -- EDITAR DESDE ACA
---	preadder : entity work.preadd_mac--preadder
---		generic map(
---			N        => N,
---			N_PREADD => N_PREADD,
---			N_ADD    => N_ADD
---		)
---		port map(
---			pre_input1 => pre_input1,
---			pre_input2 => pre_input2,
---			mul_input  => mul_input,
---			output     => output,
---			ce         => ce,
---			clk        => clk,
---			rst        => rst
---		);
-	
+	preadder : entity work.preadd_mac--preadder
+		generic map(
+			N        => N,
+			--N_PREADD => N_PREADD,
+			N_OUT    => M
+		)
+		port map(
+			pre_input1 => adder_input1,
+			pre_input2 => adder_input2,
+			mul_input  => coef_input,
+			output     => data_out,
+			ce         => ce,
+			clk        => clk,
+			rst        => rst_mac
+		);
 
 end architecture RTL;

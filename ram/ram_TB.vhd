@@ -8,9 +8,9 @@ end entity ram_TB;
 
 architecture RTL of ram_TB is
 	constant N: natural:=16;
-	constant TAPS: natural:=100;
+	constant TAPS: natural:=4;
 	signal input,output1,output2: std_logic_vector(N-1 downto 0):= (others =>'0');
-	signal i_add,o_add1,o_add2: std_logic_vector (log2(TAPS)-1 downto 0):= (others =>'0');
+	signal write_address,read_address1,read_address2: std_logic_vector (log2(TAPS)-1 downto 0):= (others =>'0');
 	signal we,clk,ce,rst: std_logic :='0';
 begin
 	
@@ -21,11 +21,11 @@ begin
 		)
 		port map(
 			input   => input,
-			i_add   => i_add,
+			write_address   => write_address,
 			output1 => output1,
 			output2 => output2,
-			o_add1  => o_add1,
-			o_add2  => o_add2,
+			read_address1  => read_address1,
+			read_address2  => read_address2,
 			we      => we,
 			ce      => ce,
 			clk     => clk,
@@ -42,23 +42,73 @@ begin
 	
 	RST_EN : process is
 	begin
+		we <= '0';
 		rst <= '1';
+		ce <= '1';
 		wait for 20 ns;
 		rst <= '0';
-		wait for 10 ns;
-		ce <= '1';
-		wait for 10 ns;
-		we <= '1';
-		i_add<="0000000";
-		input<="0011110011110011";
 		wait for 20 ns;
-		i_add<="0000001";
-		input<="0011110011110010";
+		we<='1';
+		--input<="1000000000000000";
+		input <= std_logic_vector(to_unsigned(1, 16));
+		write_address<="00";
+		read_address1<="00";
+		read_address2<="11";
 		wait for 20 ns;
 		we<='0';
-		o_add1<="0000000";
-		o_add2<="0000001";
+		read_address1<="01";
+		read_address2<="10";
+		wait for 20 ns;
+		we<='1';
+		input <= std_logic_vector(to_unsigned(2, 16));
+		write_address<="01";
+		read_address1<="01";
+		read_address2<="00";
+		wait for 20 ns;
+		we<='0';
+		read_address1<="10";
+		read_address2<="11";
+		wait for 20 ns;
+		we<='1';
+		input <= std_logic_vector(to_unsigned(3, 16));
+		write_address<="10";
+		read_address1<="10";
+		read_address2<="01";
+		wait for 20 ns;
+		we<='0';
+		read_address1<="11";
+		read_address2<="00";
+		wait for 20 ns;
+		we<='1';
+		input <= std_logic_vector(to_unsigned(4, 16));
+		write_address<="11";
+		read_address1<="11";
+		read_address2<="10";
+		wait for 20 ns;
+		we<='0';
+		read_address1<="00";
+		read_address2<="01";
+		wait for 20 ns;
+		we<='1';
+		input <= std_logic_vector(to_unsigned(5, 16));
+		write_address<="00";
+		read_address1<="00";
+		read_address2<="11";
+		wait for 20 ns;
+		we<='0';
+		read_address1<="01";
+		read_address2<="10";
 		wait;
+		wait for 20 ns;
+		we<='1';
+		input <= std_logic_vector(to_unsigned(6, 16));
+		write_address<="01";
+		read_address1<="01";
+		read_address2<="00";
+		wait for 20 ns;
+		we<='0';
+		read_address1<="10";
+		read_address2<="11";
 	end process;
 
 end architecture RTL;

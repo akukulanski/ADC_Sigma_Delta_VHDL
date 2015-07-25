@@ -3,29 +3,30 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;
 
-entity add_gen_TB is
-end entity add_gen_TB;
+entity address_generator_TB is
+end entity address_generator_TB;
 
-architecture RTL of add_gen_TB is
+architecture RTL of address_generator_TB is
 	constant TAPS                       : natural                                   := 128;
-	signal i_add, o_add1, o_add2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
-	signal c_add : std_logic_vector(log2(TAPS/2) - 1 downto 0) := (others => '0');
-	signal we, clk, ce, rst, o_we       : std_logic                                 := '0';
+	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
+	signal coef_address : std_logic_vector(log2(TAPS/2) - 1 downto 0) := (others => '0');
+	signal we, clk, ce, rst, o_we, rst_mac : std_logic                                 := '0';
 begin
-	tb : entity work.add_gen
+	tb : entity work.address_generator
 		generic map(
 			TAPS => TAPS
 		)
 		port map(
-			i_add  => i_add,
-			o_add1 => o_add1,
-			o_add2 => o_add2,
-			c_add  => c_add,
+			write_address  => write_address,
+			read_address1 => read_address1,
+			read_address2 => read_address2,
+			coef_address  => coef_address,
 			we     => we,
 			o_we   => o_we,
 			ce     => ce,
 			clk    => clk,
-			rst    => rst
+			rst    => rst,
+			rst_mac => rst_mac
 		);
 
 	CLOCK : process is
