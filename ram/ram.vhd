@@ -33,12 +33,6 @@ architecture RTL of ram is
 	signal ram_read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal ram_write_address : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 
-	type ram_type is array (TAPS downto 0) of std_logic_vector(N - 1 downto 0);
-	signal RAM         : ram_type := (others => (others => '0'));
-	signal ram_addr1   : std_logic_vector(log2(TAPS) - 1 downto 0);
-	signal ram_addr2   : std_logic_vector(log2(TAPS) - 1 downto 0);
-	signal ram_addr1_i : std_logic_vector(log2(TAPS) - 1 downto 0);
-
 begin
 
 	-- por qué el condicional?
@@ -58,7 +52,9 @@ begin
 				if (ce = '1') and (we = '1') then
 						RAM(to_integer(unsigned(ram_write_address))) <= input;
 						--RAM(to_integer(unsigned(ram_addr1_i))) <= input;
-				end if;	
+				end if;
+			end if;
+		end if;
 	end process;
 
 	READ_PROCESS : process(clk)
@@ -73,7 +69,6 @@ begin
 					ram_read_address2 <= read_address2;
 				end if;
 			end if;
-
 		end if;
 	end process;
 
