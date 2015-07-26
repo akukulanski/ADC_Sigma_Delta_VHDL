@@ -6,8 +6,10 @@ entity preadd_mac_TB is
 end entity preadd_mac_TB;
 
 architecture RTL of preadd_mac_TB is
-	constant N                    : integer := 17;
+	constant N                : integer := 18;
 	constant N_OUT                : integer := 48;
+	constant N_in_pre : integer := 16;
+	constant N_in_mul : integer := 16;
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0):=(others=>'0');
 	signal coef_input              : std_logic_vector((N+1) - 1 downto 0):=(others=>'0');
 	signal output           : std_logic_vector(N_OUT - 1 downto 0);

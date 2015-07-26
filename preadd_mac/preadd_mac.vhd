@@ -15,7 +15,7 @@ entity preadd_mac is
 		adder_input2 : in std_logic_vector(N_in_pre-1 downto 0);
 		coef_input : in std_logic_vector(N_in_mul-1 downto 0);
 		
-		output : out std_logic_vector (N_OUT -1 downto 0);
+		output : out std_logic_vector (N_OUT-1 downto 0);
 		
 		ce : in std_logic;
 		clk : in std_logic;
