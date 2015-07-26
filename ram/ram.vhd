@@ -27,54 +27,61 @@ entity ram is
 end ram;
 
 architecture RTL of ram is
-	type ram_type is array (TAPS-1 downto 0) of std_logic_vector(N - 1 downto 0);--cambiado, estaba (TAPS downto 0)
-	signal RAM               : ram_type := (others => (others => '0'));
-	signal ram_read_address1 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
-	signal ram_read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
-	signal ram_write_address : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
-
-	type ram_type is array (TAPS downto 0) of std_logic_vector(N - 1 downto 0);
-	signal RAM         : ram_type := (others => (others => '0'));
-	signal ram_addr1   : std_logic_vector(log2(TAPS) - 1 downto 0);
-	signal ram_addr2   : std_logic_vector(log2(TAPS) - 1 downto 0);
-	signal ram_addr1_i : std_logic_vector(log2(TAPS) - 1 downto 0);
-
+	type ram_type is array (TAPS - 1 downto 0) of std_logic_vector(N - 1 downto 0);
+	signal RAM                  : ram_type := (others => (others => '0'));
+	signal ram_addr1            : std_logic_vector(log2(TAPS) - 1 downto 0);
+	signal ram_addr2            : std_logic_vector(log2(TAPS) - 1 downto 0);
+	signal output1_i, output2_i : std_logic_vector(N - 1 downto 0);
+	--No es necesario los atribbute para block ram, por defecto lo es.
+	--Si no cambiar el attribute a distributed.
+	attribute ram_style : string;
+	attribute ram_style of RAM : signal is "block"; --"distributed" or "block"
 begin
+	--la ram tiene solo dos address por eso se multiplexa
+	--cuando se escribe en el address1 se lee(output1) la posición que se esta escribiendo.
+	--read_address1 queda inutil
+	ram_addr1 <= write_address when we = '1' else read_address1;
+	ram_addr2 <= read_address2;
 
-	-- por quÃ© el condicional?
-	--ram_write_address <= write_address when we='1' else ram_read_address1;
-	ram_write_address <= write_address;
-
-	--output1 <= RAM(to_integer(unsigned(ram_write_address)));
-	output1 <= RAM(to_integer(unsigned(ram_read_address1)));
-	output2 <= RAM(to_integer(unsigned(ram_read_address2)));
-
-	WRITE_PROCESS : process(clk)
+	output1 <= output1_i;
+	output2 <= output2_i;
+	--Para implementar con lut ram o block ram hay que hacer una pequeña modificación en el reset.
+	--Como no es util en nuestra implementacion lo saco.
+	--En nuestro caso la distributed ram pasa a ocupar el 8% de las luts con memoria sin aprovechar
+	--sus funcionalidades.
+	--Es preferible usar la block ram, que solo usamos el 3% del total disponible, aunque desaprovechando 
+	--parte de la memoria reservada. (si son 256 entradas de 16 bits da 4Kb o sea
+	--usamos el 25% de lo que reservamos).
+	--Dejarlo escrito como block ram y poner attribute distributed funciona,
+	--solo implementara una and entre we y ce, y una entre reset y ce.
+	--Dejarlo escrito como distributed, no se lo puede implementar como block ram
+	--por mas que se agrege el attribute block.
+	
+	read_write : process(clk)         
 	begin
 		if rising_edge(clk) then
-			if rst = '1' then
-				RAM <= (others => (others => '0'));
-			else
-				if (ce = '1') and (we = '1') then
-						RAM(to_integer(unsigned(ram_write_address))) <= input;
-						--RAM(to_integer(unsigned(ram_addr1_i))) <= input;
-				end if;	
-	end process;
-
-	READ_PROCESS : process(clk)
-	begin
-		if rising_edge(clk) then
-			if rst = '1' then
-				ram_read_address1 <= (others => '0');
-				ram_read_address2 <= (others => '0');
-			else
-				if (ce = '1') then
-					ram_read_address1 <= read_address1;
-					ram_read_address2 <= read_address2;
+--			Asi funciona reset de la distributed ram
+--			if rst='1' then
+--				output1_i <= (others => '0');
+--				output2_i <= (others => '0');
+--			elsif
+--			Asi chip enabled de la block ram
+			if (ce = '1') then
+--				Aca chip enabled distributed ram
+--				if (ce = '1') then
+				--Así funciona el reset de la block ram
+					if rst = '1' then 
+						output1_i <= (others => '0');
+						output2_i <= (others => '0');
+					else
+						output1_i <= RAM(to_integer(unsigned(ram_addr1)));
+						output2_i <= RAM(to_integer(unsigned(ram_addr2)));
+					end if;
+					if (we = '1') then
+						RAM(to_integer(unsigned(ram_addr1))) <= input;
+					end if;
 				end if;
 			end if;
-
-		end if;
-	end process;
+	end process read_write;
 
 end architecture;

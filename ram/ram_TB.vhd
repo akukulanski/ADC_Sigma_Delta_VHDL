@@ -14,7 +14,7 @@ architecture RTL of ram_TB is
 	signal we, clk, ce, rst                            : std_logic                                 := '0';
 
 begin
-	tb : entity work.RAM
+	tb : entity work.ram
 		generic map(
 			N    => N,
 			TAPS => TAPS
@@ -49,7 +49,7 @@ begin
 		wait for 20 ns;
 		rst <= '0';
 
-		wait for 20 ns;
+		wait for 11 ns;
 		we            <= '1';
 		input         <= std_logic_vector(to_unsigned(1, 16));
 		write_address <= "00";
