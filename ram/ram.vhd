@@ -38,14 +38,14 @@ architecture RTL of ram is
 	attribute ram_style of RAM : signal is "block"; --"distributed" or "block"
 begin
 	--la ram tiene solo dos address por eso se multiplexa
-	--cuando se escribe en el address1 se lee(output1) la posiciï¿½n que se esta escribiendo.
+	--cuando se escribe en el address1 se lee(output1) la posición que se esta escribiendo.
 	--read_address1 queda inutil
 	ram_addr1 <= write_address when we = '1' else read_address1;
 	ram_addr2 <= read_address2;
 
 	output1 <= output1_i;
 	output2 <= output2_i;
-	--Para implementar con lut ram o block ram hay que hacer una pequeï¿½a modificaciï¿½n en el reset.
+	--Para implementar con lut ram o block ram hay que hacer una pequeña modificación en el reset.
 	--Como no es util en nuestra implementacion lo saco.
 	--En nuestro caso la distributed ram pasa a ocupar el 8% de las luts con memoria sin aprovechar
 	--sus funcionalidades.
@@ -72,7 +72,7 @@ begin
 				end if;
 --				Aca chip enabled distributed ram
 --				if (ce = '1') then
---				Asï¿½ funciona el reset de la block ram
+--				Así funciona el reset de la block ram
 				if rst = '1' then
 					output1_i <= (others => '0');
 					output2_i <= (others => '0');
