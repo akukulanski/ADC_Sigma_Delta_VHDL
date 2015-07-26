@@ -50,7 +50,7 @@ begin
 				cnt  <= (others => '0');
 			else
 				if (we = '1') then
-					cnt <= std_logic_vector(unsigned(cnt) + to_unsigned(1, log2(TAPS)));
+					cnt <= std_logic_vector(unsigned(cnt) - to_unsigned(1, log2(TAPS)));
 				end if;
 				o_we <= we_i;
 			end if;
