@@ -7,10 +7,10 @@ entity address_generator_TB is
 end entity address_generator_TB;
 
 architecture RTL of address_generator_TB is
-	constant TAPS                       : natural                                   := 128;
+	constant TAPS                       : natural                                   := 8;
 	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal coef_address : std_logic_vector(log2(TAPS/2) - 1 downto 0) := (others => '0');
-	signal we, clk, ce, rst, o_we, rst_mac : std_logic                                 := '0';
+	signal we, clk, ce, rst, o_we, o_ce_mac: std_logic      := '0';
 begin
 	tb : entity work.address_generator
 		generic map(
@@ -26,7 +26,7 @@ begin
 			ce     => ce,
 			clk    => clk,
 			rst    => rst,
-			rst_mac => rst_mac
+			o_ce_mac => o_ce_mac
 		);
 
 	CLOCK : process is
@@ -48,7 +48,7 @@ begin
 		we <= '0';
 		ce <= '1';
 		loop
-			wait for 1400 ns;
+			wait for 200 ns;
 			we <= '1';
 			wait for 20 ns;
 			we <= '0';
