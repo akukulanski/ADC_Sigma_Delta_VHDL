@@ -19,7 +19,6 @@ entity ram is
 		read_address2 : in  std_logic_vector(log2(TAPS) - 1 downto 0);
 
 		we            : in  std_logic;  -- write enable
-
 		ce            : in  std_logic;
 		clk           : in  std_logic;
 		rst           : in  std_logic
@@ -33,6 +32,12 @@ architecture RTL of ram is
 	signal ram_read_address1 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal ram_read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal ram_write_address : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
+
+	type ram_type is array (TAPS downto 0) of std_logic_vector(N - 1 downto 0);
+	signal RAM         : ram_type := (others => (others => '0'));
+	signal ram_addr1   : std_logic_vector(log2(TAPS) - 1 downto 0);
+	signal ram_addr2   : std_logic_vector(log2(TAPS) - 1 downto 0);
+	signal ram_addr1_i : std_logic_vector(log2(TAPS) - 1 downto 0);
 
 begin
 
@@ -50,13 +55,10 @@ begin
 			if rst = '1' then
 				RAM <= (others => (others => '0'));
 			else
-				if (ce = '1') then
-					if (we = '1') then
+				if (ce = '1') and (we = '1') then
 						RAM(to_integer(unsigned(ram_write_address))) <= input;
-					end if;
-				end if;
-			end if;
-		end if;
+						--RAM(to_integer(unsigned(ram_addr1_i))) <= input;
+				end if;	
 	end process;
 
 	READ_PROCESS : process(clk)

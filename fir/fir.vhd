@@ -32,7 +32,6 @@ architecture RTL of fir is
 	signal ram_we                                      : std_logic                                     := '0';
 	signal enable_mac_new_input: std_logic := '0';
 
-
 begin
 	-- pruebas con todos los coeficientes = 0x01
 	coef_input(0 downto 0) <= "1";
@@ -60,6 +59,7 @@ begin
 			rst           => rst,
 			oe            => oe,
 			enable_mac_new_input	  => enable_mac_new_input	
+
 		);
 
 	ram : entity work.RAM
@@ -81,6 +81,7 @@ begin
 			ce            => ce,
 			clk           => clk,
 			rst           => rst
+
 		);
 
 	-- EDITAR DESDE ACA
