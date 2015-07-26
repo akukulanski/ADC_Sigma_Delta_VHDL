@@ -57,17 +57,12 @@ begin
 		rst <= '0';
 		wait for 20 ns;
 		we <= '1';
-		wait for 20 ns;
-		we <= '0';
-		wait for 300 ns;		
-		we <= '1';
-		wait for 20 ns;
-		we <= '0';
-		wait for 300 ns;
-		we <= '1';
-		wait for 20 ns;
-		we <= '0';
-		wait for 300 ns;
+		for I in 0 to 30 loop
+			wait for 20 ns;
+			we <= '0';
+			wait for 300 ns;		
+			we <= '1';
+		end loop;
 		wait;
 	end process;
 

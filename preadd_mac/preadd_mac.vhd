@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 
 entity preadd_mac is
 	generic(
-			N : integer := 17; -- SE DEBE CONVERTIR a CA2!!!
+			N : integer := 17; -- SE DEBE ENTRAR COMO CA2!!!
 			N_OUT : integer := 48
 	);
 	
@@ -32,41 +32,39 @@ architecture RTL of preadd_mac is
 	signal acc: std_logic_vector(N_OUT-1 downto 0):=std_logic_vector(to_signed(0,N_OUT));
 	
 begin
+
 	output <= std_logic_vector(acc);
-	adder_input1_resized <= adder_input1(N-1) & adder_input1;
-	adder_input2_resized <= adder_input2(N-1) & adder_input2;
 	
-load_values: process (clk)
+	load_values: process (clk)
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
---				adder_input1_resized(N-1 downto 0) <= (others => '0');
---				adder_input2_resized(N-1 downto 0) <= (others => '0');
+				adder_input1_resized <= (others => '0');
+				adder_input2_resized <= (others => '0');
 				coef_input_i <= (others => '0');
---				coef_input_ii <= (others => '0');
+				coef_input_ii <= (others => '0');
 			elsif ce = '1' then
---				adder_input1_resized(N-1 downto 0) <= adder_input1;
---				adder_input2_resized(N-1 downto 0) <= adder_input2;
+				adder_input1_resized <= adder_input1(N-1) & adder_input1;
+				adder_input2_resized <= adder_input2(N-1) & adder_input2;
 				coef_input_i <= coef_input;
---				coef_input_ii <= coef_input_i;
+				coef_input_ii <= coef_input_i;
 			end if;
 		end if;
 	end process;
 	
-make_operations: process (clk)
+	make_operations: process (clk)
 	begin
 		if rising_edge(clk) then
-			pre <= pre;
-			mul <= mul;
-			acc <= acc;
+--			pre <= pre;
+--			mul <= mul;
+--			acc <= acc;
 			if rst = '1' then
 				pre<= (others => '0');
 				mul <= (others => '0');
 				acc <= (others => '0');
 			elsif ce = '1' then
 				pre <= std_logic_vector(signed(adder_input1_resized) + signed(adder_input2_resized));
---				mul <= std_logic_vector(signed(pre) * signed(coef_input_ii));
-				mul <= std_logic_vector(signed(pre) * signed(coef_input_i));
+				mul <= std_logic_vector(signed(pre) * signed(coef_input_ii));
 				acc <= std_logic_vector(signed(mul) + signed(acc));
 			end if;
 		end if;

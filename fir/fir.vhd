@@ -25,21 +25,24 @@ architecture RTL of fir is
 	signal data_in_i                                   : std_logic_vector(N - 1 downto 0)              := (others => '0');
 	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
 	signal adder_input1, adder_input2                  : std_logic_vector(N - 1 downto 0)              := (others => '0');
+	signal ram_output1,ram_output2                  : std_logic_vector(N - 1 downto 0)              := (others => '0');
 	signal coef_input                                  : std_logic_vector(N downto 0)                  := (others => '0');
 	signal s_output                                    : std_logic_vector(M - 1 downto 0)              := (others => '0');
-	signal s_oe                                        : std_logic                                     := '0';
 	signal coef_address                                : std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
 	signal ram_we                                      : std_logic                                     := '0';
-	signal ce_mac : std_logic := '0';
+	signal enable_mac_new_input: std_logic := '0';
+
 
 begin
 	-- pruebas con todos los coeficientes = 0x01
 	coef_input(0 downto 0) <= "1";
-	--coef_input <= (others => '0');
-	--coef_input <= (others => '0') & '1';
 	data_in_i <= data_in;
 	data_out <= s_output;
 	
+	adder_input1 <= ram_output1 when enable_mac_new_input='1' else
+        (others=>'0');
+	adder_input2 <= ram_output2 when enable_mac_new_input='1' else
+        (others=>'0');
 	
 	address_gen : entity work.address_generator --address generator
 		generic map(
@@ -56,7 +59,7 @@ begin
 			clk           => clk,
 			rst           => rst,
 			oe            => oe,
-			o_ce_mac      => ce_mac	
+			enable_mac_new_input	  => enable_mac_new_input	
 		);
 
 	ram : entity work.RAM
@@ -70,8 +73,8 @@ begin
 			-- desplazado a CA2 para luego usar
 			-- el signo en el multiplicador
 			write_address => write_address,
-			output1       => adder_input1,
-			output2       => adder_input2,
+			output1       => ram_output1,
+			output2       => ram_output2,
 			read_address1 => read_address1,
 			read_address2 => read_address2,
 			we            => ram_we,
@@ -84,14 +87,14 @@ begin
 	preadder : entity work.preadd_mac   --preadder
 		generic map(
 			N     => N,
-			N_OUT => M
+			N_OUT => M --
 		)
 		port map(
 			adder_input1 => adder_input1,
 			adder_input2 => adder_input2,
 			coef_input  => coef_input,
 			output     => s_output,
-			ce         => ce_mac,
+			ce         => ce,
 			clk        => clk,
 			rst        => (ram_we or rst) --reseteo acumulador con escritura de la ram (c/ nueva muestra)
 		);

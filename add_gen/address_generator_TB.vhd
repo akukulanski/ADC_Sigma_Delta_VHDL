@@ -10,7 +10,7 @@ architecture RTL of address_generator_TB is
 	constant TAPS                       : natural                                   := 8;
 	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal coef_address : std_logic_vector(log2(TAPS/2) - 1 downto 0) := (others => '0');
-	signal we, clk, ce, rst, o_we, o_ce_mac: std_logic      := '0';
+	signal we, clk, ce, rst, o_we, enable_mac_new_input: std_logic      := '0';
 begin
 	tb : entity work.address_generator
 		generic map(
@@ -21,12 +21,12 @@ begin
 			read_address1 => read_address1,
 			read_address2 => read_address2,
 			coef_address  => coef_address,
+			enable_mac_new_input=> enable_mac_new_input,
 			we     => we,
 			o_we   => o_we,
 			ce     => ce,
 			clk    => clk,
-			rst    => rst,
-			o_ce_mac => o_ce_mac
+			rst    => rst
 		);
 
 	CLOCK : process is

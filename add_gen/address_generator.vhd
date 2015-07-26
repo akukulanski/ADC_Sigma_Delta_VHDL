@@ -21,7 +21,7 @@ entity address_generator is
 		--- data output enabled
 		oe            : out std_logic                                     := '0';
 		--- enable mac clock
-		o_ce_mac	  : out std_logic := '0';
+		enable_mac_new_input  : out std_logic := '0';
 
 		we            : in  std_logic;
 		ce            : in  std_logic;
@@ -37,8 +37,6 @@ architecture RTL of address_generator is
 	signal read_address2_i : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal j               : unsigned(log2(TAPS / 2) - 1 downto 0);
 	signal we_i            : std_logic                                 := '0';
-	signal addr_ena        : std_logic                                 := '0';
-	signal addr_rst        : std_logic                                 := '0';
 
 	--	type state_t is (idle, count);
 	--	signal state   : state_t := idle;
@@ -52,7 +50,9 @@ architecture RTL of address_generator is
 	signal next_o_we : std_logic := '1';
 	signal next_oe   : std_logic := '0';
 --signal next_j: unsigned(log2(TAPS / 2) - 1 downto 0);
-	signal next_o_ce_mac: std_logic := '0';
+	signal oper_ena_mac: std_logic := '0';
+	signal next_oper_ena_mac: std_logic := '0';
+	signal k, next_k: integer := 0;--unsigned(1 downto 0):=to_unsigned(0,2);
 
 
 begin
@@ -60,14 +60,16 @@ begin
 	we_i          <= we;
 	read_address1 <= read_address1_i;
 	read_address2 <= read_address2_i;
+	enable_mac_new_input <= oper_ena_mac;
 
-	PROXIMO_ESTADO : process(state, we, j)
+	PROXIMO_ESTADO : process(state, we, j, cnt, k)
 	begin
 		next_state <= state;
 		next_o_we  <= '0';
 		next_oe    <= '0';
 		next_cnt   <= cnt;
-		next_o_ce_mac <= '0';
+		next_oper_ena_mac <= '0';
+		next_k <= 0;
 		case state is
 			when idle =>
 				if we = '1' then
@@ -77,20 +79,24 @@ begin
 				end if;
 			when writing =>
 				next_state <= reading;
-				--next_o_ce_mac <= '1';
 			when reading =>
 				if j /= 0 then
-					next_o_ce_mac <= '1';
+					next_oper_ena_mac <= '1';
 				end if;
 				if j + 1 = 0 then --if j=0 then
---					next_state <= idle;
---					next_oe    <= '1';
 					next_state <= waiting_for_mac;
+					next_k <= 0;
 				end if;
 			when waiting_for_mac =>
-				next_state <= idle;
-				next_oe    <= '1';
-				next_o_ce_mac <= '1';
+				if k < 1 then
+					next_oper_ena_mac <= '1';
+				end if;
+				if k < 4 then
+					next_k <= k + 1;
+				else
+					next_state <= idle;
+					next_oe <= '1';
+				end if;
 		end case;
 	end process;
 
@@ -125,6 +131,7 @@ begin
 						coef_address    <= std_logic_vector(j);
 						j               <= j + 1;
 					when waiting_for_mac =>
+						-- hace falta?
 						read_address1_i <= std_logic_vector(unsigned(cnt) - j);
 						read_address2_i <= std_logic_vector(unsigned(cnt) + 1 + j);
 						coef_address    <= std_logic_vector(j);
@@ -133,86 +140,11 @@ begin
 				o_we  <= next_o_we;
 				oe    <= next_oe;
 				cnt   <= next_cnt;
-				o_ce_mac <= next_o_ce_mac;
+				oper_ena_mac <= next_oper_ena_mac;
+				k <= next_k;
 			end if;
 		end if;
 	end process;
-
---	contador : process(clk)
---	begin
---		if rising_edge(clk) then
---			--o_we <= '0';
---			if rst = '1' then
---				o_we <= '0';
---				cnt  <= (others => '1');
---				j <= (others => '0');--agregado
---				rst_mac <= '1';	--agregado
---			else
---				if (we = '1') then
---					cnt <= std_logic_vector(unsigned(cnt) + to_unsigned(1, log2(TAPS)));
---				end if;
---				o_we <= we_i;
---			end if;
---		end if;
---	end process;
---
---	ADDRESS_PROCESS: process(clk)
---	begin
---		if rising_edge(clk) then
---			if addr_rst = '1' then
---				read_address1_i <= (others => '0');
---				read_address2_i <= (others => '0');
---				coef_address    <= (others => '0');
---				j        <= (others => '0');
---				rst_mac <= '1'; --agregado
---			elsif (addr_ena = '1') then
---				read_address1_i <= std_logic_vector(unsigned(cnt) + j);
---				read_address2_i <= std_logic_vector(unsigned(cnt) - j - 1);
---				coef_address    <= std_logic_vector(j);
---				j        <= j + 1;
---				rst_mac <= '0'; --agregado
---			end if;
---		end if;
---	end process;
---
---
---
---	STATE_PROCESS : process(clk)
---	begin
---		if rising_edge(clk) then
---			if rst = '1' then
---				state <= idle;
---			elsif ce = '1' then
---				state <= state_i;
---			end if;
---		end if;
---	end process;
---
---	NEXT_STATE : process(state, we, j)
---	begin
---		state_i <= state;
---		case state is
---			when idle =>
---				if we = '1' then
---					state_i <= count;
---				end if;
---			when count =>
---				if j = 0 then
---					state_i <= idle;
---				end if;
---		end case;
---	end process;
---
---	OUTPUT_STATE : process(state_i)
---	begin
---		if state_i = count then
---			addr_ena   <= '1';
---			addr_rst <= '0';
---		else
---			addr_ena   <= '0';
---			addr_rst <= '1';
---		end if;
---	end process;
 
 
 end architecture;

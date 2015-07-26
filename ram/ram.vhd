@@ -28,7 +28,7 @@ entity ram is
 end ram;
 
 architecture RTL of ram is
-	type ram_type is array (TAPS downto 0) of std_logic_vector(N - 1 downto 0);
+	type ram_type is array (TAPS-1 downto 0) of std_logic_vector(N - 1 downto 0);--cambiado, estaba (TAPS downto 0)
 	signal RAM               : ram_type := (others => (others => '0'));
 	signal ram_read_address1 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal ram_read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');

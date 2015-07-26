@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="./isim.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="extra_functions" />
+            <top_module name="fir_tb" />
+            <top_module name="math_real" />
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/fir_tb/n" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">n</obj_property>
+      <obj_property name="ObjectShortName">n</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/m" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">m</obj_property>
+      <obj_property name="ObjectShortName">m</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/taps" type="other" db_ref_id="1">
+      <obj_property name="ElementShortName">taps</obj_property>
+      <obj_property name="ObjectShortName">taps</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/rst" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">rst</obj_property>
+      <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/ce" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ce</obj_property>
+      <obj_property name="ObjectShortName">ce</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/we" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">we</obj_property>
+      <obj_property name="ObjectShortName">we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/ram_we" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ram_we</obj_property>
+      <obj_property name="ObjectShortName">ram_we</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/entrada_legible" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">entrada_legible[16:0]</obj_property>
+      <obj_property name="ObjectShortName">entrada_legible[16:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/ram/ram" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ram[7:0]</obj_property>
+      <obj_property name="ObjectShortName">ram[7:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/enable_mac_new_input" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">enable_mac_new_input</obj_property>
+      <obj_property name="ObjectShortName">enable_mac_new_input</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/adder_input1" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">adder_input1[16:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_input1[16:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/adder_input2" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">adder_input2[16:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_input2[16:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/adder_input1_resized" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">adder_input1_resized[17:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_input1_resized[17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/adder_input2_resized" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">adder_input2_resized[17:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_input2_resized[17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/pre" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">pre[17:0]</obj_property>
+      <obj_property name="ObjectShortName">pre[17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/coef_input_i" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">coef_input_i[17:0]</obj_property>
+      <obj_property name="ObjectShortName">coef_input_i[17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/coef_input_ii" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">coef_input_ii[17:0]</obj_property>
+      <obj_property name="ObjectShortName">coef_input_ii[17:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/mul" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mul[35:0]</obj_property>
+      <obj_property name="ObjectShortName">mul[35:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/tb/preadder/acc" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">acc[47:0]</obj_property>
+      <obj_property name="ObjectShortName">acc[47:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/oe" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">oe</obj_property>
+      <obj_property name="ObjectShortName">oe</obj_property>
+   </wvobject>
+   <wvobject fp_name="/fir_tb/data_out" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">data_out[47:0]</obj_property>
+      <obj_property name="ObjectShortName">data_out[47:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
