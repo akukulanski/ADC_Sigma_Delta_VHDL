@@ -51,7 +51,8 @@ architecture RTL of address_generator is
 --signal next_j: unsigned(log2(TAPS / 2) - 1 downto 0);
 	signal oper_ena_mac: std_logic := '0';
 	signal next_oper_ena_mac: std_logic := '0';
-	signal k, next_k: integer := 0;--unsigned(1 downto 0):=to_unsigned(0,2);
+	--signal k, next_k: integer := 0;--unsigned(1 downto 0):=to_unsigned(0,2);
+	signal k, next_k: unsigned(2 downto 0) := to_unsigned(0,3);--unsigned(1 downto 0):=to_unsigned(0,2);
 
 
 begin
@@ -67,7 +68,7 @@ begin
 		next_oe    <= '0';
 		next_cnt   <= cnt;
 		next_oper_ena_mac <= '0';
-		next_k <= 0;
+		next_k <= to_unsigned(0,3);
 		case state is
 			when idle =>
 				if we = '1' then
@@ -83,18 +84,17 @@ begin
 				end if;
 				if j + 1 = 0 then --if j=0 then
 					next_state <= waiting_for_mac;
-					next_k <= 0;
+					next_k <= to_unsigned(0,3);
 				end if;
 			when waiting_for_mac =>
-				if k < 1 then
+				if k = to_unsigned(0,3) then
 					next_oper_ena_mac <= '1';
 				end if;
-				if k < 4 then
-					next_k <= k + 1;
-				else
+				if k = to_unsigned(4,3) then
 					next_state <= idle;
 					next_oe <= '1';
 				end if;
+				next_k <= k + to_unsigned(1,3);
 		end case;
 	end process;
 
