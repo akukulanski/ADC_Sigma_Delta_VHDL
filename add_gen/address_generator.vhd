@@ -36,7 +36,6 @@ architecture RTL of address_generator is
 	signal read_address1_i : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal read_address2_i : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal j               : unsigned(log2(TAPS / 2) - 1 downto 0);
-	signal we_i            : std_logic                                 := '0';
 
 	--	type state_t is (idle, count);
 	--	signal state   : state_t := idle;
@@ -57,7 +56,6 @@ architecture RTL of address_generator is
 
 begin
 	write_address <= cnt;
-	we_i          <= we;
 	read_address1 <= read_address1_i;
 	read_address2 <= read_address2_i;
 	enable_mac_new_input <= oper_ena_mac;

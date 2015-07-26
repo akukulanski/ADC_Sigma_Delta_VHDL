@@ -16,7 +16,7 @@ architecture RTL of fir_TB is
 	
 	constant init: std_logic_vector(N-2 downto 0) := (others => '0');
 	signal cont: std_logic_vector(N-1 downto 0):= '1' & init;
-	signal entrada_legible: std_logic_vector(N-1 downto 0);
+	signal entrada_legible: std_logic_vector(N-1 downto 0); --convertida de bin desplaz a ca2
 
 begin
 	tb : entity work.fir
