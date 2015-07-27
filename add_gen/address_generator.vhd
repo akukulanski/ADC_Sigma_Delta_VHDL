@@ -70,7 +70,7 @@ begin
 					next_cnt   <= std_logic_vector(unsigned(cnt) + to_unsigned(1, log2(TAPS)));
 				end if;
 			when reading =>
-				if j /= 0 then
+				if j /= 0 then --ram demora 1 clk en cargar salida
 					next_oper_ena_mac <= '1';
 				end if;
 				if j + 1 = 0 then
@@ -79,7 +79,7 @@ begin
 				end if;
 			when waiting_for_mac => 
 				if k = to_unsigned(0,3) then
-					next_oper_ena_mac <= '1';
+					next_oper_ena_mac <= '1'; --ram demora 1 clk en cargar salida 
 				end if;
 				if k = to_unsigned(4,3) then
 					next_state <= idle;
@@ -106,6 +106,7 @@ begin
 					when idle =>
 						j <= to_unsigned(0, log2(TAPS / 2));
 					when reading =>
+						-- j arranca en cero, y con cada clock j++
 						-- La muestra mas vieja (que se multiplica por el mismo coeficiente, es cnt+1, NO cnt-1).
 						-- Para recorrer las muestras hacia atras, cnt - j:
 						read_address1_i <= std_logic_vector(unsigned(cnt) - j);
@@ -114,10 +115,8 @@ begin
 						coef_address    <= std_logic_vector(j);
 						j               <= j + 1;
 					when waiting_for_mac =>
-						-- hace falta?
-						read_address1_i <= std_logic_vector(unsigned(cnt) - j);
-						read_address2_i <= std_logic_vector(unsigned(cnt) + 1 + j);
-						coef_address    <= std_logic_vector(j);
+						-- nada. sólo se espera a que se procese todo
+						-- lo que está en el dsp
 				end case;
 				state <= next_state;
 				o_we  <= next_o_we;
