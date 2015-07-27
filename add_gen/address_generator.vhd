@@ -20,7 +20,7 @@ entity address_generator is
 		o_we          : out std_logic                                     := '0';
 		--- data output enabled
 		oe            : out std_logic                                     := '0';
-		--- enable mac clock
+		--- enables dsp operations  
 		enable_mac_new_input  : out std_logic := '0';
 
 		we            : in  std_logic;
@@ -37,22 +37,15 @@ architecture RTL of address_generator is
 	signal read_address2_i : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
 	signal j               : unsigned(log2(TAPS / 2) - 1 downto 0);
 
-	--	type state_t is (idle, count);
-	--	signal state   : state_t := idle;
-	--	signal state_i : state_t := idle;
-
-	type state_t is (idle, writing, reading, waiting_for_mac);
+	type state_t is (idle, reading, waiting_for_mac);
 	signal state      : state_t                                   := idle;
 	signal next_state : state_t                                   := idle;
-	signal next_cnt   : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '0');
-
+	signal next_cnt   : std_logic_vector(log2(TAPS) - 1 downto 0) := (others => '1');
 	signal next_o_we : std_logic := '1';
 	signal next_oe   : std_logic := '0';
---signal next_j: unsigned(log2(TAPS / 2) - 1 downto 0);
 	signal oper_ena_mac: std_logic := '0';
 	signal next_oper_ena_mac: std_logic := '0';
-	--signal k, next_k: integer := 0;--unsigned(1 downto 0):=to_unsigned(0,2);
-	signal k, next_k: unsigned(2 downto 0) := to_unsigned(0,3);--unsigned(1 downto 0):=to_unsigned(0,2);
+	signal k, next_k: unsigned(2 downto 0) := to_unsigned(0,3);
 
 
 begin
@@ -76,17 +69,15 @@ begin
 					next_o_we  <= '1';
 					next_cnt   <= std_logic_vector(unsigned(cnt) + to_unsigned(1, log2(TAPS)));
 				end if;
-			when writing =>
-				next_state <= reading;
 			when reading =>
 				if j /= 0 then
 					next_oper_ena_mac <= '1';
 				end if;
-				if j + 1 = 0 then --if j=0 then
+				if j + 1 = 0 then
 					next_state <= waiting_for_mac;
 					next_k <= to_unsigned(0,3);
 				end if;
-			when waiting_for_mac =>
+			when waiting_for_mac => 
 				if k = to_unsigned(0,3) then
 					next_oper_ena_mac <= '1';
 				end if;
@@ -114,12 +105,6 @@ begin
 				case state is
 					when idle =>
 						j <= to_unsigned(0, log2(TAPS / 2));
-					when writing =>
-						-- Clock de escritura. No lee.
-						-- Sobreescribe y luego lee en reading:
-						-- j ya VALE CERO
-						-- j <= to_unsigned(0,log2(TAPS / 2));
-						null;
 					when reading =>
 						-- La muestra mas vieja (que se multiplica por el mismo coeficiente, es cnt+1, NO cnt-1).
 						-- Para recorrer las muestras hacia atras, cnt - j:

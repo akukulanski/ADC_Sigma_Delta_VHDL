@@ -37,6 +37,6 @@ begin
 		end if;
 	end process;
 
-	sum : output_i <= std_logic_vector(unsigned((M - 1 downto N => '0') & input) + unsigned(output_ii));
+sum : output_i <= std_logic_vector(unsigned((M - 1 downto N => '0') & input) + unsigned(output_ii));
 
 end architecture RTL;

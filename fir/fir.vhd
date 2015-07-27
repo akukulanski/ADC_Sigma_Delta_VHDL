@@ -109,7 +109,7 @@ begin
 			output       => dsp_output,
 			ce           => ce,
 			clk          => clk,
-			rst          => rst_mac     --reseteo acumulador con escritura de la ram (c/ nueva muestra)
+			rst          => rst_mac
 		);
 
 end architecture RTL;
