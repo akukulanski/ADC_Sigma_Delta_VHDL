@@ -28,11 +28,12 @@ begin
 				count    <= (others => '0');
 				ce_out_i <= '0';
 			else
-				ce_out_i <= '0';
 				if ce_in = '1' then
 					count <= count + to_unsigned(1, B);
 					if count = (to_unsigned(R - 1, B)) then
-						ce_out_i <= ce_out_i xor '1';
+						ce_out_i <= '1';
+					else
+						ce_out_i <= '0';
 					end if;
 				end if;
 			end if;

@@ -8,13 +8,13 @@ entity address_generator is
 		TAPS : natural := 200           --cantidad de palabras
 	);
 	port(
-		--posición de escritura
+		--posicion de escritura
 		write_address : out std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-		--posición de lectura 1
+		--posicion de lectura 1
 		read_address1 : out std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-		--posición de lectura 2
+		--posicion de lectura 2
 		read_address2 : out std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-		--posición de lectura de los coeficientes
+		--posicion de lectura de los coeficientes
 		coef_address  : out std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
 		--- write enable (habilita escritura en la RAM)
 		o_we          : out std_logic                                     := '0';
@@ -121,8 +121,8 @@ begin
 						-- j <= to_unsigned(0,log2(TAPS / 2));
 						null;
 					when reading =>
-						-- La muestra más vieja (que se multiplica por el mismo coeficiente, es cnt+1, NO cnt-1).
-						-- Para recorrer las muestras hacia atrás, cnt - j:
+						-- La muestra mas vieja (que se multiplica por el mismo coeficiente, es cnt+1, NO cnt-1).
+						-- Para recorrer las muestras hacia atras, cnt - j:
 						read_address1_i <= std_logic_vector(unsigned(cnt) - j);
 						-- Para recorrer hacia adelante, cnt+1+j
 						read_address2_i <= std_logic_vector(unsigned(cnt) + 1 + j);

@@ -6,8 +6,8 @@ entity fir_TB is
 end entity fir_TB;
 
 architecture RTL of fir_TB is
-	constant N : integer := 17;
-	constant M : integer := 48;
+	constant N : natural := 17;
+	constant M : natural := 48;
 	constant TAPS : integer := 8;
 
 	signal clk,rst,ce,we,oe: std_logic;

@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 
 entity comb is
 	generic(
-		N     : integer := 10;
-		DELAY : integer := 1
+		N     : natural := 10;
+		DELAY : natural := 1
 	);
 	port(
 		input  : in  std_logic_vector(N - 1 downto 0);

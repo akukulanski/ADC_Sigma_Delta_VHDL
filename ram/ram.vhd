@@ -45,13 +45,12 @@ begin
 
 	output1 <= output1_i;
 	output2 <= output2_i;
-	--Para implementar con lut ram o block ram hay que hacer una pequeña modificación en el reset.
-	--Como no es util en nuestra implementacion lo saco.
+	--Para implementar con lut ram o block ram hay que hacer una pequena modificacion en el reset.
 	--En nuestro caso la distributed ram pasa a ocupar el 8% de las luts con memoria sin aprovechar
 	--sus funcionalidades.
 	--Es preferible usar la block ram, que solo usamos el 3% del total disponible, aunque desaprovechando 
 	--parte de la memoria reservada. (si son 256 entradas de 16 bits da 4Kb o sea
-	--usamos el 25% de lo que reservamos).
+	--usamos el 50% de lo que reservamos).
 	--Dejarlo escrito como block ram y poner attribute distributed funciona,
 	--solo implementara una and entre we y ce, y una entre reset y ce.
 	--Dejarlo escrito como distributed, no se lo puede implementar como block ram
@@ -72,7 +71,7 @@ begin
 				end if;
 --				Aca chip enabled distributed ram
 --				if (ce = '1') then
---				Así funciona el reset de la block ram
+--				Asi funciona el reset de la block ram
 				if rst = '1' then
 					output1_i <= (others => '0');
 					output2_i <= (others => '0');

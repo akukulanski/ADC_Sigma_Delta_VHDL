@@ -6,7 +6,7 @@ entity decimator_TB is
 end entity decimator_TB;
 
 architecture RTL of decimator_TB is
-	constant R : integer := 2;
+	constant R : natural := 2;
 
 	signal ce_in  : std_logic := '0';
 	signal ce_out : std_logic := '0';

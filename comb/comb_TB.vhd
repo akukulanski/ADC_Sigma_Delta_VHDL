@@ -6,7 +6,7 @@ entity comb_TB is
 end entity comb_TB;
 
 architecture RTL of comb_TB is
-	constant N : integer := 10;
+	constant N : natural := 10;
 
 	signal input : std_logic_vector(N - 1 downto 0) := std_logic_vector(to_unsigned(0, N));
 	signal res   : std_logic_vector(N - 1 downto 0) := (others => '0');

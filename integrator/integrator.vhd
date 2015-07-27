@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 
 entity integrator is
 	generic(
-		N : integer := 1;               -- N debe ser menor a M
-		M : integer := 55
+		N : natural := 1;               -- N debe ser menor a M
+		M : natural := 55
 	);
 	port(
 		input  : in  std_logic_vector(N - 1 downto 0);

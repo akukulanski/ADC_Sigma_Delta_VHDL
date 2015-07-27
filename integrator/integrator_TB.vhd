@@ -6,8 +6,8 @@ entity integrator_TB is
 end entity integrator_TB;
 
 architecture RTL of integrator_TB is
-	constant N : integer := 2;
-	constant M : integer := 20;
+	constant N : natural := 2;
+	constant M : natural := 20;
 
 	signal input : std_logic_vector(N - 1 downto 0) := std_logic_vector(to_unsigned(0, N));
 	signal res   : std_logic_vector(M - 1 downto 0) := (others => '0');

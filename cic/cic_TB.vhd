@@ -1,8 +1,3 @@
-package mytypes_pkg is
-	type my_array_t is array (0 to 12) of natural; -- 12=2*N; N etapas
-	--type my_array_t is array (0 to 6) of natural; -- 12=2*N; N etapas
-end package mytypes_pkg;
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -18,7 +13,7 @@ architecture RTL of cic_TB is
 	constant N : integer := 6;
 	constant DELAY : integer := 1;
 	constant R : integer := 512;
-	constant B : my_array_t := (55, 55, 51, 43, 35, 28, 24, 23, 22, 21, 21, 20, 17); --bits en cada etapa
+	constant B : my_array_t := (55,55,50,42,34,27,23,22,21,20,20,19,16); --bits en cada etapa
 	--constant B : my_array_t := (55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55); --bits en cada etapa
 	--constant CC : integer := N*R*DELAY ; --cant bits sin recortar
 	--constant B : my_array_t := (CC,CC,CC,CC,CC,CC,CC); --bits en cada etapa
@@ -66,19 +61,19 @@ begin
 		wait for 20 ns;
 		ce_in <= '1';
 		wait for 20 ns;
-		--input <= '0';
-		loop
-			input <= '0';
-			wait for 20 ns;
-			input<= '1';
-			wait for 20 ns;
-		end loop;
-		loop
-			wait for 10000 us;
-			input <= '0';
-			wait for 10000 us;
-			input<= '1';
-		end loop;
+		input <= '1';
+--		loop
+--			input <= '0';
+--			wait for 20 ns;
+--			input<= '1';
+--			wait for 20 ns;
+--		end loop;
+--		loop
+--			wait for 10000 us;
+--			input <= '0';
+--			wait for 10000 us;
+--			input<= '1';
+--		end loop;
 	
 		wait;
 	end process;

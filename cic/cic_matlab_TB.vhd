@@ -56,17 +56,17 @@ architecture RTL of cic_matlab_TB is
 	
 	
 
-	-- Un período de reloj arbitrario
+	-- Un periodo de reloj arbitrario
 	constant PERI_CLK : time    := 10 ns;
 	constant N : integer:=15;
 	constant R : integer:=512;
 		
-	-- Señales básicas
+	-- Se�ales basicas
 	signal clk        : std_logic;
 	signal rst        : std_logic;
 	signal detener    : boolean := false;
 	
-	-- Colocar acá las señales de nuestro DUT
+	-- Colocar ac� las senales de nuestro DUT
 	signal input  : std_logic                         := '0';
 	signal output : std_logic_vector(17 - 1 downto 0) := (others => '0');
 	signal ce_in  : std_logic                         := '0';
@@ -101,7 +101,7 @@ begin
 		-- Reemplazar Nombre por el archivo a usar
 		file f_in : text open read_mode is "/media/nahuel/Nahuel/UTN/2015/Proyecto/vhdl-adc/cic/input_stream_CIC.txt";
 		file f_out : text open write_mode is "/media/nahuel/Nahuel/UTN/2015/Proyecto/vhdl-adc/cic/output_CIC.txt";
-		-- En este ejemplo sólo hay un std_logic_vector por línea
+		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(0 downto 0);
 		variable count : integer:=0;
 	begin
