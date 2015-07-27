@@ -1,6 +1,7 @@
 
 package mytypes_pkg is
 	type my_array_t is array (0 to 12) of natural; -- 12=2*N; N etapas
+	--type my_array_t is array (0 to 6) of natural; -- 12=2*N; N etapas
 end package mytypes_pkg;
 
 library IEEE;
@@ -30,15 +31,19 @@ end cic;
 architecture RTL of cic is
 	type signal_t is array (0 to N - 1) of std_logic_vector(B(0) - 1 downto 0);
 
-	signal senI     : signal_t;         -- señales integrador
-	signal senC     : signal_t;         -- señales comb
+	signal senI     : signal_t;         -- seales integrador
+	signal senC     : signal_t;         -- seales comb
 	signal ce_out_i : std_logic;
 	signal output_i : std_logic_vector(B(2 * N - 1) - 1 downto 0);
+	signal ce_comb : std_logic := '1';
 
 begin
-	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --último integrator directo a primer comb
-	ce_out                         <= ce_out_i;
+	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --ltimo integrator directo a primer comb
 	output                         <= output_i(B(2 * N - 1) - 1 downto B(2 * N - 1) - B(2 * N));
+	ce_comb <= '1' when R=1 else
+		ce_out_i;
+	--ce_out <= ce_out_i;
+	ce_out <= ce_comb;
 
 	g_limpia_bits : for i in 0 to N - 1 generate --limpiando bits no usados
 		senI(i)(B(0) - 1 downto B(i))         <= (others => '0');
@@ -70,7 +75,7 @@ begin
 			port map(
 				input  => senC(i)(B(i + N - 1) - 1 downto B(i + N - 1) - B(i + N)),
 				output => senC(i + 1)(B(i + N) - 1 downto 0),
-				ce     => ce_out_i,
+				ce     => ce_comb,
 				clk    => clk,
 				rst    => rst
 			);
@@ -80,7 +85,7 @@ begin
 		port map(
 			input  => senC(N - 1)(B(2 * N - 2) - 1 downto B(2 * N - 2) - B(2 * N - 1)),
 			output => output_i(B(2 * N - 1) - 1 downto 0),
-			ce     => ce_out_i,
+			ce     => ce_comb,
 			clk    => clk,
 			rst    => rst
 		);

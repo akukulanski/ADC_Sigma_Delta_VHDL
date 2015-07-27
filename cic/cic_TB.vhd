@@ -1,14 +1,31 @@
+package mytypes_pkg is
+	type my_array_t is array (0 to 12) of natural; -- 12=2*N; N etapas
+	--type my_array_t is array (0 to 6) of natural; -- 12=2*N; N etapas
+end package mytypes_pkg;
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+
 use work.mytypes_pkg.all;
+use work.extra_functions.all;
 
 entity cic_TB is
 end entity cic_TB;
 
 architecture RTL of cic_TB is
+
+	constant N : integer := 6;
+	constant DELAY : integer := 1;
+	constant R : integer := 512;
+	constant B : my_array_t := (55, 55, 51, 43, 35, 28, 24, 23, 22, 21, 21, 20, 17); --bits en cada etapa
+	--constant B : my_array_t := (55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55); --bits en cada etapa
+	--constant CC : integer := N*R*DELAY ; --cant bits sin recortar
+	--constant B : my_array_t := (CC,CC,CC,CC,CC,CC,CC); --bits en cada etapa
+
 	signal input  : std_logic                         := '0';
-	signal output : std_logic_vector(17 - 1 downto 0) := (others => '0');
+	--signal output : std_logic_vector(17 - 1 downto 0) := (others => '0');
+	signal output : std_logic_vector(B(2 * N) - 1 downto 0) := (others => '0');
 	signal ce_in  : std_logic                         := '0';
 	signal ce_out : std_logic                         := '0';
 	signal clk    : std_logic                         := '0';
@@ -16,6 +33,12 @@ architecture RTL of cic_TB is
 
 begin
 	tb : entity work.cic
+		generic map(
+			N => N,--etapas
+			DELAY => DELAY, -- delay restador
+			R => R, --decimacion
+			B => B --bits en cada etapa
+		)
 		port map(
 			input  => input,
 			output => output,
@@ -35,17 +58,26 @@ begin
 
 	RST_EN : process is
 	begin
+		input <= '0';
+		ce_in <= '0';
 		rst <= '1';
-		wait for 20 ns;
+		wait for 30 ns;
 		rst <= '0';
-		wait for 10 ns;
+		wait for 20 ns;
 		ce_in <= '1';
-		
+		wait for 20 ns;
+		--input <= '0';
+		loop
+			input <= '0';
+			wait for 20 ns;
+			input<= '1';
+			wait for 20 ns;
+		end loop;
 		loop
 			wait for 10000 us;
-			input <= '1';
+			input <= '0';
 			wait for 10000 us;
-			input<= '0';
+			input<= '1';
 		end loop;
 	
 		wait;
