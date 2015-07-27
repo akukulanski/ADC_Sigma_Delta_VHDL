@@ -2,14 +2,16 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;           -- para log2()
+use work.my_coeffs.all;
 
 entity fir is
 	generic(
 		N     : natural := 16;          --cantidad bits input (viene del cic)
+		--B cantidad bits coeficientes esta en el package incluido arriba
 		M     : natural := 20;          --cant bits salida
-		TAPS  : natural := 8;           --cant coeficientes fir
-		N_DSP : natural := 18;          -- cant de bits de entrada del dsp
-		M_DSP : natural := 48           -- cant de bits de salida del dsp
+		TAPS  : natural := 256;         --cant coeficientes fir
+		N_DSP : natural := 18;          --cant de bits de entrada del dsp
+		M_DSP : natural := 48           --cant de bits de salida del dsp
 	);
 	port(
 		clk      : in  std_logic;
@@ -24,20 +26,20 @@ end entity fir;
 
 architecture RTL of fir is
 	-- conversión de la entrada (binario desplazado --> CA2)
-	signal input_ca2                                   : std_logic_vector(N - 1 downto 0)              := (others => '0');
-	
+	signal input_ca2 : std_logic_vector(N - 1 downto 0) := (others => '0');
+
 	-- señales referidas a la ram
 	signal ram_we                                      : std_logic                                     := '0';
 	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
 	signal coef_address                                : std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
 	signal ram_output1, ram_output2                    : std_logic_vector(N - 1 downto 0)              := (others => '0');
-	
+
 	-- señales referidas al dsp
-	signal adder_input1, adder_input2                  : std_logic_vector(N - 1 downto 0)              := (others => '0');
-	signal coef_input                                  : std_logic_vector(N - 1 downto 0)              := (others => '0');
-	signal dsp_output                                  : std_logic_vector(M_DSP - 1 downto 0)          := (others => '0');
-	signal enable_mac_new_input                        : std_logic                                     := '0';
-	signal rst_mac                                     : std_logic;
+	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
+	signal coef_input                 : coeff_t                              := std_logic_vector(signed(coefficiets, B));
+	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
+	signal enable_mac_new_input       : std_logic                            := '0';
+	signal rst_mac                    : std_logic;
 
 begin
 	-- pruebas con todos los coeficientes = 0x01
@@ -98,7 +100,7 @@ begin
 		generic map(
 			-- corregir nombres para que no sea confuso
 			N_in_pre => N,
-			N_in_mul => N,
+			N_in_mul => B,
 			N        => N_DSP,
 			N_OUT    => M_DSP
 		)
