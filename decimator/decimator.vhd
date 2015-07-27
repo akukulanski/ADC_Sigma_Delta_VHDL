@@ -3,6 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;
 
+--- Nota: el ce_out retrasa un clock
+
 entity decimator is
 	generic(
 		R : natural := 512
@@ -21,6 +23,7 @@ architecture RTL of decimator is
 	signal ce_out_i : std_logic;
 begin
 	ce_out <= ce_out_i;
+
 	ce_decimate : process(clk) is
 	begin
 		if rising_edge(clk) then
@@ -28,12 +31,11 @@ begin
 				count    <= (others => '0');
 				ce_out_i <= '0';
 			else
+				ce_out_i <= '0';
 				if ce_in = '1' then
 					count <= count + to_unsigned(1, B);
 					if count = (to_unsigned(R - 1, B)) then
 						ce_out_i <= '1';
-					else
-						ce_out_i <= '0';
 					end if;
 				end if;
 			end if;
