@@ -1,0 +1,6 @@
+http://www.teuniz.net/RS-232/
+
+RS-232
+--> configurar puerto.
+--> conversor serie-usb es /dev/ttyUSB0
+--> en el programa de ejemplo, el puerto este vale 16.
