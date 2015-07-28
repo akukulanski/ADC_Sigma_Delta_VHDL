@@ -9,7 +9,7 @@ entity fir is
 		N     : natural := 16;          --cantidad bits input (viene del cic)
 		--B cantidad bits coeficientes esta en el package incluido arriba
 		M     : natural := 20;          --cant bits salida
-		TAPS  : natural := 256;         --cant coeficientes fir
+		TAPS  : natural := 2 * N_coeffs; --cant coeficientes fir, N_coeffs en el package
 		N_DSP : natural := 18;          --cant de bits de entrada del dsp
 		M_DSP : natural := 48           --cant de bits de salida del dsp
 	);
@@ -25,35 +25,37 @@ entity fir is
 end entity fir;
 
 architecture RTL of fir is
-	-- conversión de la entrada (binario desplazado --> CA2)
+	-- conversion de la entrada (binario desplazado --> CA2)
 	signal input_ca2 : std_logic_vector(N - 1 downto 0) := (others => '0');
 
-	-- señales referidas a la ram
+	-- senales referidas a la ram
 	signal ram_we                                      : std_logic                                     := '0';
 	signal write_address, read_address1, read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
 	signal coef_address                                : std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
 	signal ram_output1, ram_output2                    : std_logic_vector(N - 1 downto 0)              := (others => '0');
 
-	-- señales referidas al dsp
+	-- senales referidas al dsp
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
-	signal coef_input                 : coeff_t                              := std_logic_vector(signed(coefficiets, B));
+	signal ROM                        : coeff_t                              := coefficients;
+	signal coef_input                 : std_logic_vector(B - 1 downto 0);
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
 
 begin
-	-- pruebas con todos los coeficientes = 0x01
-	coef_input(0 downto 0) <= "1";
-	input_ca2              <= not (data_in(N - 1)) & data_in(N - 2 downto 0);
-	data_out               <= dsp_output(M_DSP - 1 downto M_DSP - M); --bits más significativos de dsp_outout()
-	rst_mac                <= (ram_we or rst); --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
 
-	-- cuando el dsp está habilitado realiza operaciones
+	--coef_input(0 downto 0) <= "1";
+	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0);
+	data_out  <= dsp_output(M_DSP - 1 downto M_DSP - M); --bits más significativos de dsp_outout()
+	rst_mac   <= (ram_we or rst);       --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
+
+	-- cuando el dsp esta habilitado realiza operaciones
 	-- cuando la entrada vale cero, sigue funcionando (procesa los datos demorados
 	-- por el pipeline) pero sus siguientes operaciones (sumar cero) fuerzan que
-	-- se mantenga el último dato válido calculado
+	-- se mantenga el ultimo dato valido calculado
 	adder_input1 <= ram_output1 when enable_mac_new_input = '1' else (others => '0');
 	adder_input2 <= ram_output2 when enable_mac_new_input = '1' else (others => '0');
+	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B)) when enable_mac_new_input = '1' else (others => '0');
 
 	-- address generator: se ocupa de controlar las posiciones de lectura/escritura de la
 	-- ram para que lleguen los valores correctos al dsp
