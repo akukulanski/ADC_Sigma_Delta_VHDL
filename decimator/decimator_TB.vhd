@@ -6,7 +6,7 @@ entity decimator_TB is
 end entity decimator_TB;
 
 architecture RTL of decimator_TB is
-	constant R : natural := 2;
+	constant R : natural := 4;
 
 	signal ce_in  : std_logic := '0';
 	signal ce_out : std_logic := '0';
@@ -27,19 +27,52 @@ begin
 
 	CLOCK : process is
 	begin
+		clk <= '0';
 		wait for 10 ns;
 		clk <= '1';
 		wait for 10 ns;
-		clk <= '0';
 	end process;
 
 	RST_EN : process is
 	begin
 		rst <= '1';
-		wait for 20 ns;
+		wait for 30 ns;
 		rst <= '0';
-		wait for 10 ns;
+		wait for 20 ns;
 		ce_in <= '1';
+		wait for 80 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
+		ce_in <= '0';
+		wait for 20 ns;
+		ce_in <= '1';
+		wait for 20 ns;
 		wait;
 	end process;
 
