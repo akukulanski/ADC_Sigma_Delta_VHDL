@@ -78,9 +78,9 @@ begin
 					next_k <= to_unsigned(0,3);
 				end if;
 			when waiting_for_mac => 
-				if k = to_unsigned(0,3) then
-					next_oper_ena_mac <= '1'; --ram demora 1 clk en cargar salida 
-				end if;
+--				if k = to_unsigned(0,3) then
+				next_oper_ena_mac <= '1'; --ram demora 1 clk en cargar salida 
+--				end if;
 				if k = to_unsigned(4,3) then
 					next_state <= idle;
 					next_oe <= '1';

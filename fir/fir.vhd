@@ -42,6 +42,10 @@ architecture RTL of fir is
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
 
+	--rom_style
+	attribute rom_style : string;
+	attribute rom_style of ROM : signal is "block"; --"distributed" or "block"
+	
 begin
 
 	--coef_input(0 downto 0) <= "1";
@@ -53,8 +57,8 @@ begin
 	-- cuando la entrada vale cero, sigue funcionando (procesa los datos demorados
 	-- por el pipeline) pero sus siguientes operaciones (sumar cero) fuerzan que
 	-- se mantenga el ultimo dato valido calculado
-	adder_input1 <= ram_output1 when enable_mac_new_input = '1' else (others => '0');
-	adder_input2 <= ram_output2 when enable_mac_new_input = '1' else (others => '0');
+	adder_input1 <= ram_output1; --when enable_mac_new_input = '1' else (others => '0');
+	adder_input2 <= ram_output2;-- when enable_mac_new_input = '1' else (others => '0');
 	--NO poner el when, igual las entradas serian cero y la mult cero.
 	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B));
 
@@ -125,7 +129,7 @@ begin
 			adder_input2 => adder_input2,
 			coef_input   => coef_input_i,
 			output       => dsp_output,
-			ce           => ce,
+			ce           => enable_mac_new_input,--ce
 			clk          => clk,
 			rst          => rst_mac
 		);
