@@ -8,7 +8,7 @@ end entity fir_TB;
 architecture RTL of fir_TB is
 	constant N : natural := 16; --bits entrada
 	constant M : natural := 48; --bits salida
-	constant TAPS : integer := 8; -- cantidad de coeficientes del filtro
+	--constant TAPS : integer := 8; -- cantidad de coeficientes del filtro
 	constant N_DSP : natural := 18;          -- cant de bits de entrada del dsp
 	constant M_DSP : natural := 48;           -- cant de bits de salida del dsp
 
@@ -25,7 +25,7 @@ begin
 		generic map(
 			N => N,
 			M => M,
-			TAPS => TAPS,
+			--TAPS => TAPS,
 			N_DSP => N_DSP,
 			M_DSP => M_DSP
 		)

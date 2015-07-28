@@ -18,7 +18,7 @@ end
 h(h==-0)=0;% me molesta el -0
 fileID=fopen(FileName,'w');%abro archivo
 %escribo la es
-fprintf(fileID,'library ieee;\nuse ieee.numeric_std.all;\n\npackage my_coeffs is\n\tconstant B: natural:=%.0f;\n\tconstant N_coeffs: natural := %.0f;\n\ttype coeff_t is array (N_coeffs-1 downto 0) of integer range -2**(B-1) to 2**(B-1)-1;\n\tconstant coefficients: coeff_t:=\n\t\t(',B,length(coefficients));
+fprintf(fileID,'library ieee;\nuse ieee.numeric_std.all;\n\npackage my_coeffs is\n\tconstant B: natural:=%.0f;\n\tconstant N_coeffs: natural := %.0f;\n\ttype coeff_t is array (0 to N_coeffs-1) of integer range -2**(B-1) to 2**(B-1)-1;\n\tconstant coefficients: coeff_t:=\n\t\t(',B,length(coefficients));
 if floor(length(coefficients)/20)~=length(coefficients)/20
     final=floor(length(coefficients)/20);
 else

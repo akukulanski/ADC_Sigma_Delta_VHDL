@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 package my_coeffs is
 	constant B: natural:=16;
 	constant N_coeffs: natural := 128;
-	type coeff_t is array (N_coeffs-1 downto 0) of integer range -2**(B-1) to 2**(B-1)-1;
+	type coeff_t is array (0 to N_coeffs-1) of integer range -2**(B-1) to 2**(B-1)-1;
 	constant coefficients: coeff_t:=
 		(0,0,0,0,1,1,1,0,-1,-2,-2,0,3,4,4,0,-4,-7,-6,-1,
 		6,11,9,1,-10,-16,-14,-2,14,23,20,3,-19,-32,-28,-4,26,44,38,7,

@@ -37,7 +37,7 @@ architecture RTL of fir is
 	-- senales referidas al dsp
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
 	signal ROM                        : coeff_t                              := coefficients;
-	signal coef_input                 : std_logic_vector(B - 1 downto 0);
+	signal coef_input, coef_input_i   : std_logic_vector(B - 1 downto 0);
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
@@ -55,7 +55,21 @@ begin
 	-- se mantenga el ultimo dato valido calculado
 	adder_input1 <= ram_output1 when enable_mac_new_input = '1' else (others => '0');
 	adder_input2 <= ram_output2 when enable_mac_new_input = '1' else (others => '0');
-	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B)) when enable_mac_new_input = '1' else (others => '0');
+	--NO poner el when, igual las entradas serian cero y la mult cero.
+	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B));
+
+	Lectura_ROM : process(clk) is
+	begin
+		if rising_edge(clk) then
+			if ce = '1' then
+				if rst = '1' then
+					coef_input_i <= (others => '0');
+				else
+					coef_input_i <= coef_input;
+				end if;
+			end if;
+		end if;
+	end process Lectura_ROM;
 
 	-- address generator: se ocupa de controlar las posiciones de lectura/escritura de la
 	-- ram para que lleguen los valores correctos al dsp
@@ -109,7 +123,7 @@ begin
 		port map(
 			adder_input1 => adder_input1,
 			adder_input2 => adder_input2,
-			coef_input   => coef_input,
+			coef_input   => coef_input_i,
 			output       => dsp_output,
 			ce           => ce,
 			clk          => clk,
