@@ -1,7 +1,5 @@
 
-package mytypes_pkg is
-	type my_array_t is array (0 to 12) of natural; -- 12=2*N; N etapas
-end package mytypes_pkg;
+
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
@@ -14,8 +12,8 @@ entity cic is
 		N     : natural    := 6;        --etapas
 		DELAY : natural    := 1;        -- delay restador
 		R     : natural    := 512;      --decimacion
-		B     : my_array_t := (55, 55, 51, 43, 35, 28, 24, 23, 22, 21, 21, 20, 17) --bits en cada etapa
-	);
+		B : my_array_t := (55,55,50,42,34,27,23,22,21,20,20,19,16)
+		);
 	port(
 		input  : in  std_logic;
 		output : out std_logic_vector(B(2 * N) - 1 downto 0);
