@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.my_coeffs.all;
 
 entity fir_TB is
 end entity fir_TB;
@@ -11,13 +12,14 @@ architecture RTL of fir_TB is
 	--constant TAPS : integer := 8; -- cantidad de coeficientes del filtro
 	constant N_DSP : natural := 18;          -- cant de bits de entrada del dsp
 	constant M_DSP : natural := 48;           -- cant de bits de salida del dsp
-
+	constant T_clk : natural := 20; -- periodo clock en ns
+	
 	signal clk,rst,ce,we,oe: std_logic;
 	signal data_in: std_logic_vector(N-1 downto 0);
 	signal data_out: std_logic_vector(M-1 downto 0);
 	
-	constant init: std_logic_vector(N-2 downto 0) := (others => '0');
-	signal cont: std_logic_vector(N-1 downto 0):= '1' & init;
+	--constant init: std_logic_vector(N-2 downto 0) := (others => '0');
+	--signal cont: std_logic_vector(N-1 downto 0):= '1' & init;
 	signal entrada_legible: std_logic_vector(N-1 downto 0); --convertida de bin desplaz a ca2
 
 begin
@@ -25,7 +27,7 @@ begin
 		generic map(
 			N => N,
 			M => M,
-			--TAPS => TAPS,
+			TAPS => 2*N_coeffs,
 			N_DSP => N_DSP,
 			M_DSP => M_DSP
 		)
@@ -39,32 +41,32 @@ begin
 			rst    => rst
 		);
 	
-	data_in <= cont;
-	entrada_legible <= not(cont(N-1)) & cont(N-2 downto 0);
+	data_in<=('1'&(N-2 downto 1 => '0')&'1');
+	entrada_legible <= not(data_in(N-1)) & data_in(N-2 downto 0);
 	
 	CLOCK : process is
 	begin
 		clk <= '0';
-		wait for 10 ns;
+		wait for (T_clk/2) * 1 ns;
 		clk <= '1';
-		cont <= std_logic_vector(unsigned(cont) + to_unsigned(1, N));
-		wait for 10 ns;
+		wait for (T_clk/2) * 1 ns;
 	end process;
 
 	RST_EN : process is
 		
 	begin
+		wait for (T_clk/2) * 1 ns;
 		rst <= '1';
 		ce <= '1';
 		we <= '0';
-		wait for 30 ns;
+		wait for T_clk * ns;
 		rst <= '0';
-		wait for 20 ns;
+		wait for T_clk * ns;
 		we <= '1';
-		for I in 0 to 30 loop
-			wait for 20 ns;
+		loop
+			wait for T_clk * ns;
 			we <= '0';
-			wait for 300 ns;		
+			wait for (T_clk*(N_coeffs+5)) * 1 ns;		
 			we <= '1';
 		end loop;
 		wait;
