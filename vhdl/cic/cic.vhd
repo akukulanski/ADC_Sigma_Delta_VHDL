@@ -4,15 +4,16 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
-use work.mytypes_pkg.all;
+--use work.mytypes_pkg.all;
 use work.extra_functions.all;
+use work.constantes.all;
 
 entity cic is
 	generic(
-		N     : natural    := 6;        --etapas
-		DELAY : natural    := 1;        -- delay restador
-		R     : natural    := 512;      --decimacion
-		B : my_array_t := (55,55,50,42,34,27,23,22,21,20,20,19,16)
+		N     : natural    := CIC_N_ETAPAS;        --etapas
+		DELAY : natural    := CIC_DELAY;        -- delay restador
+		R     : natural    := CIC_R;      --decimacion
+		B : my_array_t := CIC_COEFFICIENTS
 		);
 	port(
 		input  : in  std_logic;

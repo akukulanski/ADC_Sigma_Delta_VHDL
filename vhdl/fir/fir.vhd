@@ -2,16 +2,17 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;           -- para log2()
-use work.my_coeffs.all;
+--use work.my_coeffs.all;
+use work.constantes.all;
 
 entity fir is
 	generic(
-		N     : natural := 16;          --cantidad bits input (viene del cic)
-		--B cantidad bits coeficientes esta en el package incluido arriba
-		M     : natural := 20;          --cant bits salida
-		TAPS  : natural := 2 * N_coeffs; --cant coeficientes fir, N_coeffs en el package
-		N_DSP : natural := 18;          --cant de bits de entrada del dsp
-		M_DSP : natural := 48           --cant de bits de salida del dsp
+		N     : natural := FIR_INPUT_BITS;          --cantidad bits input (viene del cic)
+		-- FIR_B cantidad bits coeficientes esta en el package incluido arriba
+		M     : natural := FIR_OUTPUT_BITS;          --cant bits salida
+		TAPS  : natural := 2 * FIR_N_COEFF; --cant coeficientes fir, N_coeffs en el package
+		N_DSP : natural := DPS_INPUT_BITS;          --cant de bits de entrada del dsp
+		M_DSP : natural := DPS_OUTPUT_BITS           --cant de bits de salida del dsp
 	);
 	port(
 		clk      : in  std_logic;
@@ -36,8 +37,8 @@ architecture RTL of fir is
 
 	-- senales referidas al dsp
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
-	signal ROM                        : coeff_t                              := coefficients;
-	signal coef_input, coef_input_i   : std_logic_vector(B - 1 downto 0);
+	signal ROM                        : coeff_t                              := FIR_COEFFICIENTS;
+	signal coef_input, coef_input_i   : std_logic_vector(FIR_B - 1 downto 0);
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
@@ -60,7 +61,7 @@ begin
 	adder_input1 <= ram_output1; --when enable_mac_new_input = '1' else (others => '0');
 	adder_input2 <= ram_output2;-- when enable_mac_new_input = '1' else (others => '0');
 	--NO poner el when, igual las entradas serian cero y la mult cero.
-	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B));
+	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), FIR_B));
 
 	Lectura_ROM : process(clk) is
 	begin
@@ -120,7 +121,7 @@ begin
 		generic map(
 			-- corregir nombres para que no sea confuso
 			N_in_pre => N,
-			N_in_mul => B,
+			N_in_mul => FIR_B,
 			N        => N_DSP,
 			N_OUT    => M_DSP
 		)

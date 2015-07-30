@@ -3,13 +3,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library UNISIM;
-use UNISIM.vcomponents.all;
+use UNISIM.vcomponents.PLL_BASE;
 
 use work.mytypes_pkg.all;
 use work.extra_functions.all;
 use work.my_coeffs.all;
 
-entity adc_uart is
+entity top_level is
 	generic(
 		BIT_OUT   : natural    := 16;
 		N_ETAPAS  : natural    := 6;    --etapas
@@ -35,9 +35,9 @@ entity adc_uart is
 
 		Tx       : out std_logic        -- Transmisor
 	);
-end entity adc_uart;
+end entity top_level;
 
-architecture RTL of adc_uart is
+architecture RTL of top_level is
 	signal oe_i     : std_logic                              := '0';
 	signal notRst   : std_logic                              := '0';
 	signal output_i : std_logic_vector(BIT_OUT - 1 downto 0) := (others => '0');
@@ -96,7 +96,7 @@ begin
 --   );
 	
 	output<=output_i;
-	ADC : entity work.top_level
+	ADC : entity work.adc
 		generic map(
 			BIT_OUT  => BIT_OUT,
 			N_ETAPAS => N_ETAPAS,

@@ -3,13 +3,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library UNISIM;
-use UNISIM.vcomponents.all;
+use UNISIM.vcomponents.IBUFDS;
 
 use work.mytypes_pkg.all;
 use work.extra_functions.all;
 use work.my_coeffs.all;
 
-entity top_level is
+entity adc is
 	generic(BIT_OUT 	: natural 	 := 16;
 			N_ETAPAS    : natural    := 6;        --etapas
 			DELAY 		: natural    := 1;        -- delay restador
@@ -28,11 +28,11 @@ entity top_level is
 		clk     : in  std_logic;
 		rst     : in  std_logic;
 		oe 		: out std_logic  :='0'
-		-- ce_in como weak para que ande por defecto
+		-- TODO ce_in como weak para que ande por defecto
 	);
-end entity top_level;
+end entity adc;
 
-architecture RTL of top_level is
+architecture RTL of adc is
 	signal out_lvds,oe_cic,oe_fir : std_logic:='0'; -- senial de salida del LVDS
 	signal ce_in :std_logic:='1';
 	signal out_cic 	: std_logic_vector (B(2*N_ETAPAS)-1 downto 0);
@@ -40,16 +40,15 @@ architecture RTL of top_level is
 	
 begin
 	feedback <= not(out_lvds);
-	
-	
+		
 	IBUFDS_inst : IBUFDS
 		generic map(
-			DIFF_TERM    => TRUE,      -- Differential Termination 
-			IBUF_LOW_PWR => FALSE,       -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
+			DIFF_TERM    => TRUE,      		-- Differential Termination 
+			IBUF_LOW_PWR => FALSE,       	-- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
 			IOSTANDARD   => "DEFAULT")
 		port map(
-			O  => out_lvds,                    -- Buffer output
-			I  => input_p,                    -- Diff_p buffer input (connect directly to top-level port)
+			O  => out_lvds,                  -- Buffer output
+			I  => input_p,                   -- Diff_p buffer input (connect directly to top-level port)
 			IB => input_n                    -- Diff_n buffer input (connect directly to top-level port)
 		);
 		
@@ -98,8 +97,4 @@ begin
 			clk    => clk,
 			rst    => rst
 		);
-		
-
-		
-
 end architecture RTL;
