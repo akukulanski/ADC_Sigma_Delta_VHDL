@@ -3,15 +3,17 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;           -- para log2()
 use work.constantes.all;
+use std.standard.all;
 
 entity fir is
 	generic(
-		N     : natural := FIR_INPUT_BITS;          --cantidad bits input (viene del cic)
-		-- FIR_B cantidad bits coeficientes esta en el package incluido arriba
-		M     : natural := FIR_OUTPUT_BITS;          --cant bits salida
-		TAPS  : natural := 2 * FIR_N_COEFF; --cant coeficientes fir, N_coeffs en el package
-		N_DSP : natural := DSP_INPUT_BITS;          --cant de bits de entrada del dsp
-		M_DSP : natural := DSP_OUTPUT_BITS           --cant de bits de salida del dsp
+		N     : natural := FIR_INPUT_BITS; --cantidad bits input (viene del cic)
+		B     : natural := FIR_COEFF_BITS; -- cantidad bits coeficientes esta en el package incluido arriba
+		M     : natural := FIR_OUTPUT_BITS; --cant bits salida
+		TAPS  : natural := 2 * FIR_HALF_TAPS; --longitud filtro fir
+		N_DSP : natural := DSP_INPUT_BITS; --cant de bits de entrada del dsp
+		M_DSP : natural := DSP_OUTPUT_BITS; --cant de bits de salida del dsp
+		IS_TB : boolean := FALSE        --poner uno cuando se hace test bench
 	);
 	port(
 		clk      : in  std_logic;
@@ -36,8 +38,8 @@ architecture RTL of fir is
 
 	-- senales referidas al dsp
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
-	signal ROM                        : coeff_t                              := FIR_COEFFICIENTS;
-	signal coef_input, coef_input_i   : std_logic_vector(FIR_B - 1 downto 0);
+	signal ROM                        : integer_array(0 to TAPS / 2 - 1)     := decision(IS_TB,FIR_COEFFICIENTS,TB_FIR_COEFFICIENTS);
+	signal coef_input, coef_input_i   : std_logic_vector(B - 1 downto 0);
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
@@ -45,7 +47,7 @@ architecture RTL of fir is
 	--rom_style
 	attribute rom_style : string;
 	attribute rom_style of ROM : signal is "block"; --"distributed" or "block"
-	
+
 begin
 
 	--coef_input(0 downto 0) <= "1";
@@ -57,10 +59,10 @@ begin
 	-- cuando la entrada vale cero, sigue funcionando (procesa los datos demorados
 	-- por el pipeline) pero sus siguientes operaciones (sumar cero) fuerzan que
 	-- se mantenga el ultimo dato valido calculado
-	adder_input1 <= ram_output1; --when enable_mac_new_input = '1' else (others => '0');
-	adder_input2 <= ram_output2;-- when enable_mac_new_input = '1' else (others => '0');
+	adder_input1 <= ram_output1;        --when enable_mac_new_input = '1' else (others => '0');
+	adder_input2 <= ram_output2;        -- when enable_mac_new_input = '1' else (others => '0');
 	--NO poner el when, igual las entradas serian cero y la mult cero.
-	coef_input   <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), FIR_B));
+	coef_input   <= coef_input_i;
 
 	Lectura_ROM : process(clk) is
 	begin
@@ -69,7 +71,7 @@ begin
 				if rst = '1' then
 					coef_input_i <= (others => '0');
 				else
-					coef_input_i <= coef_input;
+					coef_input_i <= std_logic_vector(to_signed(ROM(to_integer(unsigned(coef_address))), B));
 				end if;
 			end if;
 		end if;
@@ -120,7 +122,7 @@ begin
 		generic map(
 			-- corregir nombres para que no sea confuso
 			N_in_pre => N,
-			N_in_mul => FIR_B,
+			N_in_mul => B,
 			N        => N_DSP,
 			N_OUT    => M_DSP
 		)
@@ -129,7 +131,7 @@ begin
 			adder_input2 => adder_input2,
 			coef_input   => coef_input_i,
 			output       => dsp_output,
-			ce           => enable_mac_new_input,--ce
+			ce           => enable_mac_new_input, --ce
 			clk          => clk,
 			rst          => rst_mac
 		);

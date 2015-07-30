@@ -1,6 +1,3 @@
-
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
@@ -8,39 +5,43 @@ use IEEE.STD_LOGIC_1164.all;
 use work.extra_functions.all;
 use work.constantes.all;
 
+use std.standard.all;
+
 entity cic is
 	generic(
-		N     : natural    := CIC_N_ETAPAS;        --etapas
-		DELAY : natural    := CIC_COMB_DELAY;        -- delay restador
-		R     : natural    := CIC_R;      --decimacion
-		B 	: my_array_t := CIC_COEFFICIENTS
-		);
+		N     : natural := CIC_N_ETAPAS; --etapas
+		DELAY : natural := CIC_COMB_DELAY; -- delay restador
+		R     : natural := CIC_R;       --decimacion
+		--B     : natural_array(0 to 2 * CIC_N_ETAPAS) := CIC_STAGE_BITS --cantidad de bits por etapa
+		IS_TB : boolean := FALSE --poner true cuando se usa testbench
+	);
 	port(
-		input  : in  std_logic;
-		output : out std_logic_vector(B(2 * N) - 1 downto 0);
-		clk    : in  std_logic;
-		rst    : in  std_logic;
-		ce_in  : in  std_logic;
-		ce_out : out std_logic
+		input  : in  std_logic;         --entrada cic
+		output : out std_logic_vector(decision(IS_TB,CIC_OUTPUT_BITS,TB_CIC_OUTPUT_BITS) - 1 downto 0); --salida cic
+		clk    : in  std_logic;         --clk
+		rst    : in  std_logic;         --reset
+		ce_in  : in  std_logic;         --clock enable entrada, cuando este esta desactivado no hace nada
+		ce_out : out std_logic          --salida, que es el mismo clock enable que usan los comb
 	);
 
 end cic;
 
 architecture RTL of cic is
+	constant B : natural_array(0 to 2 * N) := decision(IS_TB,CIC_STAGE_BITS,TB_CIC_STAGE_BITS);
 	type signal_t is array (0 to N - 1) of std_logic_vector(B(0) - 1 downto 0);
 
 	signal senI     : signal_t;         -- senales integrador
 	signal senC     : signal_t;         -- senales comb
 	signal ce_out_i : std_logic;
 	signal output_i : std_logic_vector(B(2 * N - 1) - 1 downto 0);
-	signal ce_comb : std_logic := '1';
+	signal ce_comb  : std_logic := '1';
 
 begin
 	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --ultimo integrator directo a primer comb
 	output                         <= output_i(B(2 * N - 1) - 1 downto B(2 * N - 1) - B(2 * N));
-	ce_comb <= '1' when R=1 else ce_out_i;
+	ce_comb                        <= '1' when R = 1 else ce_out_i;
 	--ce_out <= ce_out_i;
-	ce_out <= ce_comb;
+	ce_out                         <= ce_comb;
 
 	g_limpia_bits : for i in 0 to N - 1 generate --limpiando bits no usados
 		senI(i)(B(0) - 1 downto B(i))         <= (others => '0');

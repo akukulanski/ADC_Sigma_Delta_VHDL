@@ -2,8 +2,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
---use work.mytypes_pkg.all;
-use work.extra_functions.all;
 use work.constantes.all;
 
 entity cic_TB is
@@ -11,8 +9,7 @@ end entity cic_TB;
 
 architecture RTL of cic_TB is
 	signal input  : std_logic                         := '0';
-	--signal output : std_logic_vector(17 - 1 downto 0) := (others => '0');
-	signal output : std_logic_vector(CIC_COEFFICIENTS(2*CIC_N_ETAPAS) - 1 downto 0) := (others => '0');
+	signal output : std_logic_vector(TB_CIC_OUTPUT_BITS - 1 downto 0) := (others => '0');
 	signal ce_in  : std_logic                         := '0';
 	signal ce_out : std_logic                         := '0';
 	signal clk    : std_logic                         := '0';
@@ -24,7 +21,7 @@ begin
 			N => TB_CIC_N_ETAPAS,		--etapas
 			DELAY => TB_CIC_COMB_DELAY, --delay restador
 			R => TB_CIC_R, 				--decimacion
-			B => TB_CIC_COEFFICIENTS 	--bits en cada etapa
+			IS_TB => TRUE
 		)
 		port map(
 			input  => input,

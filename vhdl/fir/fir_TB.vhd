@@ -1,7 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
---use work.my_coeffs.all;
 use work.constantes.all;
 
 entity fir_TB is
@@ -22,10 +21,12 @@ begin
 	tb : entity work.fir
 		generic map(
 			N 		=> 	TB_FIR_INPUT_BITS,
+			B		=>  TB_FIR_COEFF_BITS,
 			M 		=> 	TB_FIR_OUTPUT_BITS,
-			TAPS 	=> 	2*TB_FIR_N_COEFF,
+			TAPS 	=> 	2*TB_FIR_HALF_TAPS,
 			N_DSP 	=> 	TB_DPS_INPUT_BITS,
-			M_DSP 	=> 	TB_DPS_OUTPUT_BITS
+			M_DSP 	=> 	TB_DPS_OUTPUT_BITS,
+			IS_TB   =>  TRUE
 		)
 		port map(
 			data_in => data_in,
@@ -62,7 +63,7 @@ begin
 		loop
 			wait for T_clk * ns;
 			we <= '0';
-			wait for (T_clk*(TB_FIR_N_COEFF+5)) * 1 ns;		
+			wait for (T_clk*(TB_FIR_HALF_TAPS+5)) * 1 ns;		
 			we <= '1';
 		end loop;
 		wait;
