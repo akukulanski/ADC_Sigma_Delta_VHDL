@@ -5,21 +5,21 @@ use ieee.numeric_std.all;
 library UNISIM;
 use UNISIM.vcomponents.PLL_BASE;
 
-use work.mytypes_pkg.all;
 use work.extra_functions.all;
-use work.my_coeffs.all;
+use work.constantes.all;
 
 entity top_level is
 	generic(
-		BIT_OUT   : natural    := 16;
-		N_ETAPAS  : natural    := 6;    --etapas
-		DELAY     : natural    := 1;    -- delay restador
-		R_CIC     : natural    := 512;  --decimacion
-		R_FIR     : natural    := 4;    --decimacion
-		B         : my_array_t := (55, 55, 50, 42, 34, 27, 23, 22, 21, 20, 20, 19, 16);
-		N_DSP     : natural    := 18;   --entrada dsp específico para spartan6
-		M_DSP     : natural    := 48;   --salida dsp específico para spartan6
-
+		BIT_OUT 	: natural 	 	:= BIT_OUT;
+		N_ETAPAS    : natural    	:= CIC_N_ETAPAS;   --etapas del cic
+		COMB_DELAY 	: natural    	:= CIC_COMB_DELAY;   --delay restador
+		BITS_CIC 	: my_array_t 	:= CIC_COEFFICIENTS;
+		CIC_R 		: natural    	:= CIC_R; --decimacion
+		FIR_R 		: natural    	:= FIR_R;   --decimacion
+		N_DSP		: natural 		:= DSP_INPUT_BITS; 	--entrada dsp específico para spartan6
+		M_DSP 		: natural 		:= DSP_OUTPUT_BITS; 	--salida dsp específico para spartan6
+		FIR_N_COEFF : natural		:= FIR_N_COEFF;
+	
 		Bits_UART : integer    := 16;   -- Cantidad de Bits
 		Baudrate  : integer    := 115200; -- BaudRate de la comunicacion UART
 		Core      : integer    := 50000000 -- Frecuencia de core
@@ -98,14 +98,15 @@ begin
 	output<=output_i;
 	ADC : entity work.adc
 		generic map(
-			BIT_OUT  => BIT_OUT,
-			N_ETAPAS => N_ETAPAS,
-			DELAY    => DELAY,
-			R_CIC    => R_CIC,
-			R_FIR    => R_FIR,
-			B        => B,
-			N_DSP    => N_DSP,
-			M_DSP    => M_DSP
+			BIT_OUT  	=> BIT_OUT,
+			N_ETAPAS  	=> N_ETAPAS,   --etapas del cic
+			COMB_DELAY  => COMB_DELAY,   --delay restador
+			BITS_CIC 	=> BITS_CIC,
+			CIC_R 		=> CIC_R, --decimacion
+			FIR_R 		=> FIR_R,   --decimacion
+			N_DSP		=> N_DSP, 	--entrada dsp específico para spartan6
+			M_DSP	 	=> M_DSP, 	--salida dsp específico para spartan6
+			FIR_N_COEFF	=> FIR_N_COEFF
 		)
 		port map(
 			input_p  => input_p,

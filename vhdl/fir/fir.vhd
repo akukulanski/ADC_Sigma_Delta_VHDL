@@ -2,7 +2,6 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;           -- para log2()
---use work.my_coeffs.all;
 use work.constantes.all;
 
 entity fir is
@@ -11,8 +10,8 @@ entity fir is
 		-- FIR_B cantidad bits coeficientes esta en el package incluido arriba
 		M     : natural := FIR_OUTPUT_BITS;          --cant bits salida
 		TAPS  : natural := 2 * FIR_N_COEFF; --cant coeficientes fir, N_coeffs en el package
-		N_DSP : natural := DPS_INPUT_BITS;          --cant de bits de entrada del dsp
-		M_DSP : natural := DPS_OUTPUT_BITS           --cant de bits de salida del dsp
+		N_DSP : natural := DSP_INPUT_BITS;          --cant de bits de entrada del dsp
+		M_DSP : natural := DSP_OUTPUT_BITS           --cant de bits de salida del dsp
 	);
 	port(
 		clk      : in  std_logic;

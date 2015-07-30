@@ -1,39 +1,27 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 
-use work.mytypes_pkg.all;
-use work.extra_functions.all;
-
 package constantes is
-	---- Constantes del CIC ------------
-	constant CIC_N_ETAPAS 	: natural :=6;
-	constant CIC_DELAY		: natural :=1;
-	constant CIC_R			: natural :=512; -- Decimación del cic
+	----- Constantes del ADC -------------
+	constant BIT_OUT			: natural :=16;
+	constant CIC_N_ETAPAS		: natural :=6;
+	constant CIC_COMB_DELAY		: natural :=1;
+	constant CIC_R				: natural :=512; --decimacion
+	
 	type my_array_t is array (0 to 2*CIC_N_ETAPAS) of natural; -- 12=2*N; N etapas
 	constant CIC_COEFFICIENTS : my_array_t:=(55,55,50,42,34,27,23,22,21,20,20,19,16);
 	
-	---- Constantes del CIC para testbench -------------
-	-- Cambiar el valor seguns sea necesario en el TB --
-	constant TB_CIC_N_ETAPAS 	: natural :=6;
-	constant TB_CIC_DELAY		: natural :=1;
-	constant TB_CIC_R			: natural :=512; -- Decimación del cic
-	constant TB_CIC_COEFFICIENTS : my_array_t:=(55,55,50,42,34,27,23,22,21,20,20,19,16);
-	-- constant TB_CIC_COEFFICIENTS : my_array_t:=(55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55); --bits en cada etapa
-	----------------------------------------------------------------------------------
-	
 	constant CIC_OUTPUT_BITS 	: natural:= CIC_COEFFICIENTS(2*CIC_N_ETAPAS);
-	constant FIR_INPUT_BITS		: natural:= CIC_OUTPUT_BITS;
-		
-	----------------------------------------------------------------------------------
-	-- Constantes del FIR --
+	constant FIR_INPUT_BITS		: natural:= CIC_OUTPUT_BITS;	
+			
+	---- Constantes del FIR -------------------
 	constant FIR_B				: natural:=16;
 	constant FIR_N_COEFF		: natural :=128;
 	constant FIR_OUTPUT_BITS 	: natural :=20;
-	
-	-- Constantes del DSP --
-	constant DPS_INPUT_BITS		: natural:=18;
-	constant DPS_OUTPUT_BITS	: natural:=48;
-	
+	constant FIR_R				: natural :=4; --decimacion
+	constant DSP_INPUT_BITS 	: natural :=18;
+	constant DSP_OUTPUT_BITS	: natural :=48;
+
 	type coeff_t is array (0 to FIR_N_COEFF-1) of integer range -2**(FIR_B-1) to 2**(FIR_B-1)-1;
 	constant FIR_COEFFICIENTS: coeff_t:=
 		(0,0,0,0,1,1,1,0,-1,-2,-2,0,3,4,4,0,-4,-7,-6,-1,
@@ -44,11 +32,19 @@ package constantes is
 		634,1416,1414,544,-760,-1747,-1775,-712,925,2203,2287,961,-1161,-2887,-3085,-1373,1529,4043,4519,2187,
 		-2208,-6499,-7959,-4580,3821,15245,26138,32767
 		);
-		
-	---- Constantes del CIC para testbench -------------
+	
+	----- Constantes del CIC para testbench -------------
+	-- Cambiar los valores segun sea necesario en el TB --
+	constant TB_CIC_N_ETAPAS 	: natural :=6;
+	constant TB_CIC_COMB_DELAY	: natural :=1;
+	constant TB_CIC_R			: natural :=512; -- Decimación del cic
+	constant TB_CIC_COEFFICIENTS : my_array_t:=(55,55,50,42,34,27,23,22,21,20,20,19,16);
+	-- constant TB_CIC_COEFFICIENTS : my_array_t:=(55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55); --bits en cada etapa
+	
+	---- Constantes del FIR para testbench -------------
 	-- Cambiar el valor seguns sea necesario en el TB --
 	constant TB_FIR_B				: natural :=16;
-	constant TB_FIR_INPUT_BITS			: natural :=16;
+	constant TB_FIR_INPUT_BITS		: natural :=16;
 	constant TB_FIR_N_COEFF			: natural :=128;
 	constant TB_FIR_OUTPUT_BITS 	: natural :=48;
 	
@@ -65,5 +61,4 @@ package constantes is
 		634,1416,1414,544,-760,-1747,-1775,-712,925,2203,2287,961,-1161,-2887,-3085,-1373,1529,4043,4519,2187,
 		-2208,-6499,-7959,-4580,3821,15245,26138,32767
 		);
-	
 end package constantes;

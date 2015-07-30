@@ -11,9 +11,9 @@ use work.constantes.all;
 entity cic is
 	generic(
 		N     : natural    := CIC_N_ETAPAS;        --etapas
-		DELAY : natural    := CIC_DELAY;        -- delay restador
+		DELAY : natural    := CIC_COMB_DELAY;        -- delay restador
 		R     : natural    := CIC_R;      --decimacion
-		B : my_array_t := CIC_COEFFICIENTS
+		B 	: my_array_t := CIC_COEFFICIENTS
 		);
 	port(
 		input  : in  std_logic;
@@ -38,8 +38,7 @@ architecture RTL of cic is
 begin
 	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --ultimo integrator directo a primer comb
 	output                         <= output_i(B(2 * N - 1) - 1 downto B(2 * N - 1) - B(2 * N));
-	ce_comb <= '1' when R=1 else
-		ce_out_i;
+	ce_comb <= '1' when R=1 else ce_out_i;
 	--ce_out <= ce_out_i;
 	ce_out <= ce_comb;
 

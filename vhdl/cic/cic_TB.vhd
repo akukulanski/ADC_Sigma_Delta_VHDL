@@ -22,7 +22,7 @@ begin
 	tb : entity work.cic
 		generic map(
 			N => TB_CIC_N_ETAPAS,		--etapas
-			DELAY => TB_CIC_DELAY, 		--delay restador
+			DELAY => TB_CIC_COMB_DELAY, --delay restador
 			R => TB_CIC_R, 				--decimacion
 			B => TB_CIC_COEFFICIENTS 	--bits en cada etapa
 		)
