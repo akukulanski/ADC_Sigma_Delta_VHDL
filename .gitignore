@@ -2,4 +2,5 @@ gitAdd.sh
 *~
 serial_port/RS-232/test_rx
 serial_port/RS-232/test_tx
-
+serial_port/receive_uart_fpga/logs
+serial_port/receive_uart_fpga/logs*dat
