@@ -24,7 +24,7 @@ architecture RTL of decimator is
 begin
 		
 	ce_out <= ce_in when (count=to_unsigned(0,B) or B=0) else
-		'0';
+			  '0';
 
 	ce_decimate : process(clk) is
 	begin

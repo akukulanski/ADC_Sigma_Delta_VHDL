@@ -38,7 +38,10 @@ architecture RTL of cic is
 
 begin
 	senC(0)(B(N - 1) - 1 downto 0) <= senI(N - 1)(B(N - 1) - 1 downto 0); --ultimo integrator directo a primer comb
-	output                         <= output_i(B(2 * N - 1) - 1 downto B(2 * N - 1) - B(2 * N));
+	output                         <= output_i(B(2 * N - 1) - 2 downto B(2 * N - 1) - B(2 * N)-1) when output_i(B(2 * N - 1)-1)='0' else
+									  (others=> '1');
+	
+	
 	ce_comb                        <= '1' when R = 1 else ce_out_i;
 	--ce_out <= ce_out_i;
 	ce_out                         <= ce_comb;

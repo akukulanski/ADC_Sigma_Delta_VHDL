@@ -38,11 +38,11 @@ architecture RTL of adc is
 	constant OUTPUT_BITS            : natural   := decision(IS_TB, CIC_OUTPUT_BITS, TB_CIC_OUTPUT_BITS);
 	signal out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
 	signal ce_in                    : std_logic := '1';
+	signal oe_i                    : std_logic := '1';
 	signal out_cic                  : std_logic_vector(OUTPUT_BITS - 1 downto 0);
 
 begin
-	feedback <= not (out_lvds);
-
+	
 	IBUFDS_inst : IBUFDS
 		generic map(
 			DIFF_TERM    => TRUE,       -- Differential Termination 
@@ -90,6 +90,19 @@ begin
 			rst      => rst
 		);
 
+	process(clk) is
+	begin
+		if rising_edge(clk) then
+			if rst = '1' then
+				oe <= '0';
+				feedback <= '0';
+			else
+				oe <= oe_i;
+				feedback <=  not (out_lvds); 
+			end if;
+		end if;
+	end process;
+	
 	--instanciar decimador salida fir (oe_fir --> oe)
 	fir_decimator : entity work.decimator
 		generic map(
@@ -97,7 +110,7 @@ begin
 		)
 		port map(
 			ce_in  => oe_fir,
-			ce_out => oe,
+			ce_out => oe_i,
 			clk    => clk,
 			rst    => rst
 		);
