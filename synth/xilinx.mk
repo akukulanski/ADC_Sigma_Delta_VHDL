@@ -187,9 +187,15 @@ junk += $(project).twr $(project).twx smartpreview.twr
 junk += $(project)_err.twr $(project)_err.twx
 junk += xst_report.log
 junk += $(project).bin
+junk += _xmsgs 
+junk += $(project)_bitgen.xwbt
+junk += par_usage_statistics.html
+junk += usage_statistics_webtalk.html
+junk += webtalk.log
+
 
 .gitignore: $(mkfiles)
-	echo programming_files $(junk) | sed 's, ,\n,g' > .gitignore
+	echo programming_files $(junk)  | sed 's, ,\n,g' > .gitignore
 
 clean::
 	rm -rf $(junk)

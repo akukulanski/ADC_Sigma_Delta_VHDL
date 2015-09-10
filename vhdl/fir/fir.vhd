@@ -52,7 +52,8 @@ begin
 
 	--coef_input(0 downto 0) <= "1";
 	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0);
-	data_out  <= dsp_output(M_DSP - 1 downto M_DSP - M); --bits más significativos de dsp_outout()
+	--TODO Cambiar de forma generic
+	data_out  <= dsp_output(34 downto 19); --bits más significativos de dsp_outout()
 	rst_mac   <= (ram_we or rst);       --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
 
 	-- cuando el dsp esta habilitado realiza operaciones

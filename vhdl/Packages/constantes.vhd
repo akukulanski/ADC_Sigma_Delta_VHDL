@@ -12,7 +12,9 @@ package constantes is
 	constant CIC_N_ETAPAS    : natural                              := 6; -- etapas cic
 	constant CIC_COMB_DELAY  : natural                              := 1; --delay antes de restar en el comb
 	constant CIC_R           : natural                              := 512; --decimacion
-	constant CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 50, 42, 34, 27, 23, 22, 21, 20, 20, 19, 17); --bits en cada etapa
+	--constant CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 50, 42, 34, 27, 23, 22, 21, 20, 20, 19, 17); --bits en cada etapa
+	constant CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 17); --bits en cada etapa
+	
 	--		--0 a CIC_N_ETAPAS-1: tama�os acumuladores
 	--		--CIC_N_ETAPAS a 2*CIC_N_ETAPAS-1: tama�os restadores comb
 	--		--2*CIC_N_ETAPAS: Cantidad bits salida CIC
@@ -50,7 +52,10 @@ package constantes is
 	constant TB_CIC_N_ETAPAS    : natural                              := 6;
 	constant TB_CIC_COMB_DELAY  : natural                              := 1;
 	constant TB_CIC_R           : natural                              := 512;
-	constant TB_CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 50, 42, 34, 27, 23, 22, 21, 20, 20, 19, 17);
+	constant TB_CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 55, 48, 41, 33, 30, 29, 28, 27, 27, 26, 17);
+	--constant TB_CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 55, 55, 55, 55, 55,55, 55, 55, 55, 55, 17);
+	--constant TB_CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 18);
+	
 	constant TB_CIC_OUTPUT_BITS : natural                              := TB_CIC_STAGE_BITS(2 * TB_CIC_N_ETAPAS);
 
 	---- Constantes del FIR para testbench -------------

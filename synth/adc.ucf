@@ -2,7 +2,7 @@
 #TIMESPEC TS_clk = PERIOD "clk_i" 50 MHz HIGH 50%;
 
 NET "clk" LOC = P56 | IOSTANDARD = LVTTL;
-NET "rst" LOC = P38 | IOSTANDARD = LVTTL;
+NET "nrst" LOC = P38 | IOSTANDARD = LVTTL;
 # NET "cclk" LOC = P70 | IOSTANDARD = LVTTL;
 
 NET "output<0>" LOC = P144 | IOSTANDARD = LVTTL;
@@ -25,9 +25,9 @@ NET "output<15>" LOC = P123 | IOSTANDARD = LVTTL;
 NET "input_p" LOC = P6;
 NET "input_n" LOC = P5;
 
-NET "feedback"	LOC = P50;
+NET "feedback"	LOC = P1;
 # NET "clk_i"   	LOC = P56;
 # NET "rst_i"      	LOC = P38;
-NET "oe" 	LOC = P70;
+NET "oe" 	LOC = P50;
 
 # NET "Tx"	LOC = P57;

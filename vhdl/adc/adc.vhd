@@ -29,23 +29,27 @@ entity adc is
 		output   : out std_logic_vector(BIT_OUT - 1 downto 0);
 		feedback : out std_logic := '0';
 		clk      : in  std_logic;
-		rst      : in  std_logic;
+		nrst      : in  std_logic;
 		oe       : out std_logic := '0'
 	);
 end entity adc;
 
 architecture RTL of adc is
-	constant OUTPUT_BITS            : natural   := decision(IS_TB, CIC_OUTPUT_BITS, TB_CIC_OUTPUT_BITS);
-	signal out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
+	constant OUTPUT_BITS_CIC            : natural   := decision(IS_TB, CIC_OUTPUT_BITS, TB_CIC_OUTPUT_BITS);
+	signal out_lvds_i, out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
 	signal ce_in                    : std_logic := '1';
 	signal oe_i                    : std_logic := '1';
-	signal out_cic                  : std_logic_vector(OUTPUT_BITS - 1 downto 0);
-
+	signal out_cic                  : std_logic_vector(OUTPUT_BITS_CIC - 1 downto 0);
+	signal output_fir, output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
+	signal rst : std_logic:='0';
 begin
+	rst <= not nrst;
+	feedback <= not out_lvds_i;
+	output <= output_fir_i;
 	
 	IBUFDS_inst : IBUFDS
 		generic map(
-			DIFF_TERM    => TRUE,       -- Differential Termination 
+			DIFF_TERM    => FALSE,       -- Differential Termination 
 			IBUF_LOW_PWR => FALSE,      -- Low power (TRUE) vs. performance (FALSE) setting for referenced I/O standards
 			IOSTANDARD   => "DEFAULT")
 		port map(
@@ -62,7 +66,7 @@ begin
 			IS_TB => IS_TB             
 		)
 		port map(
-			input  => out_lvds,
+			input  => out_lvds_i,
 			output => out_cic,
 			clk    => clk,
 			rst    => rst,
@@ -72,7 +76,7 @@ begin
 
 	fir : entity work.fir
 		generic map(
-			N     => OUTPUT_BITS,
+			N     => OUTPUT_BITS_CIC,
 			B     => COEFF_BITS,
 			M     => BIT_OUT,
 			TAPS  => 2 * FIR_HALF_TAPS,
@@ -82,7 +86,7 @@ begin
 		)
 		port map(
 			data_in  => out_cic,
-			data_out => output,
+			data_out => output_fir,
 			we       => oe_cic,
 			oe       => oe_fir,
 			ce       => ce_in,
@@ -95,10 +99,16 @@ begin
 		if rising_edge(clk) then
 			if rst = '1' then
 				oe <= '0';
-				feedback <= '0';
+				out_lvds_i <= '0';
+				output_fir_i <= (others => '0');
 			else
 				oe <= oe_i;
-				feedback <=  not (out_lvds); 
+				out_lvds_i <=  out_lvds;
+				
+				if (oe_i= '1') then
+					output_fir_i <= output_fir;
+				end if; 
+				
 			end if;
 		end if;
 	end process;
