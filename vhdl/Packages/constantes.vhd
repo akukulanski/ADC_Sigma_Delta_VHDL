@@ -27,7 +27,7 @@ package constantes is
 	--Esta es la cantidad de coeficientes a guardar, ya que es simetrico.
 	--El orden filtro FIR es = 2*FIR_HALF_N_COEFF+1
 	constant FIR_HALF_TAPS   : natural := 128;
-	constant FIR_OUTPUT_BITS : natural := 20; --cantidad bits salida fir
+	constant FIR_OUTPUT_BITS : natural := 16; --cantidad bits salida fir
 	constant FIR_R           : natural := 4; --decimacion en el fir
 	constant DSP_INPUT_BITS  : natural := 18; --cantidad de bits de entrada al dsp
 	constant DSP_OUTPUT_BITS : natural := 48; --cantidad de bits salida del dsp

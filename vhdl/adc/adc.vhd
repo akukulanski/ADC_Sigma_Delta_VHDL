@@ -29,7 +29,7 @@ entity adc is
 		output   : out std_logic_vector(BIT_OUT - 1 downto 0);
 		feedback : out std_logic := '0';
 		clk      : in  std_logic;
-		nrst      : in  std_logic;
+		rst      : in  std_logic;
 		oe       : out std_logic := '0'
 	);
 end entity adc;
@@ -38,12 +38,12 @@ architecture RTL of adc is
 	constant OUTPUT_BITS_CIC            : natural   := decision(IS_TB, CIC_OUTPUT_BITS, TB_CIC_OUTPUT_BITS);
 	signal out_lvds_i, out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
 	signal ce_in                    : std_logic := '1';
-	signal oe_i                    : std_logic := '1';
+	signal oe_i,oe_ii                    : std_logic := '1';
 	signal out_cic                  : std_logic_vector(OUTPUT_BITS_CIC - 1 downto 0);
 	signal output_fir, output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
-	signal rst : std_logic:='0';
+	--signal rst : std_logic:='0';
 begin
-	rst <= not nrst;
+	--rst <= not nrst;
 	feedback <= not out_lvds_i;
 	output <= output_fir_i;
 	
@@ -103,6 +103,7 @@ begin
 				output_fir_i <= (others => '0');
 			else
 				oe <= oe_i;
+				oe_ii <= oe_i;
 				out_lvds_i <=  out_lvds;
 				
 				if (oe_i= '1') then

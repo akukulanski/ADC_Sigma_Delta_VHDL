@@ -1,9 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.math_real.floor;
 
-library UNISIM;
-use UNISIM.vcomponents.PLL_BASE;
+--library UNISIM;
+--use UNISIM.vcomponents.PLL_BASE;
 
 use work.extra_functions.all;
 use work.constantes.all;
@@ -21,7 +22,7 @@ entity top_level is
 		FIR_HALF_TAPS : natural := FIR_HALF_TAPS;
 		IS_TB         : boolean := FALSE;
 
-		Bits_UART     : integer := 16;  -- Cantidad de Bits
+		Bits_UART     : integer := 8;  -- Cantidad de Bits
 		Baudrate      : integer := 115200; -- BaudRate de la comunicacion UART
 		Core          : integer := 50000000 -- Frecuencia de core
 	);
@@ -30,21 +31,30 @@ entity top_level is
 		input_n  : in  std_logic;
 		output   : out std_logic_vector(BIT_OUT - 1 downto 0);
 		feedback : out std_logic := '0';
-		clk_i    : in  std_logic;
-		rst_i    : in  std_logic;
-		oe       : out std_logic := '0';
+		clk    : in  std_logic;
+		nrst    : in  std_logic;
 
 		Tx       : out std_logic        -- Transmisor
 	);
 end entity top_level;
 architecture RTL of top_level is
-	signal oe_i     : std_logic                              := '0';
-	signal notRst   : std_logic                              := '0';
+	
+	signal oe     : std_logic                              := '0';
+	signal rst   : std_logic                              := '0';
 	signal output_i : std_logic_vector(BIT_OUT - 1 downto 0) := (others => '0');
+	signal tx_load,tx_load_i : std_logic_vector (BITS_UART-1 downto 0):= (others=>'0');
+	signal tx_busy, tx_start,tx_start_i : std_logic:='0';
+	type state_type is (IDLE, FIRST, SECOND, WAITING); 
+	signal state, state_i : state_type; 
+	
+	constant cuentas : natural := 4*CORE/BAUDRATE;
+	signal cnt : std_logic_vector( log2(cuentas)-1 downto 0);
+	signal rst_cnt,rst_cnt_i : std_logic:= '1';
 --signal clk_f,clk_o: std_logic;
 
 begin
-	notRst <= not Rst_i;
+	rst <= not nrst;
+	
 	--clk_o<=clk_i;
 	--  <-----Cut code below this line and paste into the architecture body---->
 
@@ -114,28 +124,96 @@ begin
 			input_n  => input_n,
 			output   => output_i,
 			feedback => feedback,
-			clk      => clk_i,
-			rst      => notrst,
-			oe       => oe_i
+			clk      => clk,
+			rst      => rst,
+			oe       => oe
 		);
 
-	SERIE : entity work.UART
+	SERIE : entity work.Tx_uart
 		generic map(
-			Core     => Core,
-			BaudRate => BaudRate,
-			Bits     => Bits_UART
+			BITS     => Bits_UART,
+			CORE     => core,
+			BAUDRATE => Baudrate
 		)
 		port map(
-			Tx_o      => Tx,
-			Load      => output_i,      -- Conectado al ADC
-			LE        => oe_i,          -- Conectado al ADC
-			TxEmpty   => open,
-			Rx_in     => '0',
-			Rx_Data   => open,
-			Rx_Parity => open,
-			RxFinish  => open,
-			Rst       => notRst,
-			Clk       => Clk_i
+			Tx      => Tx,
+			Load    => tx_load,
+			LE      => tx_start,
+			Tx_busy => Tx_busy,
+			clk     => clk,
+			rst     => rst
 		);
-
+	
+	
+	process (clk, rst) is
+	begin
+		if rst = '1' then
+			state <= IDLE;
+			tx_load <= (others=>'0');
+			tx_start <= '0';		
+			rst_cnt <= '1';		
+		elsif rising_edge(clk) then
+			state <= state_i;
+			rst_cnt <= rst_cnt_i;
+			tx_load <= tx_load_i;
+			tx_start <= tx_start_i;
+		end if;
+	end process;
+	
+	
+	OUT_PROC:process (tx_busy,oe,state,output_i,tx_start,cnt)
+	begin	
+		rst_cnt_i <= '1';
+		tx_load_i <= tx_load;
+		tx_start_i <= tx_start;
+		state_i <= state;
+		case state is
+			when IDLE => 
+				if oe='1' then
+					tx_load_i <= output_i(BIT_OUT-1 downto BIT_OUT/2);
+					tx_start_i <= '1';
+					state_i <= FIRST;	
+				else
+					tx_load_i <= (others=>'0');
+					tx_start_i <= '0';
+					state_i <= IDLE;							
+				end if;
+			when FIRST=>
+				if (tx_busy = '0' and tx_start ='0') then
+					rst_cnt_i <= '0';
+					state_i <= WAITING;
+				else
+					tx_load_i <= (others=>'0');
+					tx_start_i <= '0';
+					state_i <= FIRST;
+				end if;
+				
+			when WAITING => 
+				if cnt=std_logic_vector(to_unsigned(cuentas,cnt'length)) then
+					tx_load_i <= output_i(BIT_OUT/2-1 downto 0);
+					tx_start_i <= '1';
+					state_i <= SECOND;
+				end if;
+					
+			when SECOND=>
+				if tx_busy = '0' and tx_start ='0' then
+					tx_load_i <= (others=>'0');
+					tx_start_i <= '0';
+					state_i <= IDLE;
+				else
+					tx_load_i <= (others=>'0');
+					tx_start_i <= '0';
+					state_i <= SECOND;
+				end if;	
+		end case;
+	end process;
+	
+	process (clk, rst_cnt)
+	begin
+		if rst_cnt = '1' then
+			cnt <= (others =>'0');
+		elsif rising_edge(clk) then
+			cnt <= std_logic_vector(unsigned(cnt)+to_unsigned(1,cnt'length));
+		end if;
+	end process;
 end architecture RTL;
