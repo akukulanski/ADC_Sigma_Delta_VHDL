@@ -28,6 +28,6 @@ NET "input_n" LOC = P5;
 NET "feedback"	LOC = P1;
 # NET "clk_i"   	LOC = P56;
 # NET "rst_i"      	LOC = P38;
-NET "oe" 	LOC = P50;
+NET "parallel_oe" 	LOC = P111 | IOSTANDARD = LVTTL;
 
-# NET "Tx"	LOC = P57;
+NET "Tx"	LOC = P57 | IOSTANDARD = LVTTL;

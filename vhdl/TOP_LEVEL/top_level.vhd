@@ -23,14 +23,15 @@ entity top_level is
 		IS_TB         : boolean := FALSE;
 
 		Bits_UART     : integer := 8;  -- Cantidad de Bits
-		Baudrate      : integer := 115200; -- BaudRate de la comunicacion UART
+		Baudrate      : integer := 921600; -- BaudRate de la comunicacion UART
 		Core          : integer := 50000000 -- Frecuencia de core
 	);
 	port(
 		input_p  : in  std_logic;
 		input_n  : in  std_logic;
 		output   : out std_logic_vector(BIT_OUT - 1 downto 0);
-		feedback : out std_logic := '0';
+		parallel_oe : out std_logic;
+		feedback : out std_logic;
 		clk    : in  std_logic;
 		nrst    : in  std_logic;
 
@@ -54,7 +55,7 @@ architecture RTL of top_level is
 
 begin
 	rst <= not nrst;
-	
+	parallel_oe <= oe;
 	--clk_o<=clk_i;
 	--  <-----Cut code below this line and paste into the architecture body---->
 
@@ -188,7 +189,8 @@ begin
 					state_i <= FIRST;
 				end if;
 				
-			when WAITING => 
+			when WAITING =>
+				rst_cnt_i <= '0';  
 				if cnt=std_logic_vector(to_unsigned(cuentas,cnt'length)) then
 					tx_load_i <= output_i(BIT_OUT/2-1 downto 0);
 					tx_start_i <= '1';
@@ -216,4 +218,5 @@ begin
 			cnt <= std_logic_vector(unsigned(cnt)+to_unsigned(1,cnt'length));
 		end if;
 	end process;
+	
 end architecture RTL;

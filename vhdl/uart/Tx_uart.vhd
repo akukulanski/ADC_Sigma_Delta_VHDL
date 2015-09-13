@@ -80,7 +80,7 @@ begin
 				if LE='1' then
 					Tx_busy_i <= '1';
 					state_i <= STARTING;
-					timer_i <= std_logic_vector(to_unsigned(TIMER_TIME-2,timer_count'length));
+					timer_i <= std_logic_vector(to_unsigned(TIMER_TIME-3,timer_count'length));
 					timer_e_i <= '1';
 					timer_start_i <= '1';
 					Tx_i <= '0';
@@ -100,7 +100,7 @@ begin
 				if count(count'length-1)='1' then
 					rst_count_i <= '1';
 					state_i <= STOPING;
-					Tx_i <= '0';					
+					Tx_i <= '1';					
 				end if;
 			when STOPING => 			
 				if timer_finish='1' then

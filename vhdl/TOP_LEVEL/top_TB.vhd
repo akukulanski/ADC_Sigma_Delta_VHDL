@@ -29,15 +29,16 @@ begin
 			N_DSP         => DSP_INPUT_BITS,
 			M_DSP         => DSP_OUTPUT_BITS,
 			FIR_HALF_TAPS => FIR_HALF_TAPS,
-			IS_TB         => TRUE,
+			IS_TB         => FALSE,
 			Bits_UART     => 8,
-			Baudrate      => 921600,
+			Baudrate      => 115200,
 			Core          => 50000000
 		)
 		port map(
 			input_p  => input_p,
 			input_n  => input_n,
 			output   => output,
+			parallel_oe => oe,
 			feedback => feedback,
 			clk      => clk,
 			nrst     => rst,

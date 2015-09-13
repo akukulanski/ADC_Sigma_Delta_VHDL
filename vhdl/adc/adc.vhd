@@ -102,11 +102,11 @@ begin
 				out_lvds_i <= '0';
 				output_fir_i <= (others => '0');
 			else
-				oe <= oe_i;
+				oe <= oe_ii;
 				oe_ii <= oe_i;
 				out_lvds_i <=  out_lvds;
 				
-				if (oe_i= '1') then
+				if (oe_ii= '1') then
 					output_fir_i <= output_fir;
 				end if; 
 				
