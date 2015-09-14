@@ -29,7 +29,6 @@ begin
 			N_DSP         => DSP_INPUT_BITS,
 			M_DSP         => DSP_OUTPUT_BITS,
 			FIR_HALF_TAPS => FIR_HALF_TAPS,
-			IS_TB         => FALSE,
 			Bits_UART     => 8,
 			Baudrate      => 115200,
 			Core          => 50000000

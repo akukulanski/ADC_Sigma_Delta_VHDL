@@ -11,13 +11,12 @@ entity cic is
 	generic(
 		N     : natural := CIC_N_ETAPAS; --etapas
 		DELAY : natural := CIC_COMB_DELAY; -- delay restador
-		R     : natural := CIC_R;       --decimacion
+		R     : natural := CIC_R       --decimacion
 		--B     : natural_array(0 to 2 * CIC_N_ETAPAS) := CIC_STAGE_BITS --cantidad de bits por etapa
-		IS_TB : boolean := FALSE --poner true cuando se usa testbench
 	);
 	port(
 		input  : in  std_logic;         --entrada cic
-		output : out std_logic_vector(decision(IS_TB,CIC_OUTPUT_BITS,TB_CIC_OUTPUT_BITS) - 1 downto 0); --salida cic
+		output : out std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0); --salida cic
 		clk    : in  std_logic;         --clk
 		rst    : in  std_logic;         --reset
 		ce_in  : in  std_logic;         --clock enable entrada, cuando este esta desactivado no hace nada
@@ -27,7 +26,7 @@ entity cic is
 end cic;
 
 architecture RTL of cic is
-	constant B : natural_array(0 to 2 * N) := decision(IS_TB,CIC_STAGE_BITS,TB_CIC_STAGE_BITS);
+	constant B : natural_array(0 to 2 * N) := CIC_STAGE_BITS;
 	type signal_t is array (0 to N - 1) of std_logic_vector(B(0) - 1 downto 0);
 
 	signal senI     : signal_t;         -- senales integrador

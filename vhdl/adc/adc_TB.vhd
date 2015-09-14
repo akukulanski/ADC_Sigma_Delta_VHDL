@@ -19,15 +19,14 @@ begin
 	tb : entity work.adc
 		generic map(
 			BIT_OUT       => BIT_OUT,
-			N_ETAPAS      => TB_CIC_N_ETAPAS,
-			COMB_DELAY    => TB_CIC_COMB_DELAY,
+			N_ETAPAS      => CIC_N_ETAPAS,
+			COMB_DELAY    => CIC_COMB_DELAY,
 			CIC_R         => CIC_R,
-			COEFF_BITS    => TB_FIR_COEFF_BITS,
-			FIR_R         => TB_FIR_R,
-			N_DSP         => TB_DPS_INPUT_BITS,
-			M_DSP         => TB_DPS_OUTPUT_BITS,
-			FIR_HALF_TAPS => TB_FIR_HALF_TAPS,
-			IS_TB         => TRUE
+			COEFF_BITS    => FIR_COEFF_BITS,
+			FIR_R         => FIR_R,
+			N_DSP         => DSP_INPUT_BITS,
+			M_DSP         => DSP_OUTPUT_BITS,
+			FIR_HALF_TAPS => FIR_HALF_TAPS
 		)
 		port map(
 			input_p  => input_p,

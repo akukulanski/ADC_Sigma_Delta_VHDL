@@ -20,7 +20,6 @@ entity top_level is
 		N_DSP         : natural := DSP_INPUT_BITS; --entrada dsp específico para spartan6
 		M_DSP         : natural := DSP_OUTPUT_BITS; --salida dsp específico para spartan6
 		FIR_HALF_TAPS : natural := FIR_HALF_TAPS;
-		IS_TB         : boolean := FALSE;
 
 		Bits_UART     : integer := 8;  -- Cantidad de Bits
 		Baudrate      : integer := 921600; -- BaudRate de la comunicacion UART
@@ -117,8 +116,7 @@ begin
 			FIR_R         => FIR_R,     --decimacion
 			N_DSP         => N_DSP,     --entrada dsp específico para spartan6
 			M_DSP         => M_DSP,     --salida dsp específico para spartan6
-			FIR_HALF_TAPS => FIR_HALF_TAPS,
-			IS_TB         => IS_TB
+			FIR_HALF_TAPS => FIR_HALF_TAPS
 		)
 		port map(
 			input_p  => input_p,
@@ -162,7 +160,7 @@ begin
 	end process;
 	
 	
-	OUT_PROC:process (tx_busy,oe,state,output_i,tx_start,cnt)
+	OUT_PROC:process (tx_busy,oe,state,output_i,tx_start,cnt,tx_load)
 	begin	
 		rst_cnt_i <= '1';
 		tx_load_i <= tx_load;

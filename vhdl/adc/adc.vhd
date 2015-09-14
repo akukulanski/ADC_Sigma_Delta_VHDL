@@ -19,8 +19,7 @@ entity adc is
 		    FIR_R         : natural := FIR_R; --decimacion
 		    N_DSP         : natural := DSP_INPUT_BITS; --entrada dsp específico para spartan6
 		    M_DSP         : natural := DSP_OUTPUT_BITS; --salida dsp específico para spartan6
-		    FIR_HALF_TAPS : natural := FIR_HALF_TAPS;
-		    IS_TB         : boolean := FALSE
+		    FIR_HALF_TAPS : natural := FIR_HALF_TAPS
 	);
 
 	port(
@@ -35,11 +34,10 @@ entity adc is
 end entity adc;
 
 architecture RTL of adc is
-	constant OUTPUT_BITS_CIC            : natural   := decision(IS_TB, CIC_OUTPUT_BITS, TB_CIC_OUTPUT_BITS);
 	signal out_lvds_i, out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
 	signal ce_in                    : std_logic := '1';
 	signal oe_i,oe_ii                    : std_logic := '1';
-	signal out_cic                  : std_logic_vector(OUTPUT_BITS_CIC - 1 downto 0);
+	signal out_cic                  : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0);
 	signal output_fir, output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
 	--signal rst : std_logic:='0';
 begin
@@ -62,8 +60,7 @@ begin
 		generic map(
 			N     => N_ETAPAS,          --etapas
 			DELAY => COMB_DELAY,        -- delay restador
-			R     => CIC_R,             --decimacion
-			IS_TB => IS_TB             
+			R     => CIC_R             --decimacion            
 		)
 		port map(
 			input  => out_lvds_i,
@@ -76,13 +73,12 @@ begin
 
 	fir : entity work.fir
 		generic map(
-			N     => OUTPUT_BITS_CIC,
+			N     => CIC_OUTPUT_BITS,
 			B     => COEFF_BITS,
 			M     => BIT_OUT,
 			TAPS  => 2 * FIR_HALF_TAPS,
 			N_DSP => N_DSP,
-			M_DSP => M_DSP,
-			IS_TB => IS_TB		
+			M_DSP => M_DSP	
 		)
 		port map(
 			data_in  => out_cic,

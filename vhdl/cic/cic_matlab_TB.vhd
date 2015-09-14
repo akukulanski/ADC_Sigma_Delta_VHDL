@@ -65,7 +65,7 @@ architecture RTL of cic_matlab_TB is
 
 	-- Colocar acá las senales de nuestro DUT
 	signal input  : std_logic                                         := '0';
-	signal output : std_logic_vector(TB_CIC_OUTPUT_BITS - 1 downto 0) := (others => '0');
+	signal output : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0) := (others => '0');
 	signal ce_in  : std_logic                                         := '0';
 	signal ce_out : std_logic                                         := '0';
 
@@ -84,10 +84,10 @@ begin
 
 	DUT : entity work.cic
 		generic map(
-			N     => TB_CIC_N_ETAPAS,   --etapas
-			DELAY => TB_CIC_COMB_DELAY, --delay restador
-			R     => TB_CIC_R,          --decimacion
-			IS_TB => TRUE)
+			N     => CIC_N_ETAPAS,   --etapas
+			DELAY => CIC_COMB_DELAY, --delay restador
+			R     => CIC_R          --decimacion
+			)
 		port map(
 			input  => input,
 			output => output,
@@ -118,7 +118,7 @@ begin
 			input <= leido(0);
 			--wait for 1 ps;
 			count := count + 1;
-			if count = TB_CIC_R then
+			if count = CIC_R then
 				count := 0;
 				write(l, output);
 				writeline(f_out, l);

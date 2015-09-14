@@ -12,8 +12,7 @@ entity fir is
 		M     : natural := FIR_OUTPUT_BITS; --cant bits salida
 		TAPS  : natural := 2 * FIR_HALF_TAPS; --longitud filtro fir
 		N_DSP : natural := DSP_INPUT_BITS; --cant de bits de entrada del dsp
-		M_DSP : natural := DSP_OUTPUT_BITS; --cant de bits de salida del dsp
-		IS_TB : boolean := FALSE        --poner uno cuando se hace test bench
+		M_DSP : natural := DSP_OUTPUT_BITS --cant de bits de salida del dsp
 	);
 	port(
 		clk      : in  std_logic;
@@ -38,7 +37,7 @@ architecture RTL of fir is
 
 	-- senales referidas al dsp
 	signal adder_input1, adder_input2 : std_logic_vector(N - 1 downto 0)     := (others => '0');
-	signal ROM                        : integer_array(0 to TAPS / 2 - 1)     := decision(IS_TB,FIR_COEFFICIENTS,TB_FIR_COEFFICIENTS);
+	signal ROM                        : integer_array(0 to TAPS / 2 - 1)     := FIR_COEFFICIENTS;
 	signal coef_input, coef_input_i   : std_logic_vector(B - 1 downto 0);
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
@@ -52,8 +51,7 @@ begin
 
 	--coef_input(0 downto 0) <= "1";
 	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0);
-	--TODO Cambiar de forma generic
-	data_out  <= dsp_output(34 downto 19); --bits más significativos de dsp_outout()
+	data_out  <= dsp_output(FIR_MSB_OUT downto FIR_MSB_OUT-BIT_OUT+1); --bits mas significativos de dsp_outout
 	rst_mac   <= (ram_we or rst);       --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
 
 	-- cuando el dsp esta habilitado realiza operaciones

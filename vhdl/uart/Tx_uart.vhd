@@ -64,7 +64,7 @@ begin
 
 	Tx <= Tx_aux;
 	Tx_busy <= Tx_busy_aux;
-	OUT_STATE: process (timer_e,Tx_aux,Tx_busy_aux,LE,data,state,state_i,Tx_i,timer_i,rst_count_i,timer_start_i, timer_finish, count,Tx_busy_i)
+	OUT_STATE: process (timer_e,Tx_aux,Tx_busy_aux,LE,data,state,timer,rst_count,timer_start, timer_finish, count)
 	begin
 		state_i <= state;
 		Tx_i <= Tx_aux;
