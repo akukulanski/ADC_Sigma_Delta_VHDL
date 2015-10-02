@@ -15,8 +15,8 @@ package constantes is
 	--constant CIC_STAGE_BITS  : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 50, 42, 34, 27, 23, 22, 21, 20, 20, 19, 17); --bits en cada etapa
 	constant CIC_STAGE_BITS : natural_array(0 to 2 * CIC_N_ETAPAS) := (55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 16); --bits en cada etapa
 
-	--		--0 a CIC_N_ETAPAS-1: tamaños acumuladores
-	--		--CIC_N_ETAPAS a 2*CIC_N_ETAPAS-1: tamaños restadores comb
+	--		--0 a CIC_N_ETAPAS-1: tamaï¿½os acumuladores
+	--		--CIC_N_ETAPAS a 2*CIC_N_ETAPAS-1: tamaï¿½os restadores comb
 	--		--2*CIC_N_ETAPAS: Cantidad bits salida CIC
 	constant CIC_OUTPUT_BITS : natural := CIC_STAGE_BITS(2 * CIC_N_ETAPAS); --Cantidad bits salida CIC
 
@@ -28,7 +28,7 @@ package constantes is
 	--El orden filtro FIR es = 2*FIR_HALF_N_COEFF+1
 	constant FIR_HALF_TAPS   : natural := 128;
 	constant FIR_OUTPUT_BITS : natural := 16; --cantidad bits salida fir
-	constant FIR_MSB_OUT     : natural := 34; --bit más significativo de la salida (contando desde el bit 0)
+	constant FIR_MSB_OUT     : natural := 34; --bit mï¿½s significativo de la salida (contando desde el bit 0)
 	constant FIR_R           : natural := 4; --decimacion en el fir
 	constant DSP_INPUT_BITS  : natural := 18; --cantidad de bits de entrada al dsp
 	constant DSP_OUTPUT_BITS : natural := 48; --cantidad de bits salida del dsp
@@ -37,12 +37,12 @@ package constantes is
 	--type coeff_t is array (0 to FIR_HALF_TAPS - 1) of integer range -2 ** (FIR_COEFF_BITS - 1) to 2 ** (FIR_COEFF_BITS - 1) - 1;
 	--coeficientes del fir (la primer mitad)
 	constant FIR_COEFFICIENTS : integer_array(0 to FIR_HALF_TAPS - 1) := (
-		0, 0, 0, 0, 1, 1, 1, 0, -1, -2, -2, 0, 3, 4, 4, 0, -4, -7, -6, -1,
-		6, 11, 9, 1, -10, -16, -14, -2, 14, 23, 20, 3, -19, -32, -28, -4, 26, 44, 38, 7,
-		-34, -60, -51, -10, 44, 78, 68, 14, -57, -102, -89, -19, 72, 130, 115, 26, -90, -164, -146, -35,
-		111, 205, 184, 47, -135, -254, -229, -61, 163, 311, 284, 79, -196, -380, -350, -102, 233, 460, 428, 130,
-		-277, -555, -521, -165, 327, 667, 633, 209, -385, -802, -769, -264, 453, 964, 936, 333, -534, -1164, -1145, -424,
-		634, 1416, 1414, 544, -760, -1747, -1775, -712, 925, 2203, 2287, 961, -1161, -2887, -3085, -1373, 1529, 4043, 4519, 2187,
-		-2208, -6499, -7959, -4580, 3821, 15245, 26138, 32767
+		0,0,-1,0,0,1,1,1,-1,-2,-3,-1,1,4,4,2,-2,-7,-8,-4,
+		3,10,12,7,-4,-16,-18,-10,7,22,26,14,-9,-31,-37,-20,12,41,50,28,
+		-16,-56,-67,-37,20,72,88,50,-25,-94,-114,-66,30,119,146,85,-36,-149,-185,-109,
+		42,186,231,138,-49,-229,-287,-175,57,279,352,219,-65,-338,-432,-271,72,406,524,333,
+		-80,-487,-636,-409,88,581,767,502,-96,-694,-926,-616,101,827,1118,756,-106,-990,-1358,-933,
+		108,1193,1664,1165,-106,-1457,-2070,-1480,97,1815,2637,1935,-74,-2341,-3503,-2660,16,3200,5011,4013,
+		151,-4928,-8405,-7532,-1011,10155,22806,32767
 	);
 end package constantes;

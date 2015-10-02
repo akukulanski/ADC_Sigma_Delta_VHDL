@@ -42,18 +42,19 @@ architecture RTL of fir is
 	signal dsp_output                 : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal enable_mac_new_input       : std_logic                            := '0';
 	signal rst_mac                    : std_logic;
-
+	signal oe_i,oe_ii : std_logic := '0';
+	signal dsp_output_i,dsp_output_ii : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
+	
 	--rom_style
 	attribute rom_style : string;
 	attribute rom_style of ROM : signal is "block"; --"distributed" or "block"
-
 begin
 
 	--coef_input(0 downto 0) <= "1";
 	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0);
 	data_out  <= dsp_output(FIR_MSB_OUT downto FIR_MSB_OUT-BIT_OUT+1); --bits mas significativos de dsp_outout
 	rst_mac   <= (ram_we or rst);       --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
-
+	
 	-- cuando el dsp esta habilitado realiza operaciones
 	-- cuando la entrada vale cero, sigue funcionando (procesa los datos demorados
 	-- por el pipeline) pero sus siguientes operaciones (sumar cero) fuerzan que
@@ -63,6 +64,23 @@ begin
 	--NO poner el when, igual las entradas serian cero y la mult cero.
 	coef_input   <= coef_input_i;
 
+	delay : process (clk) is  -- Ajuste fullscale
+	begin
+		if rising_edge(clk) then
+				if rst = '1' then
+					oe <= '0';
+					dsp_output <= (others => '0');
+					dsp_output_ii <= (others => '0');
+				else
+					oe <= oe_i;
+					oe_i <= oe_ii;
+					dsp_output <= std_logic_vector(signed(dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1 downto 3) )+signed(dsp_output_ii));
+					dsp_output_ii <= std_logic_vector(signed(dsp_output_i(M_DSP - 1) & dsp_output_i(M_DSP - 1 downto 1) )+signed(dsp_output_i(M_DSP - 2 downto 0) & '0'));
+				end if;
+		end if;
+	end process;
+		
+	
 	Lectura_ROM : process(clk) is
 	begin
 		if rising_edge(clk) then
@@ -90,7 +108,7 @@ begin
 			we                   => we,
 			o_we                 => ram_we,
 			enable_mac_new_input => enable_mac_new_input,
-			oe                   => oe,
+			oe                   => oe_ii,
 			ce                   => ce,
 			clk                  => clk,
 			rst                  => rst
@@ -129,7 +147,7 @@ begin
 			adder_input1 => adder_input1,
 			adder_input2 => adder_input2,
 			coef_input   => coef_input_i,
-			output       => dsp_output,
+			output       => dsp_output_i,
 			ce           => enable_mac_new_input, --ce
 			clk          => clk,
 			rst          => rst_mac

@@ -14,7 +14,7 @@ Bout=16; %bits salida recortado
 
 %%%%%%% fir2 parametros %%%%%%
 B = 16; % Cantidad bits coeficientes
-L = 255; % Orden filtro
+L = 256; % Orden filtro
 Window=kaiser(L+1,9); %ventana usada en el filtro fir
 %con estos parametros atenua 87dB a partir de 22.2KHz
 %otras ventanas: chebwin(L+1,90)
@@ -112,11 +112,15 @@ for i=1:1:length(hz)
     end
 end
 
+hz = hz*4;
+
 if abs_max_positive==1 %caso positivo(o ambos iguales)
     hz = round(hz*(power(2,B-1)-1));
 else%caso negativo(solo)
     hz = round(hz*power(2,B-1));
 end
+
+
 
 FIRcomp_f=dfilt.dffir(hz);
 %%CIC_f=dfilt.dffir(h_sub_j);

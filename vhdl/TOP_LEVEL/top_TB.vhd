@@ -30,8 +30,8 @@ begin
 			M_DSP         => DSP_OUTPUT_BITS,
 			FIR_HALF_TAPS => FIR_HALF_TAPS,
 			Bits_UART     => 8,
-			Baudrate      => 115200,
-			Core          => 50000000
+			Baudrate      => 921600,
+			Core          => 90625000
 		)
 		port map(
 			input_p  => input_p,
@@ -47,9 +47,9 @@ begin
 	
 	CLOCK : process is
 		begin
-		wait for 10 ns;
+		wait for 5 ns;
 		clk <= '1';
-		wait for 10 ns;
+		wait for 5 ns;
 		clk <= '0';
 	end process;
 
