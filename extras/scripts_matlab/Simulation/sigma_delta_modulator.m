@@ -1,4 +1,4 @@
-function [ output ] = sigma_delta_modulator(func,fclk,dt,time)
+function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     
     if (nargin<4)
         time = 10000e-6;        
@@ -20,8 +20,8 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time)
     end
     
     
-    Vth = 3.3/2;   
-    wo =2*pi*200000;%2*pi*1e3;
+    %Vhist =0.0001;
+    %wo =2*pi*20000;%2*pi*1e3;
     
    
     
@@ -44,25 +44,36 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time)
     q(1:2) = 0;
     x(1:2) = 0;
     output(1:2) = 0;
-    aux =0;
+    
+    k = 1/R1+1/R2;
     
     for i=3:numel(t)
         %y(i) = dt/wo *( s(i)+q(i-1)-2*y(i-1) ) + y(i-1);
         
-        aux= s(i-1)+q(i-1)-2*y(i-1);
-        y(i) = aux*dt*wo +y(i-1);
+        aux= s(i-1)/R1+q(i-1)/R2-y(i-1)*k;
+        y(i) = aux*dt/C +y(i-1);
         
         %y(i) = (x(i)*wo+x(i-1)*wo-y(i-1)*(wo-2/dt))/(2/dt+wo);
         %y(i) = dt/2*(x(i-1) + x(i))+y(i-1);
         
         
         if (edge(i)==1)
-            if (y(i)>Vth) 
-               q(i) = 0;
-               output(i) = 1;
+            if (output(i-1) == 1)
+                if (y(i) < Vth-Vhist) 
+                   q(i) = 3.3;
+                   output(i) = 0;
+                else
+                   q(i) = 0;
+                   output(i) = 1;
+                end
             else
-               q(i) = 3.3;
-               output(i) = 0;
+                if (y(i) > Vth+Vhist)
+                   q(i) = 0;
+                   output(i) = 1;
+                else
+                   q(i) = 3.3;
+                   output(i) = 0;
+                end
             end
         else
             q(i) = q(i-1);
