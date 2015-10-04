@@ -34,18 +34,21 @@ entity top_level is
 		clk    : in  std_logic;
 		nrst    : in  std_logic;
 
-		Tx       : out std_logic        -- Transmisor
+		Tx       : out std_logic;        -- Transmisor
+		Rx 		 : in std_logic
 	);
 end entity top_level;
 architecture RTL of top_level is
 	signal clk_90 : std_logic := '0';
-	signal oe     : std_logic                              := '0';
+	signal oe,oe_adc     : std_logic                              := '0';
 	signal rst   : std_logic                              := '0';
 	signal output_i : std_logic_vector(BIT_OUT - 1 downto 0) := (others => '0');
 	signal tx_load,tx_load_i : std_logic_vector (BITS_UART-1 downto 0):= (others=>'0');
 	signal tx_busy, tx_start,tx_start_i : std_logic:='0';
 	type state_type is (IDLE, FIRST, SECOND, WAITING); 
 	signal state, state_i : state_type; 
+	
+	signal rx_output :  std_logic_vector(Bits_UART-1 downto 0) := (others=>'0');
 	
 	constant cuentas : natural := 4*CORE/BAUDRATE;
 	signal cnt : std_logic_vector( log2(cuentas)-1 downto 0);
@@ -55,55 +58,6 @@ architecture RTL of top_level is
 begin
 	rst <= not nrst;
 	parallel_oe <= oe;
-	--clk_o<=clk_i;
-	--  <-----Cut code below this line and paste into the architecture body---->
-
-	-- PLL_BASE: Phase-Lock Loop Clock Circuit 
-	--           Spartan-6
-	-- Xilinx HDL Language Template, version 11.4
-
-	--   PLL_BASE_inst : PLL_BASE
-	--   generic map (
-	--      BANDWIDTH => "OPTIMIZED",  -- "HIGH", "LOW" or "OPTIMIZED" 
-	--      CLKFBOUT_MULT => 2,        -- Multiplication factor for all output clocks
-	--      CLKFBOUT_PHASE => 0.0,     -- Phase shift (degrees) of all output clocks
-	--      CLKIN_PERIOD => 20.000,     -- Clock period (ns) of input clock on CLKIN
-	--      CLKOUT0_DIVIDE => 1,       -- Division factor for CLKOUT0  (1 to 128)
-	--      CLKOUT0_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT0 (0.01 to 0.99)
-	--      CLKOUT0_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT0 (0.0 to 360.0)
-	--      CLKOUT1_DIVIDE => 1,       -- Division factor for CLKOUT1 (1 to 128)
-	--      CLKOUT1_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT1 (0.01 to 0.99)
-	--      CLKOUT1_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT1 (0.0 to 360.0)
-	--      CLKOUT2_DIVIDE => 1,       -- Division factor for CLKOUT2 (1 to 128)
-	--      CLKOUT2_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT2 (0.01 to 0.99)
-	--      CLKOUT2_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT2 (0.0 to 360.0)
-	--      CLKOUT3_DIVIDE => 1,       -- Division factor for CLKOUT3 (1 to 128)
-	--      CLKOUT3_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT3 (0.01 to 0.99)
-	--      CLKOUT3_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT3 (0.0 to 360.0)
-	--      CLKOUT4_DIVIDE => 1,       -- Division factor for CLKOUT4 (1 to 128)
-	--      CLKOUT4_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT4 (0.01 to 0.99)
-	--      CLKOUT4_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT4 (0.0 to 360.0)
-	--      CLKOUT5_DIVIDE => 1,       -- Division factor for CLKOUT5 (1 to 128)
-	--      CLKOUT5_DUTY_CYCLE => 0.5, -- Duty cycle for CLKOUT5 (0.01 to 0.99)
-	--      CLKOUT5_PHASE => 0.0,      -- Phase shift (degrees) for CLKOUT5 (0.0 to 360.0)
-	--      COMPENSATION => "INTERNAL",  -- "SYSTEM_SYNCHRNOUS", 
-	--                                             -- "SOURCE_SYNCHRNOUS", "INTERNAL", 
-	--                                             -- "EXTERNAL", "DCM2PLL", "PLL2DCM" 
-	--      DIVCLK_DIVIDE => 1,      -- Division factor for all clocks (1 to 52)
-	--      REF_JITTER => 0.100)     -- Input reference jitter (0.000 to 0.999 UI%)
-	--      port map (
-	--      CLKFBOUT => clk_f,      -- General output feedback signal
-	--      CLKOUT0 => clk_o,        -- One of six general clock output signals
-	--      CLKOUT1 => open,        -- One of six general clock output signals
-	--      CLKOUT2 => open,        -- One of six general clock output signals
-	--      CLKOUT3 => open,        -- One of six general clock output signals
-	--      CLKOUT4 => open,        -- One of six general clock output signals
-	--      CLKOUT5 => open,        -- One of six general clock output signals
-	--      LOCKED => open,          -- Active high PLL lock signal
-	--      CLKFBIN => clk_f,        -- Clock feedback input
-	--      CLKIN => clk_i,            -- Clock input
-	--      RST => '0'                 -- Asynchronous PLL reset
-	--   );
 
 	output <= output_i;
 	
@@ -132,10 +86,10 @@ begin
 			feedback => feedback,
 			clk      => clk_90,
 			rst      => rst,
-			oe       => oe
+			oe       => oe_adc
 		);
 
-	SERIE : entity work.Tx_uart
+	TX_SERIE : entity work.Tx_uart
 		generic map(
 			BITS     => Bits_UART,
 			CORE     => core,
@@ -149,9 +103,23 @@ begin
 			clk     => clk_90,
 			rst     => rst
 		);
+		
+	RX_SERIE: entity work.Rx_uart
+		generic map(
+			BITS     => Bits_UART,
+			CORE     => core,
+			BAUDRATE => Baudrate
+		)
+		port map(
+			rx     => rx,
+			oe     => open,
+			output => rx_output,
+			clk    => clk_90,
+			rst    => rst
+		);
+		
 	
-	
-	process (clk_90, rst) is
+	process (clk_90) is
 	begin
 		if rising_edge(clk_90) then
 			if rst = '1' then
@@ -168,8 +136,9 @@ begin
 		end if;
 	end process;
 	
+	oe <= oe_adc when (rx_output="01110011") else '0';  -- s arranca la transmision
 	
-	OUT_PROC:process (tx_busy,oe,state,output_i,tx_start,cnt,tx_load)
+	OUT_PROC:process (tx_busy,oe,state,output_i,tx_start,tx_load)
 	begin	
 		rst_cnt_i <= '1';
 		tx_load_i <= tx_load;
@@ -177,7 +146,7 @@ begin
 		state_i <= state;
 		case state is
 			when IDLE => 
-				if oe='1' then
+				if oe ='1' then
 					tx_load_i <= output_i(BIT_OUT-1 downto BIT_OUT/2);
 					tx_start_i <= '1';
 					state_i <= FIRST;	
@@ -214,7 +183,7 @@ begin
 		end case;
 	end process;
 	
-	process (clk_90, rst_cnt)
+	process (clk_90)
 	begin
 		if rising_edge(clk_90) then
 			if rst_cnt = '1' then

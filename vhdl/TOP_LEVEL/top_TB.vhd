@@ -15,7 +15,7 @@ architecture RTL of TOP_TB is
 	signal clk      : std_logic;
 	signal rst      : std_logic;
 	signal oe       : std_logic := '0';
-	signal Tx :std_logic:='0';
+	signal Tx, Rx :std_logic:='0';
 	
 begin
 	tb : entity work.top_level
@@ -41,15 +41,16 @@ begin
 			feedback => feedback,
 			clk      => clk,
 			nrst     => rst,
-			Tx       => Tx
+			Tx       => Tx,
+			Rx 		=> Rx
 		);
 		
 	
 	CLOCK : process is
 		begin
-		wait for 5 ns;
+		wait for 10 ns;
 		clk <= '1';
-		wait for 5 ns;
+		wait for 10 ns;
 		clk <= '0';
 	end process;
 
@@ -75,6 +76,57 @@ begin
 		end loop;
 		
 		wait;
+	end process;
+
+	RX_PROC: process is
+	begin
+		rx <= '1';
+		wait for 100 us;   -- 01110011
+		rx <= '0';	-- StartBit
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '0';
+		wait for 1.085 us;
+		rx <= '0';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '0';
+		wait for 1.085 us;
+		rx <= '1'; -- Stop Bit
+		wait for 1.085 us;
+		rx <= '1';
+		
+		wait for 1000 us;
+		rx <= '0';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait for 1.085 us;
+		rx <= '1';
+		wait;	
 	end process;
 
 end architecture RTL;

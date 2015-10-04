@@ -28,7 +28,7 @@ architecture RTL of Tx_uart is
 	
 	
 	signal state,state_i : state_type:= IDLE;
-	signal Tx_i : std_logic:= '0';
+	signal Tx_i : std_logic:= '1';
 	signal Tx_busy_i : std_logic:='0';
 	
 	signal rst_count,rst_count_i : std_logic:= '0';
