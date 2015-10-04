@@ -40,18 +40,24 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     
     
     
-    y(1:2) = 0;
+    y(1:3) = 0;
     q(1:2) = 0;
-    x(1:2) = 0;
+    %x(1:3) = 0;
     output(1:2) = 0;
     
-    k = 1/R1+1/R2;
-    
+    k1 = R2/(R1+R2);
+    k2 = R1/(R1+R2);
+    w0= (1/R1+1/R2)/C;
+    a=2/dt-w0; %número mágico 1
+    b=2/dt+w0; %número mágico 2
     for i=3:numel(t)
+        
+        aux= k1*(s(i)+s(i-1))+k2*(q(i-1)+q(i-2));
+        y(i)= (w0*aux+a*y(i-1))/b;
         %y(i) = dt/wo *( s(i)+q(i-1)-2*y(i-1) ) + y(i-1);
         
-        aux= s(i-1)/R1+q(i-1)/R2-y(i-1)*k;
-        y(i) = aux*dt/C +y(i-1);
+        %aux= s(i-1)/R1+q(i-1)/R2-y(i-1)*k;
+        %y(i) = aux*dt/C +y(i-1);
         
         %y(i) = (x(i)*wo+x(i-1)*wo-y(i-1)*(wo-2/dt))/(2/dt+wo);
         %y(i) = dt/2*(x(i-1) + x(i))+y(i-1);

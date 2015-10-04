@@ -10,7 +10,7 @@ function [ output ] = cic( input )
      input = fi(input','Signedness','Signed','WordLength',2,'FractionLength',0,'RoundingMethod', 'Floor');
      
      output = step(H,input(1:k*256)); 
-     output = output;
+     %output = output;
 % input = fi(input,'Signedness','Unsigned','WordLength',55,'FractionLength',0,'RoundingMethod', 'Floor', 'OverflowAction', 'Wrap');
 %      a = integrator(input,55);
 %      a = integrator(a,55);     
