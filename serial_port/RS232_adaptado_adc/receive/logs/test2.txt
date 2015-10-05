@@ -1,7 +1,0 @@
-*** SERIAL RECEIVER CONFIG ***
-file: 		./logs/test2.txt
-port: 		16
-baudrate:	921600
-timeout: 	30
-*** DATA ***
-16705	16705	16705	16705	16705	16705	16705	16705	16705	16705	16705	16705	16705	
