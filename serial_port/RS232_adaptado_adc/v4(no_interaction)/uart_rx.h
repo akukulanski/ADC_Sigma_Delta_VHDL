@@ -1,7 +1,7 @@
 
 
 #ifndef DEMO_RX_H
-#define DEMO_RX_X
+#define DEMO_RX_H
 
 enum{ttyS0,ttyS1,ttyS2,ttyS3,ttyS4,ttyS5,ttyS6,ttyS7,ttyS8,ttyS9,ttyS10,ttyS11,ttyS12,ttyS13,ttyS14,ttyS15,ttyUSB0,ttyUSB1,ttyUSB2,ttyUSB3,ttyUSB4,ttyUSB5,ttyAMA0,ttyAMA1,ttyACM0,ttyACM1,rfcomm0,rfcomm1,ircomm0,ifcomm1};
 enum{COM1,COM2,COM3,COM4,COM5,COM6,COM7,COM8,COM9,COM10,COM11,COM12,COM13,COM14,COM15,COM16};
@@ -37,7 +37,5 @@ enum{COM1,COM2,COM3,COM4,COM5,COM6,COM7,COM8,COM9,COM10,COM11,COM12,COM13,COM14,
 28  ircomm0   n.a.
 29  ircomm1   n.a.
 */
-
-
 
 #endif

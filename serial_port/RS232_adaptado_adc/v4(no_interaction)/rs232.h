@@ -76,8 +76,6 @@ void RS232_disableDTR(int);
 void RS232_enableRTS(int);
 void RS232_disableRTS(int);
 
-void RS232_write(int comport_number, const unsigned char *buffer, int size);
-
 
 #ifdef __cplusplus
 } /* extern "C" */

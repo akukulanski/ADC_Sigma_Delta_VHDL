@@ -691,9 +691,4 @@ void RS232_cputs(int comport_number, const char *text)  /* sends a string to ser
   while(*text != 0)   RS232_SendByte(comport_number, *(text++));
 }
 
-void RS232_write(int comport_number, const unsigned char *buffer, int size){
-	if(!(size>0)) return;
-	while(size--)	RS232_SendByte(comport_number, *(buffer++));
-}
-
 
