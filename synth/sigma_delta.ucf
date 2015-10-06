@@ -31,3 +31,4 @@ NET "feedback"	LOC = P22;
 NET "parallel_oe" 	LOC = P111 | IOSTANDARD = LVTTL;
 
 NET "Tx"	LOC = P57 | IOSTANDARD = LVTTL;
+NET "Rx"	LOC = P66 | IOSTANDARD = LVTTL;
