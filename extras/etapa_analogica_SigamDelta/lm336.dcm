@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LM336
+D Voltage Reference
+K REFERENCE DIODE
+$ENDCMP
+#
+#End Doc Library
