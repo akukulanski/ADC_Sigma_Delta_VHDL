@@ -80,13 +80,13 @@ $EndComp
 $Comp
 L POT RV1
 U 1 1 56154BFA
-P 5200 1500
-F 0 "RV1" H 5200 1400 50  0000 C CNN
-F 1 "100" H 5200 1500 50  0000 C CNN
-F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 5200 1500 60  0001 C CNN
-F 3 "" H 5200 1500 60  0000 C CNN
-	1    5200 1500
-	0    1    1    0   
+P 4850 1250
+F 0 "RV1" H 4850 1150 50  0000 C CNN
+F 1 "100" H 4850 1250 50  0000 C CNN
+F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 4850 1250 60  0001 C CNN
+F 3 "" H 4850 1250 60  0000 C CNN
+	1    4850 1250
+	1    0    0    -1  
 $EndComp
 $Comp
 L C C4
@@ -157,12 +157,12 @@ $EndComp
 $Comp
 L POT RV2
 U 1 1 5617E04B
-P 5200 2125
-F 0 "RV2" H 5200 2025 50  0000 C CNN
-F 1 "10k" H 5200 2125 50  0000 C CNN
-F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 5200 2125 60  0001 C CNN
-F 3 "" H 5200 2125 60  0000 C CNN
-	1    5200 2125
+P 5175 1500
+F 0 "RV2" H 5175 1400 50  0000 C CNN
+F 1 "10k" H 5175 1500 50  0000 C CNN
+F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 5175 1500 60  0001 C CNN
+F 3 "" H 5175 1500 60  0000 C CNN
+	1    5175 1500
 	0    1    1    0   
 $EndComp
 $Comp
@@ -201,15 +201,10 @@ Wire Wire Line
 Connection ~ 5925 1500
 Wire Wire Line
 	6475 1500 6475 1750
-Wire Wire Line
-	4500 1250 4500 1625
-Wire Wire Line
-	5200 2525 5200 2375
 Connection ~ 3800 1250
 Wire Wire Line
 	3800 1250 3800 1675
 Connection ~ 3550 1250
-Connection ~ 5200 2525
 Connection ~ 4500 2525
 Connection ~ 3800 2525
 Wire Wire Line
@@ -238,7 +233,6 @@ Wire Wire Line
 Connection ~ 6475 1500
 Wire Wire Line
 	5750 1500 6675 1500
-Connection ~ 4500 1250
 Wire Wire Line
 	3250 1250 4000 1250
 $Comp
@@ -277,31 +271,7 @@ F 3 "" H 9050 2300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5350 2125 5450 2125
-Wire Wire Line
-	5450 2125 5450 2425
-Wire Wire Line
-	5450 2425 5200 2425
-Connection ~ 5200 2425
-Wire Wire Line
 	5350 1500 5450 1500
-Wire Wire Line
-	5200 1750 5200 1875
-$Comp
-L R R5
-U 1 1 561C5510
-P 4800 1250
-F 0 "R5" V 4880 1250 50  0000 C CNN
-F 1 "5k6" V 4800 1250 50  0000 C CNN
-F 2 "Resistors_SMD:R_0805_HandSoldering" V 4730 1250 30  0001 C CNN
-F 3 "" H 4800 1250 30  0000 C CNN
-	1    4800 1250
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	4300 1250 4650 1250
-Wire Wire Line
-	4950 1250 5200 1250
 Wire Wire Line
 	9300 3450 9475 3450
 Wire Wire Line
@@ -573,4 +543,19 @@ $EndComp
 Wire Wire Line
 	4700 2475 4700 2525
 Connection ~ 4700 2525
+Wire Wire Line
+	5100 1250 5175 1250
+Wire Wire Line
+	5175 1750 5175 2525
+Connection ~ 5175 2525
+Wire Wire Line
+	4300 1250 4600 1250
+Wire Wire Line
+	4500 1625 4500 1250
+Connection ~ 4500 1250
+Wire Wire Line
+	4850 1100 5125 1100
+Wire Wire Line
+	5125 1100 5125 1250
+Connection ~ 5125 1250
 $EndSCHEMATC
