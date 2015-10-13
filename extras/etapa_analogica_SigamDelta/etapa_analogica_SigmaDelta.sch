@@ -72,7 +72,7 @@ U 1 1 56154941
 P 4900 1825
 F 0 "D1" V 4600 1825 50  0000 C CNN
 F 1 "LM336" V 4400 1825 50  0000 C CNN
-F 2 "LEDs:LED-5MM" V 4500 1825 60  0001 C CNN
+F 2 "Housings_TO-92:TO-92_Rugged_Reverse" V 4500 1825 60  0001 C CNN
 F 3 "" V 4500 1825 60  0000 C CNN
 	1    4900 1825
 	1    0    0    -1  
@@ -265,13 +265,13 @@ U 1 1 561C4378
 P 9050 3500
 F 0 "P3" H 9050 4050 50  0000 C CNN
 F 1 "CONN_02X10" V 9050 3500 50  0000 C CNN
-F 2 "" H 9050 2300 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x10" H 9050 2300 60  0001 C CNN
 F 3 "" H 9050 2300 60  0000 C CNN
 	1    9050 3500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5350 1500 5450 1500
+	5325 1500 5450 1500
 Wire Wire Line
 	9300 3450 9475 3450
 Wire Wire Line
@@ -332,8 +332,6 @@ Text Label 9475 3850 0    60   ~ 0
 P24
 Text Label 9475 3950 0    60   ~ 0
 P22
-Text Label 8625 3050 2    60   ~ 0
-5v
 Text Label 8625 3150 2    60   ~ 0
 3.3v
 Text Label 8625 3250 2    60   ~ 0
@@ -358,7 +356,7 @@ U 1 1 561C4301
 P 7000 3600
 F 0 "P1" H 7000 4150 50  0000 C CNN
 F 1 "CONN_02X10" V 7000 3600 50  0000 C CNN
-F 2 "" H 7000 2400 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x10" H 7000 2400 60  0001 C CNN
 F 3 "" H 7000 2400 60  0000 C CNN
 	1    7000 3600
 	1    0    0    -1  
@@ -446,10 +444,6 @@ Text Label 7425 3150 0    60   ~ 0
 GND
 Text Label 7425 3250 0    60   ~ 0
 GND
-Text Label 6575 3150 2    60   ~ 0
-5v
-Text Label 6575 3250 2    60   ~ 0
-3.3v
 NoConn ~ 7425 3350
 NoConn ~ 6575 3350
 NoConn ~ 6575 3450
@@ -462,19 +456,17 @@ NoConn ~ 6575 4050
 NoConn ~ 7425 4050
 NoConn ~ 7425 3950
 NoConn ~ 7425 3850
-Text Label 7425 3450 0    60   ~ 0
+Text Label 7425 3650 0    60   ~ 0
 Rx
-Text Label 7425 3550 0    60   ~ 0
+Text Label 7425 3750 0    60   ~ 0
 Tx
-NoConn ~ 7425 3750
-NoConn ~ 7425 3650
 $Comp
 L CONN_01X03 P2
 U 1 1 561C952B
 P 8900 2300
 F 0 "P2" H 8900 2500 50  0000 C CNN
 F 1 "CONN_01X03" V 9000 2300 50  0000 C CNN
-F 2 "" H 8900 2300 60  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_1x03" H 8900 2300 60  0001 C CNN
 F 3 "" H 8900 2300 60  0000 C CNN
 	1    8900 2300
 	1    0    0    -1  
@@ -485,9 +477,9 @@ Wire Wire Line
 	8700 2300 8375 2300
 Wire Wire Line
 	8700 2400 8375 2400
-Text Label 8375 2200 2    60   ~ 0
-Rx
 Text Label 8375 2300 2    60   ~ 0
+Rx
+Text Label 8375 2200 2    60   ~ 0
 Tx
 Text Label 8375 2400 2    60   ~ 0
 GND
@@ -497,7 +489,7 @@ U 1 1 561C9CC6
 P 3125 3600
 F 0 "P4" H 3135 3720 50  0000 C CNN
 F 1 "BNC" V 3235 3540 50  0000 C CNN
-F 2 "" H 3125 3600 60  0000 C CNN
+F 2 "Sockets_BNC:BNC_Socket_TYCO-AMP_LargePads" H 3125 3600 60  0001 C CNN
 F 3 "" H 3125 3600 60  0000 C CNN
 	1    3125 3600
 	-1   0    0    -1  
@@ -558,4 +550,10 @@ Wire Wire Line
 Wire Wire Line
 	5125 1100 5125 1250
 Connection ~ 5125 1250
+NoConn ~ 4650 1825
+NoConn ~ 6575 3250
+NoConn ~ 6575 3150
+NoConn ~ 8625 3050
+NoConn ~ 7425 3550
+NoConn ~ 7425 3450
 $EndSCHEMATC
