@@ -1,0 +1,143 @@
+Cmp-Mod V01 Created by Cvpcb (2015-04-26 BZR 5624)-product   date = mar 13 oct 2015 15:11:24 ART
+
+BeginCmp
+TimeStamp = /56181DAE;
+Reference = C1;
+ValeurCmp = 10u;
+IdModule  = Capacitors_SMD:c_elec_4x5.7;
+EndCmp
+
+BeginCmp
+TimeStamp = /56153EF9;
+Reference = C2;
+ValeurCmp = 0,01u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5617FB92;
+Reference = C3;
+ValeurCmp = 22u;
+IdModule  = Capacitors_SMD:c_elec_4x5.7;
+EndCmp
+
+BeginCmp
+TimeStamp = /56154D38;
+Reference = C4;
+ValeurCmp = 1u;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /56155461;
+Reference = C5;
+ValeurCmp = 1n;
+IdModule  = Capacitors_SMD:C_0805;
+EndCmp
+
+BeginCmp
+TimeStamp = /5617FBFD;
+Reference = C6;
+ValeurCmp = 10u;
+IdModule  = Capacitors_Tantalum_SMD:TantalC_SizeA_EIA-3216_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /56154941;
+Reference = D1;
+ValeurCmp = LM336;
+IdModule  = LEDs:LED-5MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C7944;
+Reference = FB1;
+ValeurCmp = FILTER;
+IdModule  = Capacitors_SMD:C_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C4301;
+Reference = P1;
+ValeurCmp = CONN_02X10;
+IdModule  = Pin_Headers:Pin_Header_Straight_2x10;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C952B;
+Reference = P2;
+ValeurCmp = CONN_01X03;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x03;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C4378;
+Reference = P3;
+ValeurCmp = CONN_02X10;
+IdModule  = Pin_Headers:Pin_Header_Straight_2x10;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C9CC6;
+Reference = P4;
+ValeurCmp = BNC;
+IdModule  = chasis_bnc:chasis_bnc;
+EndCmp
+
+BeginCmp
+TimeStamp = /56153FC2;
+Reference = R1;
+ValeurCmp = 560;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /561553B6;
+Reference = R2;
+ValeurCmp = 6,8K;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /5615541C;
+Reference = R3;
+ValeurCmp = 6,8K;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /56181855;
+Reference = R4;
+ValeurCmp = 7,5k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C553D;
+Reference = R5;
+ValeurCmp = 1k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /561C588E;
+Reference = R6;
+ValeurCmp = 1k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = /56154BFA;
+Reference = RV1;
+ValeurCmp = 100;
+IdModule  = Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp;
+EndCmp
+
+BeginCmp
+TimeStamp = /5617E04B;
+Reference = RV2;
+ValeurCmp = 10k;
+IdModule  = Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp;
+EndCmp
+
+EndListe
