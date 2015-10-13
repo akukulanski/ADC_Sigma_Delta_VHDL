@@ -4,3 +4,5 @@ serial_port/RS-232/
 serial_port/RS-232/
 serial_port/RS232_adaptado_adc/logs/
 serial_port/RS232_adaptado_adc/uart_rx
+extras/etapa_analogica_SigamDelta/_saved_etapa_analogica_SigmaDelta.sch
+extras/etapa_analogica_SigamDelta/etapa_analogica_SigmaDelta.xml
