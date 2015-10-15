@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:etapa_analogica_SigmaDelta-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -67,7 +68,7 @@ F 3 "" H 3350 1250 30  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L LM336 D1
+L LM336-RESCUE-etapa_analogica_SigmaDelta D1
 U 1 1 56154941
 P 4100 1825
 F 0 "D1" V 3800 1825 50  0000 C CNN

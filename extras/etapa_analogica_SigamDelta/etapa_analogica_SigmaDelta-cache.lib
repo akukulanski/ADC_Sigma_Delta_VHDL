@@ -182,11 +182,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# LM336
+# LM336-RESCUE-etapa_analogica_SigmaDelta
 #
-DEF LM336 D 0 40 N N 1 F N
+DEF LM336-RESCUE-etapa_analogica_SigmaDelta D 0 40 N N 1 F N
 F0 "D" -300 0 50 V V C CNN
-F1 "LM336" -500 0 50 V V C CNN
+F1 "LM336-RESCUE-etapa_analogica_SigmaDelta" -500 0 50 V V C CNN
 F2 "" -400 0 60 V V C CNN
 F3 "" -400 0 60 V V C CNN
 $FPLIST

@@ -1,0 +1,26 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#
+# LM336-RESCUE-etapa_analogica_SigmaDelta
+#
+DEF LM336-RESCUE-etapa_analogica_SigmaDelta D 0 40 N N 1 F N
+F0 "D" -300 0 50 V V C CNN
+F1 "LM336-RESCUE-etapa_analogica_SigmaDelta" -500 0 50 V V C CNN
+F2 "" -400 0 60 V V C CNN
+F3 "" -400 0 60 V V C CNN
+$FPLIST
+ D?
+ SO*
+ SM*
+ TO92
+$ENDFPLIST
+DRAW
+P 5 0 1 0  -400 50  -350 -50  -450 -50  -400 50  -400 50 F
+P 5 0 1 8  -350 70  -370 50  -430 50  -450 30  -450 30 N
+X A 1 -400 -200 150 U 50 50 1 1 P
+X K 2 -400 200 150 D 50 50 1 1 P
+X Adj 3 -200 0 200 L 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+#End Library

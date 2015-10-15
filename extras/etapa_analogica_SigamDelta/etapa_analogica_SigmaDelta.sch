@@ -1,4 +1,5 @@
 EESchema Schematic File Version 2
+LIBS:etapa_analogica_SigmaDelta-rescue
 LIBS:power
 LIBS:device
 LIBS:transistors
@@ -67,7 +68,7 @@ F 3 "" H 3350 1250 30  0000 C CNN
 	0    1    1    0   
 $EndComp
 $Comp
-L LM336 D1
+L LM336-RESCUE-etapa_analogica_SigmaDelta D1
 U 1 1 56154941
 P 4100 1825
 F 0 "D1" V 3800 1825 50  0000 C CNN
@@ -86,17 +87,6 @@ F 1 "100" H 4050 1250 50  0000 C CNN
 F 2 "Potentiometers:Potentiometer_Bourns_3296W_3-8Zoll_Inline_ScrewUp" H 4050 1250 60  0001 C CNN
 F 3 "" H 4050 1250 60  0000 C CNN
 	1    4050 1250
-	1    0    0    -1  
-$EndComp
-$Comp
-L C C4
-U 1 1 56154D38
-P 7025 1900
-F 0 "C4" H 7050 2000 50  0000 L CNN
-F 1 "1u" H 7050 1800 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805" H 7063 1750 30  0001 C CNN
-F 3 "" H 7025 1900 60  0000 C CNN
-	1    7025 1900
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -170,8 +160,8 @@ L CP1 C3
 U 1 1 5617FB92
 P 5925 1900
 F 0 "C3" H 5950 2000 50  0000 L CNN
-F 1 "22u" H 5950 1800 50  0000 L CNN
-F 2 "Capacitors_SMD:c_elec_4x5.7" H 5925 1900 60  0001 C CNN
+F 1 "10u" H 5950 1800 50  0000 L CNN
+F 2 "Capacitors_Tantalum_SMD:TantalC_SizeA_EIA-3216_HandSoldering" H 5925 1900 60  0001 C CNN
 F 3 "" H 5925 1900 60  0000 C CNN
 	1    5925 1900
 	1    0    0    -1  
@@ -210,8 +200,6 @@ Connection ~ 3000 2525
 Wire Wire Line
 	4000 4050 4000 4000
 Wire Wire Line
-	7025 2525 7025 2050
-Wire Wire Line
 	3700 2025 3700 2575
 Wire Wire Line
 	3000 1975 3000 2525
@@ -242,7 +230,7 @@ L R R4
 U 1 1 56181855
 P 5600 1500
 F 0 "R4" V 5680 1500 50  0000 C CNN
-F 1 "7,5k" V 5600 1500 50  0000 C CNN
+F 1 "15k" V 5600 1500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 5530 1500 30  0001 C CNN
 F 3 "" H 5600 1500 30  0000 C CNN
 	1    5600 1500
@@ -563,7 +551,7 @@ L R R5
 U 1 1 561C553D
 P 6200 1500
 F 0 "R5" V 6280 1500 50  0000 C CNN
-F 1 "1k" V 6200 1500 50  0000 C CNN
+F 1 "15k" V 6200 1500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 6130 1500 30  0001 C CNN
 F 3 "" H 6200 1500 30  0000 C CNN
 	1    6200 1500
@@ -574,7 +562,7 @@ L R R6
 U 1 1 561C588E
 P 6750 1500
 F 0 "R6" V 6830 1500 50  0000 C CNN
-F 1 "1k" V 6750 1500 50  0000 C CNN
+F 1 "15k" V 6750 1500 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 6680 1500 30  0001 C CNN
 F 3 "" H 6750 1500 30  0000 C CNN
 	1    6750 1500
@@ -598,4 +586,17 @@ Wire Wire Line
 Wire Wire Line
 	7025 2525 2750 2525
 NoConn ~ 3900 1825
+$Comp
+L CP1 C?
+U 1 1 56200ADB
+P 7025 1900
+F 0 "C?" H 7050 2000 50  0000 L CNN
+F 1 "10u" H 7050 1800 50  0000 L CNN
+F 2 "Capacitors_Tantalum_SMD:TantalC_SizeA_EIA-3216_HandSoldering" H 7025 1900 60  0001 C CNN
+F 3 "" H 7025 1900 60  0000 C CNN
+	1    7025 1900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7025 2050 7025 2525
 $EndSCHEMATC
