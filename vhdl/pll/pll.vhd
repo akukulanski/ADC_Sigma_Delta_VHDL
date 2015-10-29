@@ -60,7 +60,7 @@ begin
     DIVCLK_DIVIDE        => 2,
     CLKFBOUT_MULT        => 29,
     CLKFBOUT_PHASE       => 0.000,
-    CLKOUT0_DIVIDE       => 8,
+    CLKOUT0_DIVIDE       => 16,  -- Aca va 8 para 44 kHs samp
     CLKOUT0_PHASE        => 0.000,
     CLKOUT0_DUTY_CYCLE   => 0.500,
     CLKIN_PERIOD         => 20.000,

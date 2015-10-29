@@ -22,13 +22,13 @@ NET "output<13>" LOC = P126 | IOSTANDARD = LVTTL;
 NET "output<14>" LOC = P124 | IOSTANDARD = LVTTL;
 NET "output<15>" LOC = P123 | IOSTANDARD = LVTTL;
 
-NET "input_p" LOC = P33;
-NET "input_n" LOC = P32;
+NET "input_p" LOC = P41;
+NET "input_n" LOC = P40;
 
-NET "feedback"	LOC = P22;
+NET "feedback"	LOC = P35;
 # NET "clk_i"   	LOC = P56;
 # NET "rst_i"      	LOC = P38;
 NET "parallel_oe" 	LOC = P111 | IOSTANDARD = LVTTL;
 
-NET "Tx"	LOC = P57 | IOSTANDARD = LVTTL;
-NET "Rx"	LOC = P66 | IOSTANDARD = LVTTL;
+NET "Tx"	LOC = P114 | IOSTANDARD = LVTTL;
+NET "Rx"	LOC = P79 | IOSTANDARD = LVTTL;
