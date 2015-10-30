@@ -1,14 +1,21 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use std.textio.all;
 use work.constantes.all;
+use std.textio.all;
 
-entity cic_matlab_TB is
-end entity cic_matlab_TB;
+entity fir_TB_files is
+end entity fir_TB_files;
 
-architecture RTL of cic_matlab_TB is
-	-- string to std_logic_vector
+architecture RTL of fir_TB_files is
+	constant T_clk : natural := 20; -- periodo clock en ns
+	
+	signal clk,rst,ce,we,oe: std_logic;
+	signal data_in: std_logic_vector(FIR_INPUT_BITS-1 downto 0);
+	signal data_out: std_logic_vector(FIR_OUTPUT_BITS-1 downto 0);
+	signal data_out_35: std_logic_vector(34 downto 0);
+
+-- LEVANTAR ARCHIVO
 	procedure str2sv(s : in string; sv : out std_logic_vector) is
 		variable i : integer;
 	begin
@@ -55,19 +62,14 @@ architecture RTL of cic_matlab_TB is
 		end loop;
 	end procedure write;
 
-	-- Un periodo de reloj arbitrario
+-- FIN LEVANTAR ARCHIVO
+
+-- Un periodo de reloj arbitrario
 	constant PERI_CLK : time := 10 ns;
 
 	-- Se�ales basicas
-	signal clk     : std_logic;
-	signal rst     : std_logic;
 	signal detener : boolean := false;
 
-	-- Colocar ac� las senales de nuestro DUT
-	signal input  : std_logic                                         := '0';
-	signal output : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0) := (others => '0');
-	signal ce_in  : std_logic                                         := '0';
-	signal ce_out : std_logic                                         := '0';
 
 -- Constantes de generics en package en archivo constantes.vhd
 begin
@@ -82,54 +84,79 @@ begin
 
 	rst <= '1', '0' after PERI_CLK * 3 / 2;
 
-	DUT : entity work.cic
-		generic map(
-			N     => CIC_N_ETAPAS,   --etapas
-			DELAY => CIC_COMB_DELAY, --delay restador
-			R     => CIC_R          --decimacion
-			)
+-- FIR NUESTROOOOOOOOOOOOOOOO
+--	tb : entity work.fir
+--		generic map(
+--			N 		=> 	FIR_INPUT_BITS,
+--			B		=>  FIR_COEFF_BITS,
+--			M 		=> 	FIR_OUTPUT_BITS,
+--			TAPS 	=> 	2*FIR_HALF_TAPS,
+--			N_DSP 	=> 	DSP_INPUT_BITS,
+--			M_DSP 	=> 	DSP_OUTPUT_BITS
+--		)
+--		port map(
+--			data_in => data_in,
+--			data_out => data_out,
+--			we => we,
+--			oe => oe,
+--			ce     => ce,
+--			clk    => clk,
+--			rst    => rst
+--		);
+-- FIN FIR NUESTROOOOOOOOOOOOOOOOOo
+
+-- FIR MATLAAAAAAAAAAAAAAAAAAAAA'
+	tb : entity work.filterM
 		port map(
-			input  => input,
-			output => output,
-			clk    => clk,
-			rst    => rst,
-			ce_in  => ce_in,
-			ce_out => ce_out
+			clk        => clk,
+			clk_enable => ce,
+			reset      => rst,
+			filter_in  => data_in,
+			filter_out => data_out_35,
+			ce_out     => oe
 		);
+	--data_out <= data_out_35(34 downto 19);
+
+-- FIN FIR MATLAAAAAAAAAAAAAAAAA'
+		
 
 	do_test : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/vhdl/cic/input_stream_CIC.txt";
-		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/vhdl/cic/output_CIC.txt";
+		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_20000.txt";
+		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/temp_borrar.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
-		variable leido : std_logic_vector(0 downto 0);
-		variable count : integer := 0;
+		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
 	begin
-		report "Comenzando la prueba del CIC mediante archivos" severity note;
+		report "Comenzando la prueba del FIR mediante archivos" severity note;
 		wait until rst = '0';
-		ce_in <= '1';
+		ce<='1';
 		wait for 1 ps;
 
 		while not (endfile(f_in)) loop
 			wait until rising_edge(clk);
 			readline(f_in, l);
 			read(l, leido);
-			input <= leido(0);
-			--wait for 1 ps;
 			
-			if ce_out ='1' then
-				write(l, output);
+			we<='1';
+			data_in <= leido;
+			wait for PERI_CLK;
+			we<='0';
+
+			--wait for PERI_CLK * 
+			wait until oe ='1';
+			if oe = '1' then
+				write(l, data_out_35);
+				--write(l, data_out);
 				writeline(f_out, l);
 			end if;	
 				
---			count := count + 1;		
---			if count = CIC_R then
---				count := 0;
---				write(l, output);
---				writeline(f_out, l);
---			end if;
+			
 		end loop;
+		
+		report "TERMINOOOOOOOOOOOOOOOOOOOOOO" severity failure;
+		
 		wait;
 	end process do_test;
-end architecture RTL;
+	
+end architecture;

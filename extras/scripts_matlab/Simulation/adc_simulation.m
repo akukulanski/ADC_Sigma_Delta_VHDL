@@ -2,14 +2,14 @@ function [ cic_out ] = adc_simulation( )
         close all; 
         fclk = 90.6e6; % Frecuencia de clk
         time = 3000e-6; % Tiempo de simulacion
-        dt = (1/fclk)/30; % Paso de la simulacion analogica
-        func = @(t) 3.3/2 + 2.6/2 *sin(2*pi*1000*t) + 0.01 * rand(1,numel(t)); % Input
-        R1 = 2.2e3;
-        R2 = 2e3;
-        C = 2.2e-9;
+        dt = (1/fclk)/5; % Paso de la simulacion analogica
+        func = @(t) 3.3/2 + 2.6/2 *sin(2*pi*1000*t) + 0.0 * rand(1,numel(t)); % Input
+        R1 = 150e3;
+        R2 = 150e3;
+        C = .1e-9;
         
-        Vth = 1.5;
-        Vhist = 0.03;   % Histeresis        
+        Vth = 1.65;
+        Vhist = 0.0;   % Histeresis        
         
         %filtrado con el cic
         sig_delt = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist);

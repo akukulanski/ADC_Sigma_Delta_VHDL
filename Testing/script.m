@@ -3,6 +3,7 @@ j = 0;
 volt = 0.01:0.01:3.3;
 for i=0.01:0.01:3.3;
     file_name=['./measures/DCv2/offset_' num2str(i) '.mat'];
+    %file_name=['/home/ariel/git/vhdl-adc/Testing/measures/DCv2/offset_' num2str(i) '.mat'];
     a = load(file_name);
     j=j+1;
     lin(j) = median(a.measures);
