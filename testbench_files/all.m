@@ -15,7 +15,7 @@ A=1000; %2^16
 % Testear en Fin>=11KHz
 
 for fin=1000:1000:30000;
-    t=0:Ts:5/fin;
+    t=0:Ts:50/fin;
     input = A*sin(2*pi*fin*t);
     temp=[];
     temp=sprintf('%s%d%s', './inputs/fir_input_', fin, '.txt');
@@ -49,7 +49,7 @@ end
 
 %% CHECKING FIR INPUT SIGNAL
 figure();
-freq = 15000;
+freq = 8000;
 temp = [];
 filename=sprintf('./inputs/fir_input_%d.txt',freq);
 exec=[];
@@ -66,12 +66,14 @@ fclose(fd);
 
 %% READING TESTBENCH OUTPUTS
 figure();
-freq = 15000;
+freq = 8000;	
 temp = [];
 filename=sprintf('./outputs/fir_output_%d.txt', freq);
+%filename=sprintf('./outputs/fir_output_TEST.txt');
 exec=sprintf('%s %s', fileExec, filename);
 [status, ~] = system(exec);
 filename2=sprintf('./outputs/fir_output_%d_int16.txt', freq);
+%filename2=sprintf('./outputs/fir_output_TEST_int16.txt');
 fd=fopen(filename2);
 frewind(fd)
 out = fread(fd,'int16')

@@ -8,12 +8,12 @@ entity fir_TB_files is
 end entity fir_TB_files;
 
 architecture RTL of fir_TB_files is
-	constant T_clk : natural := 20; -- periodo clock en ns
+	--constant T_clk : natural := 20; -- periodo clock en ns
 	
 	signal clk,rst,ce,we,oe: std_logic;
 	signal data_in: std_logic_vector(FIR_INPUT_BITS-1 downto 0);
 	signal data_out: std_logic_vector(FIR_OUTPUT_BITS-1 downto 0);
-	signal data_out_35: std_logic_vector(34 downto 0);
+	--signal data_out_35: std_logic_vector(34 downto 0);
 
 -- LEVANTAR ARCHIVO
 	procedure str2sv(s : in string; sv : out std_logic_vector) is
@@ -85,50 +85,102 @@ begin
 	rst <= '1', '0' after PERI_CLK * 3 / 2;
 
 -- FIR NUESTROOOOOOOOOOOOOOOO
---	tb : entity work.fir
---		generic map(
---			N 		=> 	FIR_INPUT_BITS,
---			B		=>  FIR_COEFF_BITS,
---			M 		=> 	FIR_OUTPUT_BITS,
---			TAPS 	=> 	2*FIR_HALF_TAPS,
---			N_DSP 	=> 	DSP_INPUT_BITS,
---			M_DSP 	=> 	DSP_OUTPUT_BITS
---		)
---		port map(
---			data_in => data_in,
---			data_out => data_out,
---			we => we,
---			oe => oe,
---			ce     => ce,
---			clk    => clk,
---			rst    => rst
---		);
+	tb: entity work.fir
+		generic map(
+			N 		=> 	FIR_INPUT_BITS,
+			B		=>  FIR_COEFF_BITS,
+			M 		=> 	FIR_OUTPUT_BITS,
+			TAPS 	=> 	2*FIR_HALF_TAPS,
+			N_DSP 	=> 	DSP_INPUT_BITS,
+			M_DSP 	=> 	DSP_OUTPUT_BITS
+		)
+		port map(
+			data_in => data_in,
+			data_out => data_out,
+			we => we,
+			oe => oe,
+			ce     => ce,
+			clk    => clk,
+			rst    => rst
+		);
 -- FIN FIR NUESTROOOOOOOOOOOOOOOOOo
 
 -- FIR MATLAAAAAAAAAAAAAAAAAAAAA'
-	tb : entity work.filterM
-		port map(
-			clk        => clk,
-			clk_enable => ce,
-			reset      => rst,
-			filter_in  => data_in,
-			filter_out => data_out_35,
-			ce_out     => oe
-		);
+--	tb : entity work.filterM
+--		port map(
+--			clk        => clk,
+--			clk_enable => ce,
+--			reset      => rst,
+--			filter_in  => data_in,
+--			filter_out => data_out_35,
+--			ce_out     => oe
+--		);
 	--data_out <= data_out_35(34 downto 19);
 
 -- FIN FIR MATLAAAAAAAAAAAAAAAAA'
 		
 
-	do_test : process
+--	do_test : process
+--		variable l : line;
+--		-- Reemplazar Nombre por el archivo a usar
+--		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_10000.txt";
+--		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_10000.txt";
+--		-- En este ejemplo solo hay un std_logic_vector por linea
+--		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
+--		variable cont:integer :=0;
+--	begin
+--		report "Comenzando la prueba del FIR mediante archivos" severity note;
+--		wait until rst = '0';
+--		ce<='1';
+--		wait for 1 ps;
+--
+--		while not (endfile(f_in)) loop
+--			wait until rising_edge(clk);
+--			readline(f_in, l);
+--			read(l, leido);
+--			
+--			we<='1';
+--			data_in <= leido;
+--			wait for PERI_CLK;
+--			we<='0';
+--
+--			--wait for PERI_CLK * 10;
+--			wait until oe ='1';
+--			
+--			if oe = '1' then
+--				--write(l, data_out_35);
+--				write(l, data_out);
+--				writeline(f_out, l);
+--			end if;
+--			wait for PERI_CLK * 10;	
+--		end loop;
+--		cont:=1;
+--		loop
+--			if(cont=1) then
+--				wait until rising_edge(clk);
+--				--wait until oe ='1';
+--				if oe = '1' then
+--					--write(l, data_out_35);
+--					write(l, data_out);
+--					writeline(f_out, l);
+--				end if;
+--				wait for PERI_CLK * 2;
+--			end if;	
+--		end loop;
+--		report "TERMINOOOOOOOOOOOOOOOOOOOOOO" severity failure;
+--		wait;
+--	end process do_test;
+
+
+process_read : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_20000.txt";
-		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/temp_borrar.txt";
+		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_8000.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
+		variable cont:integer :=0;
 	begin
-		report "Comenzando la prueba del FIR mediante archivos" severity note;
+		report "Comenzando la lectura de archivos" severity note;
 		wait until rst = '0';
 		ce<='1';
 		wait for 1 ps;
@@ -137,26 +189,44 @@ begin
 			wait until rising_edge(clk);
 			readline(f_in, l);
 			read(l, leido);
-			
 			we<='1';
 			data_in <= leido;
 			wait for PERI_CLK;
 			we<='0';
-
-			--wait for PERI_CLK * 
 			wait until oe ='1';
-			if oe = '1' then
-				write(l, data_out_35);
-				--write(l, data_out);
-				writeline(f_out, l);
-			end if;	
-				
-			
+			wait for PERI_CLK * 2;	
 		end loop;
-		
-		report "TERMINOOOOOOOOOOOOOOOOOOOOOO" severity failure;
-		
+		cont:=0;
+		while(cont<FIR_HALF_TAPS) loop
+			wait until rising_edge(clk);
+			cont:=cont+1;
+			we<='1';
+			data_in <= "0000000000000000";
+			--wait for PERI_CLK;
+			wait until rising_edge(clk);
+			we<='0';
+			wait until oe ='1';
+			wait for PERI_CLK * 2;	
+		end loop;
+
+		report "TERMINO LECTURA!!" severity note;
 		wait;
-	end process do_test;
+	end process process_read;
 	
+process_write: process
+		variable l : line;
+		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_8000.txt";
+	begin
+		report "Comenzando la escritura de archivos" severity note;
+		loop
+			wait until rising_edge(clk);
+			--wait until oe ='1';
+			if oe = '1' then
+				write(l, data_out);
+				writeline(f_out, l);
+				report "ESCRIBIO LINEA." severity note;
+			end if;
+			wait for PERI_CLK * 10;	
+		end loop;
+	end process process_write;
 end architecture;
