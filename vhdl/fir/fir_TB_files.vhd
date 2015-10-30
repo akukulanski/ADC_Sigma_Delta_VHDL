@@ -175,10 +175,10 @@ begin
 process_read : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_8000.txt";
+		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_1000.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
-		variable cont:integer :=0;
+		variable cont,cr: integer :=0;
 	begin
 		report "Comenzando la lectura de archivos" severity note;
 		wait until rst = '0';
@@ -189,6 +189,7 @@ process_read : process
 			wait until rising_edge(clk);
 			readline(f_in, l);
 			read(l, leido);
+			cr:=cr+1;
 			we<='1';
 			data_in <= leido;
 			wait for PERI_CLK;
@@ -197,25 +198,27 @@ process_read : process
 			wait for PERI_CLK * 2;	
 		end loop;
 		cont:=0;
-		while(cont<FIR_HALF_TAPS) loop
+		while(cont<2*FIR_HALF_TAPS) loop
 			wait until rising_edge(clk);
 			cont:=cont+1;
 			we<='1';
 			data_in <= "0000000000000000";
+			cr:=cr+1;
 			--wait for PERI_CLK;
 			wait until rising_edge(clk);
 			we<='0';
 			wait until oe ='1';
 			wait for PERI_CLK * 2;	
 		end loop;
-
-		report "TERMINO LECTURA!!" severity note;
+		wait for PERI_CLK*10;
+		report "TERMINO LECTURA!!" severity failure;
 		wait;
 	end process process_read;
 	
 process_write: process
 		variable l : line;
-		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_8000.txt";
+		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_1000.txt";
+		variable cw: integer :=0;
 	begin
 		report "Comenzando la escritura de archivos" severity note;
 		loop
@@ -224,9 +227,10 @@ process_write: process
 			if oe = '1' then
 				write(l, data_out);
 				writeline(f_out, l);
+				cw:=cw+1;
 				report "ESCRIBIO LINEA." severity note;
 			end if;
-			wait for PERI_CLK * 10;	
+			wait for PERI_CLK;
 		end loop;
 	end process process_write;
 end architecture;
