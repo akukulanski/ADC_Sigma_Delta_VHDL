@@ -10,23 +10,30 @@ int ascii_to_int16(char *src, char *dst);
 int int16_to_ascii(char *src, char *dst);
 
 int main(int argc, char ** argv){
-	//printf("%d\n", '\n');
+
 	char src[100], dst[100];
-	printf("argc=%d\n",argc);
+	
+	//printf("argc=%d\n",argc);
+	//printf("%d\n", '\n');
+	
 	if(argc==3){
-		printf("1=%s\n2=%s\n",argv[1],argv[2]);
+		//printf("1=%s\n2=%s\n",argv[1],argv[2]);
 		strcpy(src,argv[1]);
 		strcpy(dst,argv[2]);
 	}else if(argc==2){
-		printf("1=%s\n\n",argv[1]);
+		//printf("1=%s\n\n",argv[1]);
 		strcpy(src,argv[1]);
-		strncpy(dst,argv[1],strlen(argv[1])-4);
+		printf("src========%s\n",src);
+		//strncpy(dst,argv[1],strlen(argv[1])-4);
+		strcpy(dst,src);
+		dst[strlen(argv[1])-4]='\0';
+		printf("dst========%s\n",dst);
 		strcat(dst,"_int16.txt");
-		printf("dst=%s\n",dst);
+		printf("dst========%s\n",dst);
 	}else
 		return -1;
 	
-	printf("%s\n%s\n",src,dst);
+	printf("src=%s\ndst=%s\n",src,dst);
 	ascii_to_int16(src,dst);
 	//int16_to_ascii(src,dst);
 	
@@ -54,7 +61,8 @@ int ascii_to_int16(char *src, char *dst){
 		fwrite(&acum, sizeof(short),1,out);
 	}
 
-	fclose(in);fclose(out);	
+	fclose(in);
+	fclose(out);	
 	return 0;
 }
 

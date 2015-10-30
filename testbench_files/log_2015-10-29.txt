@@ -1,0 +1,13 @@
+*** 2015-10-29 ***
+Hicimos testeos de la implementación, generamos señales de prueba y escribimos las salidas en archivos para levantarlas con matlab.
+CIC: ok! parece andar bien siempre.
+FIR: Internamente y por separado todo parece hacer lo que debería, pero no responde bien a las entradas. Entrando con un seno de 1KHz, pasa OK. Entrando con uno de 20KHz apenas atenúa.
+(Estamos cortando en 1/4, usando 45MHz de clk --> fs_in_fir=88KHz, fcorte_fir=11KHz)
+
+captura_001: (FIR)
+Arriba las entradas, Abajo las salidas.
+Izquierda 1KHz, Derecha 15KHz.
+
+
+Para testear, ver los scripts de matlab en testbench_files/ (all.m tiene casi todo)
+el programa en C convierte ascii a bin. (cambiar por bin2dec() de matlab)
