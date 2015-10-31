@@ -175,7 +175,7 @@ begin
 process_read : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_1000.txt";
+		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_10000.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
 		variable cont,cr: integer :=0;
@@ -217,7 +217,7 @@ process_read : process
 	
 process_write: process
 		variable l : line;
-		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_1000.txt";
+		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_10000.txt";
 		variable cw: integer :=0;
 	begin
 		report "Comenzando la escritura de archivos" severity note;

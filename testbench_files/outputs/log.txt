@@ -1,0 +1,10 @@
+/home/ariel/git/vhdl-adc/testbench_files/outputs
+
+Carpetas:
+
+_001
+	Coeficientes obtenidos con fdatool (equirripple)
+	1KHz -> resultado: OK!
+
+
+

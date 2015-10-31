@@ -34,7 +34,7 @@ end
 %% CONVERTING TO PLOT (only to check what was generated)
 %exec = ['./uart_rx -p 16 -bd 460800 -numsamples ' num2str(nsamples) ' -to 30 -filename ' file_name];
 %[status, ~] = system(exec);
-
+figure();
 for fin=1000:1000:30000;
     filename=sprintf('./inputs/fir_input_%d.txt',fin);
     exec=[];
@@ -44,15 +44,18 @@ for fin=1000:1000:30000;
     fd=fopen(filename2);
     frewind(fd)
     out = fread(fd,'int16')
+    fclose(fd);
     %stem(out);
+    subplot(211);
     plot(out);
     grid on;
-    fclose(fd);
+    subplot(212);
+    plot(abs(fft(out)));
+    grid on;
     pause(0.1);
 end
 
 %% CHECKING FIR INPUT SIGNAL
-figure();
 freq = 1000;
 temp = [];
 filename=sprintf('./inputs/fir_input_%d.txt',freq);
@@ -63,14 +66,19 @@ filename2=sprintf('./inputs/fir_input_%d_int16.txt',freq);
 fd=fopen(filename2);
 frewind(fd)
 out = fread(fd,'int16')
+fclose(fd);
+figure();
 %stem(out);
+subplot(211);
 plot(out);
 grid on;
-fclose(fd);
+subplot(212);
+plot(abs(fft(out)));
+grid on;
 
 %% READING TESTBENCH OUTPUTS
 figure();
-freq = 1000;	
+freq = 10000;	
 temp = [];
 filename=sprintf('./outputs/fir_output_%d.txt', freq);
 %filename=sprintf('./outputs/fir_output_TEST.txt');
@@ -81,10 +89,15 @@ filename2=sprintf('./outputs/fir_output_%d_int16.txt', freq);
 fd=fopen(filename2);
 frewind(fd)
 out = fread(fd,'int16')
+fclose(fd);
+figure();
 %stem(out);
+subplot(211);
 plot(out);
 grid on;
-fclose(fd);
+subplot(212);
+plot(abs(fft(out)));
+grid on;
 
 %% SEÑAL RAMPA GENERACION
 cant = 1023;
@@ -105,13 +118,13 @@ filename2=sprintf('./outputs/fir_output_rampa_int16.txt');
 fd=fopen(filename2);
 frewind(fd)
 out = fread(fd,'int16')
-stem(out);
-%plot(out);
-grid on;
 fclose(fd);
+stem(out);
+grid on;
+
 
 %% CHECK FILTER CONVOLUTION WITH MATLAB
-freq = 1000;
+freq = 10000;
 temp = [];
 filename=sprintf('./inputs/fir_input_%d.txt',freq);
 exec=[];
@@ -123,12 +136,21 @@ frewind(fd)
 input = fread(fd,'int16')
 fclose(fd);
 figure();
-subplot(311);
+subplot(511);
 %stem(input);
 plot(input);
+grid on;
+subplot(512);
+plot(abs(fft(input)));
+grid on;
 output=conv(input,coef);
-subplot(312);
+subplot(513);
 stem(coef);
-subplot(313);
+grid on;
+subplot(514);
 plot(output);
 grid on;
+subplot(515);
+plot(abs(fft(output)));
+grid on;
+
