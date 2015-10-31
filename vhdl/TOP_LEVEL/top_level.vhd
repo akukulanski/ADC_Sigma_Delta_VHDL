@@ -38,6 +38,7 @@ entity top_level is
 		Rx 		 : in std_logic
 	);
 end entity top_level;
+
 architecture RTL of top_level is
 	signal clk_90 : std_logic := '0';
 	signal oe,oe_adc     : std_logic                              := '0';

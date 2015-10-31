@@ -48,10 +48,10 @@ begin
 		rst <= '0';
 		wait for 20 ns;
 		ce_in <= '1';
-		wait for 20 ns;
+		wait for 40 ns;
 		input <= '1';
 		wait for 4 ms;
-		input <= '0';
+		--input <= '0';
 --		loop
 --			input <= '0';
 --			wait for 20 ns;

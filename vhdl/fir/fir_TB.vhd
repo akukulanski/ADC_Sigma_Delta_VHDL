@@ -37,7 +37,7 @@ begin
 			rst    => rst
 		);
 	
-	data_in<=('1'&(FIR_INPUT_BITS-2 downto 1 => '0')&'1');
+	--data_in<=('1'&(FIR_INPUT_BITS-2 downto 1 => '0')&'1');
 	entrada_legible <= not(data_in(FIR_INPUT_BITS-1)) & data_in(FIR_INPUT_BITS-2 downto 0);
 	
 	CLOCK : process is
@@ -49,7 +49,7 @@ begin
 	end process;
 
 	RST_EN : process is
-		
+		variable numX: integer := 0;-- unsigned(FIR_OUTPUT_BITS-1 downto 0) := to_unsigned(0, FIR_OUTPUT_BITS);
 	begin
 		wait for (T_clk/2) * 1 ns;
 		rst <= '1';
@@ -58,12 +58,17 @@ begin
 		wait for T_clk * ns;
 		rst <= '0';
 		wait for T_clk * ns;
+		
+		numX := numX+10;
+		data_in <= ('1' & std_logic_vector(to_unsigned(numX, FIR_OUTPUT_BITS-1)));
 		we <= '1';
 		loop
 			wait for T_clk * ns;
 			we <= '0';
 			wait for (T_clk*(FIR_HALF_TAPS+5)) * 1 ns;		
 			we <= '1';
+			numX := numX + 10;
+			data_in <= ('1' & std_logic_vector(to_unsigned(numX, FIR_OUTPUT_BITS-1)));
 		end loop;
 		wait;
 	end process;

@@ -22,6 +22,12 @@ architecture RTL of decimator is
 	signal count    : unsigned(B - 1 downto 0) := (others=>'1'); --counter
 
 begin
+
+	
+
+
+
+
 		
 	ce_out <= ce_in when (count=to_unsigned(0,B) or B=0) else
 			  '0';
