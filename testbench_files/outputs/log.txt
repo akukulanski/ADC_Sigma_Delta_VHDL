@@ -5,6 +5,8 @@ Carpetas:
 _001
 	Coeficientes obtenidos con fdatool (equirripple)
 	1KHz -> resultado: OK!
+	10KHz -> resultado: OK!
+	11KHz -> resultado: OK!
 
 
 

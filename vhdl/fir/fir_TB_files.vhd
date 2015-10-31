@@ -175,7 +175,7 @@ begin
 process_read : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_10000.txt";
+		file f_in : text open read_mode is "/home/ariel/git/vhdl-adc/testbench_files/inputs/fir_input_1000.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(FIR_INPUT_BITS-1 downto 0);
 		variable cont,cr: integer :=0;
@@ -195,29 +195,29 @@ process_read : process
 			wait for PERI_CLK;
 			we<='0';
 			wait until oe ='1';
-			wait for PERI_CLK * 2;	
+			wait for PERI_CLK * 3;	
 		end loop;
-		cont:=0;
-		while(cont<2*FIR_HALF_TAPS) loop
-			wait until rising_edge(clk);
-			cont:=cont+1;
-			we<='1';
-			data_in <= "0000000000000000";
-			cr:=cr+1;
-			--wait for PERI_CLK;
-			wait until rising_edge(clk);
-			we<='0';
-			wait until oe ='1';
-			wait for PERI_CLK * 2;	
-		end loop;
-		wait for PERI_CLK*10;
+--		cont:=0;
+--		while(cont<2*FIR_HALF_TAPS) loop
+--			wait until rising_edge(clk);
+--			cont:=cont+1;
+--			we<='1';
+--			data_in <= "0000000000000000";
+--			cr:=cr+1;
+--			--wait for PERI_CLK;
+--			wait until rising_edge(clk);
+--			we<='0';
+--			wait until oe ='1';
+--			wait for PERI_CLK * 2;	
+--		end loop;
+		wait for PERI_CLK*50;
 		report "TERMINO LECTURA!!" severity failure;
 		wait;
 	end process process_read;
 	
 process_write: process
 		variable l : line;
-		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_10000.txt";
+		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/testbench_files/outputs/fir_output_1000.txt";
 		variable cw: integer :=0;
 	begin
 		report "Comenzando la escritura de archivos" severity note;
@@ -225,10 +225,12 @@ process_write: process
 			wait until rising_edge(clk);
 			--wait until oe ='1';
 			if oe = '1' then
-				write(l, data_out);
-				writeline(f_out, l);
 				cw:=cw+1;
-				report "ESCRIBIO LINEA." severity note;
+				if(cw > 2*FIR_HALF_TAPS) then
+					write(l, data_out);
+					writeline(f_out, l);
+					report "ESCRIBIO LINEA." severity note;
+				end if;
 			end if;
 			wait for PERI_CLK;
 		end loop;

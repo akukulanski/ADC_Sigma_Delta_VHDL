@@ -1,13 +1,31 @@
 *** 2015-10-29 ***
 Hicimos testeos de la implementación, generamos señales de prueba y escribimos las salidas en archivos para levantarlas con matlab.
-CIC: ok! parece andar bien siempre.
-FIR: Internamente y por separado todo parece hacer lo que debería, pero no responde bien a las entradas. Entrando con un seno de 1KHz, pasa OK. Entrando con uno de 20KHz apenas atenúa.
-(Estamos cortando en 1/4, usando 45MHz de clk --> fs_in_fir=88KHz, fcorte_fir=11KHz)
+CIC: OK! parece andar bien siempre.
+FIR: OK en testbench
 
-captura_001: (FIR)
-Arriba las entradas, Abajo las salidas.
-Izquierda 1KHz, Derecha 15KHz.
+Para testear, el scripts de matlab 'all.m' tiene casi todo.
+El programa en C convierte ascii a bin. (cambiar por bin2dec() de matlab)
+
+*** El script de matlab all.m tiene las siguientes secciones ***
+%% GENERATING SINUSOIDAL INPUTS
+	Genera entradas desde 1KHz hasta 30KHz para los testbenchs.
+	En ./inputs/fir_input_[frec].txt
+
+%% CONVERTING TO PLOT (only to check what was generated)
+	Imprime las entradas generadas
+
+%% CHECKING FIR INPUT SIGNAL
+	Idem CONVERTING TO PLOT pero sólo para una frecuencia
+
+%% READING TESTBENCH OUTPUTS
+	Levanta archivo generado por el isim (./inputs/fir_output_[frec].txt)
+
+%% SEÑAL RAMPA GENERACION
+	Genera una rampa (para verificar fácil el address_generator)
+%% SALIDA SEÑAL RAMPA LECTURA
+	Lectura de la salida
 
 
-Para testear, ver los scripts de matlab en testbench_files/ (all.m tiene casi todo)
-el programa en C convierte ascii a bin. (cambiar por bin2dec() de matlab)
+%% CHECK FILTER CONVOLUTION WITH MATLAB
+	Levanta la señal generada y la filtra con los coeficientes cargados en vector 'coef'.
+	Muestra entrada, salida, sus respectivas fft y coeficientes.
