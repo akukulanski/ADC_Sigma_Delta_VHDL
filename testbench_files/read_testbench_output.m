@@ -10,7 +10,7 @@ name_prefix=name_cic_fir;
 name_ext='.txt';
 
 close all;
-for freq=[1000,10000,11000,15000,22000,25000];
+for freq=[25000];%[1000,10000,11000,15000,22000,25000];
     filename = sprintf('%s%s%d%s',path,name_prefix, freq, name_ext);
     fd = fopen(filename);
     if fd<3
