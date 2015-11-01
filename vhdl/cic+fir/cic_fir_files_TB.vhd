@@ -9,12 +9,14 @@ end entity cic_fir_files_TB;
 
 architecture RTL of cic_fir_files_TB is
 	--constant T_clk : natural := 20; -- periodo clock en ns
-	
-	signal clk,rst,ce,oe: std_logic;
-	signal input: std_logic;
-	signal output: std_logic_vector(FIR_OUTPUT_BITS-1 downto 0);
 
--- LEVANTAR ARCHIVO
+	signal clk, rst, ce, oe : std_logic;
+	signal input            : std_logic;
+	signal output           : std_logic_vector(FIR_OUTPUT_BITS - 1 downto 0);
+	signal oe_cic           : std_logic;
+	signal output_cic       : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0);
+
+	-- LEVANTAR ARCHIVO
 	procedure str2sv(s : in string; sv : out std_logic_vector) is
 		variable i : integer;
 	begin
@@ -61,14 +63,13 @@ architecture RTL of cic_fir_files_TB is
 		end loop;
 	end procedure write;
 
--- FIN LEVANTAR ARCHIVO
+	-- FIN LEVANTAR ARCHIVO
 
--- Un periodo de reloj arbitrario
+	-- Un periodo de reloj arbitrario
 	constant PERI_CLK : time := 10 ns;
 
 	-- Se�ales basicas
 	signal detener : boolean := false;
-
 
 -- Constantes de generics en package en archivo constantes.vhd
 begin
@@ -83,73 +84,82 @@ begin
 
 	--rst <= '1', '0' after PERI_CLK * 3 / 2;
 
--- FIR NUESTROOOOOOOOOOOOOOOO
-	tb: entity work.cic_fir
+	-- FIR NUESTROOOOOOOOOOOOOOOO
+	tb : entity work.cic_fir
 		generic map(
-			N_ETAPAS => CIC_N_ETAPAS,
-			COMB_DELAY => CIC_COMB_DELAY, --delay restador
-		    CIC_R => CIC_R, --decimacion
-		    COEFF_BITS => FIR_COEFF_BITS,
-		    FIR_R => 1,--FIR_R, --decimacion
-		    N_DSP => DSP_INPUT_BITS, --entrada dsp específico para spartan6
-		    M_DSP => DSP_OUTPUT_BITS, --salida dsp específico para spartan6
-		    FIR_HALF_TAPS => FIR_HALF_TAPS
+			N_ETAPAS      => CIC_N_ETAPAS,
+			COMB_DELAY    => CIC_COMB_DELAY, --delay restador
+			CIC_R         => CIC_R,     --decimacion
+			COEFF_BITS    => FIR_COEFF_BITS,
+			FIR_R         => 1,         --FIR_R, --decimacion
+			N_DSP         => DSP_INPUT_BITS, --entrada dsp específico para spartan6
+			M_DSP         => DSP_OUTPUT_BITS, --salida dsp específico para spartan6
+			FIR_HALF_TAPS => FIR_HALF_TAPS
 		)
 		port map(
-			input  => input,
-			output => output,
-			clk    => clk,
-			rst    => rst,
-			oe     => oe
+			input      => input,
+			output     => output,
+			clk        => clk,
+			rst        => rst,
+			oe         => oe,
+			output_cic => output_cic,
+			oe_cic     => oe_cic
 		);
--- FIN FIR NUESTROOOOOOOOOOOOOOOOOo		
+	-- FIN FIR NUESTROOOOOOOOOOOOOOOOOo		
 
 
-process_read : process
+	process_read : process
 		variable l : line;
 		-- Reemplazar Nombre por el archivo a usar
-		file f_in : text open read_mode is "/home/ivan/codigo vhdl/ADC/testbench_files/cic+fir/cic_input_15000.txt";
+		file f_in : text open read_mode is "/home/ivan/codigo vhdl/ADC/testbench_files/cic_input_11000.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(0 downto 0);
-		variable cr: integer :=0;
+		variable cr    : integer := 0;
 	begin
-		rst <= '1';
-		input<='0';
-		wait for 2*PERI_CLK;
-		rst<= '0';
+		rst   <= '1';
+		input <= '0';
+		wait for 2 * PERI_CLK;
+		rst <= '0';
 		wait until rst = '0';
 		report "Comenzando la lectura de archivos" severity note;
-		ce<='1';
+		ce <= '1';
 		wait for 1 ps;
 
 		while not (endfile(f_in)) loop
 			wait until rising_edge(clk);
 			readline(f_in, l);
 			read(l, leido);
-			cr:=cr+1;
+			cr    := cr + 1;
 			input <= leido(0);
 		end loop;
-		wait for PERI_CLK*50;
+		wait for PERI_CLK * 50;
 		report "TERMINO LECTURA!!" severity note;
 		wait;
 	end process process_read;
-	
-process_write: process
+
+	process_write : process
 		variable l : line;
-		file f_out : text open write_mode is "/home/ivan/codigo vhdl/ADC/testbench_files/cic+fir/cic_output_15000.txt";
-		variable cw: integer :=0;
+		file f_out_fir : text open write_mode is "/home/ivan/codigo vhdl/ADC/testbench_files/outputs/cic+fir/fir_output_11000.txt";
+		file f_out_cic : text open write_mode is "/home/ivan/codigo vhdl/ADC/testbench_files/outputs/cic+fir/cic_output_11000.txt";
+		variable cw : integer := 0;
 	begin
 		report "Comenzando la escritura de archivos" severity note;
 		loop
 			wait until rising_edge(clk);
 			--wait until oe ='1';
 			if oe = '1' then
-				cw:=cw+1;
+				cw := cw + 1;
 				--if(cw > 2*FIR_HALF_TAPS) then
-					write(l, output);
-					writeline(f_out, l);
-					report "ESCRIBIO LINEA." severity note;
-				--end if;
+				write(l, output);
+				writeline(f_out_fir, l);
+				report "ESCRIBIO LINEA." severity note;
+			--end if;
+			end if;
+			if oe_cic = '1' then
+				cw := cw + 1;
+				write(l, output_cic);
+				writeline(f_out_cic, l);
+				report "ESCRIBIO LINEA." severity note;
 			end if;
 			wait for PERI_CLK;
 		end loop;

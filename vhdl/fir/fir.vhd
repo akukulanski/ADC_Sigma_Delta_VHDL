@@ -30,13 +30,13 @@ architecture RTL of fir is
 	signal input_ca2 : std_logic_vector(N - 1 downto 0) := (others => '0');
 
 	-- senales referidas a la ram
-	signal ram_we        : std_logic                                     := '0';
-	signal write_address : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-	signal read_address1 : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-	signal read_address2 : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
-	signal coef_address  : std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
-	signal ram_output1   : std_logic_vector(N - 1 downto 0)              := (others => '0');
-	signal ram_output2   : std_logic_vector(N - 1 downto 0)              := (others => '0');
+	signal ram_we, ram_we_i : std_logic                                     := '0';
+	signal write_address    : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
+	signal read_address1    : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
+	signal read_address2    : std_logic_vector(log2(TAPS) - 1 downto 0)     := (others => '0');
+	signal coef_address     : std_logic_vector(log2(TAPS / 2) - 1 downto 0) := (others => '0');
+	signal ram_output1      : std_logic_vector(N - 1 downto 0)              := (others => '0');
+	signal ram_output2      : std_logic_vector(N - 1 downto 0)              := (others => '0');
 
 	-- senales referidas al dsp
 	signal adder_input1         : std_logic_vector(N - 1 downto 0)     := (others => '0');
@@ -50,7 +50,7 @@ architecture RTL of fir is
 	signal oe_i, oe_ii          : std_logic                            := '0';
 	signal dsp_output_i         : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal dsp_output_ii        : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
-	
+
 	--rom_style
 	attribute rom_style : string;
 	attribute rom_style of ROM : signal is "block"; --"distributed" or "block"
@@ -60,11 +60,11 @@ begin
 	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0); --VA ESTE EN ADC!!!
 	--input_ca2 <= (data_in(N - 1)) & data_in(N - 2 downto 0); --SOLO PARA TESTBENCH FIR CON ARCHIVOS
 	-- ******************************************************
-	
-	data_out  <= dsp_output(FIR_MSB_OUT downto FIR_MSB_OUT-BIT_OUT+1); --bits mas significativos de dsp_outout
+
+	data_out <= dsp_output(FIR_MSB_OUT downto FIR_MSB_OUT - BIT_OUT + 1); --bits mas significativos de dsp_outout
 	-- divide salida por (2^(FIR_MSB_OUT-BIT_OUT+1)) = 2^(34-15) = 2^19 
-	rst_mac   <= (ram_we or rst);       --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
-	
+	rst_mac  <= (ram_we or rst);        --resetea cuando hay dato nuevo o cuando se activa el rst general del fir
+
 	-- cuando el dsp esta habilitado realiza operaciones
 	-- cuando la entrada vale cero, sigue funcionando (procesa los datos demorados
 	-- por el pipeline) pero sus siguientes operaciones (sumar cero) fuerzan que
@@ -74,25 +74,26 @@ begin
 	--NO poner el when, igual las entradas serian cero y la mult cero.
 	--coef_input   <= coef_input_i;
 
-	delay : process (clk) is  -- Ajuste fullscale
+	delay : process(clk) is             -- Ajuste fullscale
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
-				oe <= '0';
-				dsp_output <= (others => '0');
+				oe            <= '0';
+				dsp_output    <= (others => '0');
 				dsp_output_ii <= (others => '0');
+				ram_we_i	<= '0';
 			else
-				oe <= oe_i;
-				oe_i <= oe_ii;
+				oe            <= oe_i;
+				oe_i          <= oe_ii;
 				--dsp_output <= std_logic_vector(signed(dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1 downto 3) )+signed(dsp_output_ii));
 				--dsp_output_ii <= std_logic_vector(signed(dsp_output_i(M_DSP - 1) & dsp_output_i(M_DSP - 1 downto 1) )+signed(dsp_output_i(M_DSP - 2 downto 0) & '0'));
-				dsp_output <= dsp_output_ii;
+				dsp_output    <= dsp_output_ii;
 				dsp_output_ii <= dsp_output_i;
+				ram_we_i <=ram_we;
 			end if;
 		end if;
 	end process;
-		
-	
+
 	Lectura_ROM : process(clk) is
 	begin
 		if rising_edge(clk) then
@@ -141,7 +142,7 @@ begin
 			output2       => ram_output2,
 			read_address1 => read_address1,
 			read_address2 => read_address2,
-			we            => ram_we,
+			we            => ram_we_i,
 			ce            => ce,
 			clk           => clk,
 			rst           => rst

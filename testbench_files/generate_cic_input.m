@@ -1,10 +1,10 @@
 
 
-for fin=[1000,10000,11000,15000];
+for fin=[44000];%[1000,10000,11000,15000,22000,44000];%
     filename= ['./cic_input_' , sprintf('%d',fin),'.txt'];
     TAPS=256;
     fclk = 90.6e6/2; % Frecuencia de clk
-    time = 5/fin+2*TAPS/fclk+5000e-6; % Tiempo de simulacion
+    time = 5/fin+2*TAPS/fclk+10000e-6; % Tiempo de simulacion
     dt = (1/fclk)/5; % Paso de la simulacion analogica
     func = @(t) 3.3/2 + 2.6/2 *sin(2*pi*fin*t) + 0.0 * rand(1,numel(t)); % Input
     R1 = 150e3;

@@ -23,24 +23,28 @@ entity cic_fir is
 	);
 
 	port(
-		input  : in  std_logic;
-		output : out std_logic_vector(BIT_OUT - 1 downto 0);
-		clk    : in  std_logic;
-		rst    : in  std_logic;
-		oe     : out std_logic := '0'
+		input      : in  std_logic;
+		output     : out std_logic_vector(BIT_OUT - 1 downto 0);
+		clk        : in  std_logic;
+		rst        : in  std_logic;
+		oe         : out std_logic := '0';
+		output_cic : out std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0) := (others => '0');
+		oe_cic     : out std_logic := '0'
 	);
 end entity cic_fir;
 
 architecture RTL of cic_fir is
-	signal oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
-	signal ce_in          : std_logic := '1';
-	signal oe_i, oe_ii    : std_logic := '0';
-	signal out_cic        : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0);
-	signal output_fir     : std_logic_vector(BIT_OUT - 1  downto 0);
-    signal output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
+	signal oe_cic_s, oe_fir : std_logic := '0'; -- senial de salida del LVDS
+	signal ce_in            : std_logic := '1';
+	signal oe_i, oe_ii      : std_logic := '0';
+	signal out_cic          : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0);
+	signal output_fir       : std_logic_vector(BIT_OUT - 1 downto 0);
+	signal output_fir_i     : std_logic_vector(BIT_OUT - 1 downto 0);
 begin
-	output <= output_fir_i;
-	
+	output     <= output_fir_i;
+	oe_cic     <= oe_cic_s;
+	output_cic <= out_cic;
+
 	CIC : entity work.cic
 		generic map(
 			N     => N_ETAPAS,          --etapas
@@ -53,7 +57,7 @@ begin
 			clk    => clk,
 			rst    => rst,
 			ce_in  => ce_in,
-			ce_out => oe_cic
+			ce_out => oe_cic_s
 		);
 
 	fir : entity work.fir
@@ -68,7 +72,7 @@ begin
 		port map(
 			data_in  => out_cic,
 			data_out => output_fir,
-			we       => oe_cic,
+			we       => oe_cic_s,
 			oe       => oe_fir,
 			ce       => ce_in,
 			clk      => clk,
@@ -86,19 +90,19 @@ begin
 			clk    => clk,
 			rst    => rst
 		);
-		
+
 	process(clk) is
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
-				oe <= '0';
+				oe           <= '0';
 				output_fir_i <= (others => '0');
 			else
-				oe <= oe_ii;
+				oe    <= oe_ii;
 				oe_ii <= oe_i;
-				if (oe_ii= '1') then
+				if (oe_ii = '1') then
 					output_fir_i <= output_fir;
-				end if; 
+				end if;
 			end if;
 		end if;
 	end process;
