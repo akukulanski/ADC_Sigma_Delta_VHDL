@@ -16,11 +16,11 @@ entity cic is
 	);
 	port(
 		input  : in  std_logic;         --entrada cic
-		output : out std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0); --salida cic
+		output : out std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0):= (others=>'0'); --salida cic
 		clk    : in  std_logic;         --clk
 		rst    : in  std_logic;         --reset
 		ce_in  : in  std_logic;         --clock enable entrada, cuando este esta desactivado no hace nada
-		ce_out : out std_logic          --salida, que es el mismo clock enable que usan los comb
+		ce_out : out std_logic := '0'          --salida, que es el mismo clock enable que usan los comb
 	);
 
 end cic;

@@ -39,7 +39,9 @@ architecture RTL of cic_fir is
 	signal output_fir     : std_logic_vector(BIT_OUT - 1  downto 0);
     signal output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
 begin
-	output <= output_fir_i;
+	--output <= output_fir_i;
+	output <= output_fir;
+	oe <= oe_fir;
 	
 	CIC : entity work.cic
 		generic map(
@@ -75,31 +77,33 @@ begin
 			rst      => rst
 		);
 
-	--instanciar decimador salida fir (oe_fir --> oe)
-	fir_decimator : entity work.decimator
-		generic map(
-			R => FIR_R
-		)
-		port map(
-			ce_in  => oe_fir,
-			ce_out => oe_i,
-			clk    => clk,
-			rst    => rst
-		);
-		
-	process(clk) is
-	begin
-		if rising_edge(clk) then
-			if rst = '1' then
-				oe <= '0';
-				output_fir_i <= (others => '0');
-			else
-				oe <= oe_ii;
-				oe_ii <= oe_i;
-				if (oe_ii= '1') then
-					output_fir_i <= output_fir;
-				end if; 
-			end if;
-		end if;
-	end process;
+--	--instanciar decimador salida fir (oe_fir --> oe)
+--	fir_decimator : entity work.decimator
+--		generic map(
+--			R => FIR_R
+--		)
+--		port map(
+--			ce_in  => oe_fir,
+--			ce_out => oe_i,
+--			clk    => clk,
+--			rst    => rst
+--		);
+--		
+--	process(clk) is
+--	begin
+--		if rising_edge(clk) then
+--			if rst = '1' then
+--				oe <= '0';
+--				output_fir_i <= (others => '0');
+--			else
+----				oe <= oe_ii;
+----				oe_ii <= oe_i;
+----				if (oe_ii= '1') then
+----					output_fir_i <= output_fir;
+----				end if; 
+--				oe <= oe_i;
+--				output_fir_i <= output_fir;
+--			end if;
+--		end if;
+--	end process;
 end architecture RTL;

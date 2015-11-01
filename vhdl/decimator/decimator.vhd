@@ -11,7 +11,7 @@ entity decimator is
 	);
 	port(
 		ce_in  : in  std_logic;
-		ce_out : out std_logic;
+		ce_out : out std_logic:='0';
 		clk    : in  std_logic;
 		rst    : in  std_logic
 	);

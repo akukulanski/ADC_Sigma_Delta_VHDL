@@ -20,8 +20,8 @@ entity fir is
 		ce       : in  std_logic;
 		we       : in  std_logic;
 		data_in  : in  std_logic_vector(N - 1 downto 0);
-		data_out : out std_logic_vector(M - 1 downto 0);
-		oe       : out std_logic
+		data_out : out std_logic_vector(M - 1 downto 0):=(others=>'0');
+		oe       : out std_logic :='0'
 	);
 end entity fir;
 
