@@ -45,10 +45,10 @@ begin
 	--ce_out <= ce_out_i;
 	ce_out                         <= ce_comb;
 
-	g_limpia_bits : for i in 0 to N - 1 generate --limpiando bits no usados
-		senI(i)(B(0) - 1 downto B(i))         <= (others => '0');
-		senC(i)(B(0) - 1 downto B(i + N - 1)) <= (others => '0');
-	end generate g_limpia_bits;
+--	g_limpia_bits : for i in 0 to N - 1 generate --limpiando bits no usados
+--		senI(i)(B(0) - 1 downto B(i))         <= (others => '0');
+--		senC(i)(B(0) - 1 downto B(i + N - 1)) <= (others => '0');
+--	end generate g_limpia_bits;
 
 	acu0 : entity work.integrator generic map(N => 1, M => B(0)) --primer acumulador
 		port map(

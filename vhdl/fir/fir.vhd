@@ -57,8 +57,8 @@ architecture RTL of fir is
 begin
 
 	-- CAMBIARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-	--input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0); --VA ESTE EN ADC!!!
-	input_ca2 <= (data_in(N - 1)) & data_in(N - 2 downto 0); --SOLO PARA TESTBENCH FIR CON ARCHIVOS
+	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0); --VA ESTE EN ADC!!!
+	--input_ca2 <= (data_in(N - 1)) & data_in(N - 2 downto 0); --SOLO PARA TESTBENCH FIR CON ARCHIVOS
 	-- ******************************************************
 	
 	data_out  <= dsp_output(FIR_MSB_OUT downto FIR_MSB_OUT-BIT_OUT+1); --bits mas significativos de dsp_outout

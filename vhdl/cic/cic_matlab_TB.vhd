@@ -104,7 +104,6 @@ begin
 		file f_out : text open write_mode is "/home/ariel/git/vhdl-adc/vhdl/cic/output_CIC.txt";
 		-- En este ejemplo solo hay un std_logic_vector por linea
 		variable leido : std_logic_vector(0 downto 0);
-		variable count : integer := 0;
 	begin
 		report "Comenzando la prueba del CIC mediante archivos" severity note;
 		wait until rst = '0';
