@@ -5,8 +5,8 @@ path_cic_fir='./outputs/cic+fir/';
 name_fir='fir_output_';
 name_cic_fir='cic_output_';
 
-path=path_fir;
-name_prefix=name_fir;
+path=path_cic_fir;
+name_prefix=name_cic_fir;
 name_ext='.txt';
 
 close all;
