@@ -51,13 +51,16 @@ architecture RTL of fir is
 	signal dsp_output_i         : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	signal dsp_output_ii        : std_logic_vector(M_DSP - 1 downto 0) := (others => '0');
 	
+	signal data_in_i :std_logic_vector(N - 1 downto 0):=(others=>'0'); 
+	signal we_i : std_logic:='0';
+	
 	--rom_style
 	attribute rom_style : string;
 	attribute rom_style of ROM : signal is "block"; --"distributed" or "block"
 begin
 
 	-- CAMBIARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-	input_ca2 <= not (data_in(N - 1)) & data_in(N - 2 downto 0); --VA ESTE EN ADC!!!
+	input_ca2 <= not (data_in_i(N - 1)) & data_in_i(N - 2 downto 0); --VA ESTE EN ADC!!!
 	--input_ca2 <= (data_in(N - 1)) & data_in(N - 2 downto 0); --SOLO PARA TESTBENCH FIR CON ARCHIVOS
 	-- ******************************************************
 	
@@ -73,6 +76,14 @@ begin
 	adder_input2 <= ram_output2;        -- when enable_mac_new_input = '1' else (others => '0');
 	--NO poner el when, igual las entradas serian cero y la mult cero.
 	--coef_input   <= coef_input_i;
+	
+	registro_de_entradas: process (clk) is
+	begin
+		if(rising_edge(clk)) then
+			data_in_i <= data_in;
+			we_i <= we;
+		end if;
+	end process registro_de_entradas; 
 
 	delay : process (clk) is  -- Ajuste fullscale
 	begin
@@ -117,7 +128,7 @@ begin
 			read_address1        => read_address1,
 			read_address2        => read_address2,
 			coef_address         => coef_address,
-			we                   => we,
+			we                   => we_i,
 			o_we                 => ram_we,
 			enable_mac_new_input => enable_mac_new_input,
 			oe                   => oe_ii,
