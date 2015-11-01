@@ -136,10 +136,6 @@ plot(abs(fft(output)));
 grid on;
 
 
-
-
-
-
 %% SEÑAL RAMPA GENERACION
 cant = 1023;
 t=0:1:cant;
