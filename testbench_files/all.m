@@ -166,7 +166,9 @@ grid on;
 %% CIC_FIR OUTPUT
 close all;
 for freq=[1000,10000,11000,15000];
-    filename=sprintf('d:/ivan/adc/codigo vhdl/CIC/testbench_files/cic+fir/cic_output_%d.txt', freq);
+    %filename=sprintf('d:/ivan/adc/codigo vhdl/CIC/testbench_files/cic+fir/cic_output_%d.txt', freq);
+    %filename=sprintf('d:/ivan/adc/codigo vhdl/CIC/testbench_files/cic+fir/cic_output_%d.txt', freq);
+    filename=sprintf('./cic+fir/cic_output_%d.txt', freq);
     %filename=sprintf('./outputs/fir_output_TEST.txt');
 
     %filename2=sprintf('./outputs/fir_output_TEST_int16.txt');
@@ -183,9 +185,9 @@ for freq=[1000,10000,11000,15000];
     set(gcf,'name',tit,'numbertitle','off');
     %stem(out);
     subplot(211);
-    plot(out);
+    plot(out(150:600));
     grid on;
     subplot(212);
-    %%plot(abs(fft(out)));
+    plot(abs(fft(double(out(150:600)))));
     grid on;
 end
