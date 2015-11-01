@@ -2,7 +2,7 @@ path='./inputs/cic+fir/'
 file_prefix='cic_input_';
 file_ext='.txt';
 
-for fin=[12000];%[1000,10000,11000,15000];
+for fin=[10000];%[1000,10000,11000,15000];
     filename=sprintf('%s%s%d%s',path,file_prefix,fin,file_ext);
     TAPS=256;
     fclk = 90.6e6/2; % Frecuencia de clk

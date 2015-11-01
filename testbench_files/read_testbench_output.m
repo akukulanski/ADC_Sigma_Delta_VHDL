@@ -11,7 +11,7 @@ path=path_cic_fir;
 name_prefix=name_cic_fir;
 name_ext='.txt';
 
-freq_vector=12  000;%[1000,10000,11000,15000,22000,25000];
+freq_vector=[10000 11000];%[1000,10000,11000,15000,22000,25000];
 
 close all;
 for freq=freq_vector;

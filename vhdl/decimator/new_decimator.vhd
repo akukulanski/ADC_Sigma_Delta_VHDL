@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.extra_functions.all;
 
---- Nota: POTENCIAS DE DOS!!!!!
+-- Nota: POTENCIAS DE DOS!!!!!
 
 entity new_decimator is
 	generic(
@@ -23,11 +23,9 @@ end entity new_decimator;
 architecture RTL of new_decimator is
 	constant B      : natural := log2(R); -- se redondea log2(R) para arriba
 	signal count,count_i   : unsigned(B - 1 downto 0) := (others=>'0'); --counter
+	signal input_i : std_logic_vector(BITS-1 downto 0):=(others=>'0');
 
 begin
-	
-	ce_out <= ce_in when (count=to_unsigned(0,B) or B=0) else
-			  '0';
 
 	sec_proc : process(clk) is
 	begin
@@ -50,7 +48,7 @@ begin
 		end if;
 	end process sec_proc;
 	
-	next_state: process(count, count_i, input)
+	next_state: process(count, count_i, input, ce_in)
 	begin
 		count_i <= count;
 		input_i <= (others => '0');
