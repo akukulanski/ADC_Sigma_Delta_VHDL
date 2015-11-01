@@ -1,7 +1,9 @@
+path='./inputs/cic+fir/'
+file_prefix='cic_input_';
+file_ext='.txt';
 
-
-for fin=[1000,10000,11000,15000];
-    filename= ['./cic_input_' , sprintf('%d',fin),'.txt'];
+for fin=[25000];%[1000,10000,11000,15000];
+    filename=sprintf('%s%s%d%s',path,file_prefix,fin,file_ext);
     TAPS=256;
     fclk = 90.6e6/2; % Frecuencia de clk
     time = 5/fin+2*TAPS/fclk+5000e-6; % Tiempo de simulacion
