@@ -1,4 +1,5 @@
-
+close all;
+clear;
 %%%%%% CIC parametros %%%%%%
 M=1;%retardo antes de restar(en el comb)
 N=6;%etapas CIC
@@ -12,7 +13,7 @@ Fs = fs; % frec sampling
 Bin=1; %bits entrada
 Bout=16; %bits salida recortado
 
-Fo = 0.95*R*fp; % frecuencia de corte normalizada a fs/R
+Fo = 0.99*R*fp; % frecuencia de corte normalizada a fs/R
 
 %%%%%%% fir2 parametros %%%%%%
 B = 16; % Cantidad bits coeficientes

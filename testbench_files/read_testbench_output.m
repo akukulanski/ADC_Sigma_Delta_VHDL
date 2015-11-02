@@ -5,14 +5,14 @@ Ts=1/Fs;
 path_fir='./outputs/fir/'; %_001/
 path_cic_fir='./outputs/cic+fir/';
 name_fir='fir_output_';
-name_cic_fir='cic_output_';
+name_cic_fir='cic_fir_output_';
 
 path=path_cic_fir;
 name_prefix=name_cic_fir;
 name_ext='.txt';
 
-freq_vector=[10000 11000];%[1000,10000,11000,15000,22000,25000];
-
+freq_vector=[1000 2000 4000 8000 8500 9000 9500 10000 11000];%[1000,10000,11000,15000,22000];
+%freq_vector=[11000];
 close all;
 for freq=freq_vector;
     filename = sprintf('%s%s%d%s',path,name_prefix, freq, name_ext);

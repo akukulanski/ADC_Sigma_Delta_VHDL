@@ -1,8 +1,9 @@
-path='./inputs/cic+fir/'
+path='./inputs/cic+fir/';
 file_prefix='cic_input_';
 file_ext='.txt';
-
-for fin=[10000];%[1000,10000,11000,15000];
+%vector_frec=[1000,10000,11000,15000,22000];
+vector_frec=[1000,2000,4000,8000,8500,9000,9500,10000,11000];
+for fin=vector_frec;
     filename=sprintf('%s%s%d%s',path,file_prefix,fin,file_ext);
     TAPS=256;
     fclk = 90.6e6/2; % Frecuencia de clk
