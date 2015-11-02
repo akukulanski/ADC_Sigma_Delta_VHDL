@@ -11,6 +11,8 @@ path=path_cic_fir;
 name_prefix=name_cic_fir;
 name_ext='.txt';
 
+fit_t = fittype('sin1');
+
 freq_vector=[1000 2000 4000 8000 8500 9000 9500 10000 11000];%[1000,10000,11000,15000,22000];
 %freq_vector=[11000];
 close all;
@@ -26,7 +28,7 @@ for freq=freq_vector;
     fclose(fd);
     leido2 = vec2mat(leido,16); %separa en filas de 16 bits
     out_int16=typecast(uint16(bin2dec(leido2)),'int16'); %convierte a ca2
-    out=double(out_int16);
+    out=double(out_int16(200:600));
     
    
     %out=out(300:400);
@@ -44,5 +46,16 @@ for freq=freq_vector;
     grid on;
     subplot(212);
     plot(abs(fft(out)));
-    grid on;    
+    grid on;   
+    
+    fit_curve = fit(x',out,fit_t);
+    seno = fit_curve.a1*sin(fit_curve.b1*x+fit_curve.c1);
+    e = out'-seno;
+    figure();
+    plot(x,out,'-');
+    hold on;
+    plot(x,seno,'o');
+    plot(x,e,'r');
+    hold off;
+    fprintf ('Freq: %f, SNR: %f,\n',fit_curve.b1/(2*pi),10*log10(sum((seno).^2)/sum((e).^2)));
 end
