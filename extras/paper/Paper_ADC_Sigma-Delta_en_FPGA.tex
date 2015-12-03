@@ -466,7 +466,7 @@ Para el desarrollo del proyecto se uso el kit de desarrollo Mojo v3 el cual pose
 %\hfill January 11, 2007
 
 \subsection{Modulador $\Sigma\Delta$ en tiempo discreto}
-Basado en el diagrama en bloques anterior, una modulador primer orden consiste en un acumulador:
+Basado en el diagrama en bloques anterior, un modulador de primer orden consiste en un acumulador:
 \begin{align}
 H(z)=\frac{z^{-1}}{1-z^{-1}}
 \end{align}
@@ -600,7 +600,7 @@ En la Fig.3 se ilustra el resultado.
 % command of the stfloats package.
 
 \section{Modulador $\Sigma\Delta$ en tiempo continuo}
-En la siguiente imagen se presenta un sigma delta de tiempo continuo, donde se ve reemplazado el cuantizador por su modelo de ruido aditivo:
+En la siguiente imagen se presenta un sigma delta de tiempo continuo, donde se ve reemplazado el cuantizador por su modelo de ruido aditivo.
 Las transferencias para la se\~nal y para el ruido quedan como:
 \begin{align}
 H_x(e^{sT_s}) &= \frac{H(s)}{1+H_{eq}(e^{sT_s})} \\
@@ -638,7 +638,7 @@ Donde el filtro antes del cuantizador es un integrador, y la trasferencia para l
 %\label{fig_6}
 \centering
 \includegraphics[height=0.9in]{Respuesta_Modulador_Completa}
-\caption{Arriba: Respuesta banda de paso de la se\~nal (derecha), y ruido (izquierda). Abajo: Respuesta se\~nal completa}
+\caption{Arriba: Respuesta banda de paso de la se\~nal (izquierda), y ruido (derecha). Abajo: Respuesta se\~nal completa}
 \label{fig_5}
 \end{figure}
 La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC. La cuantificaci\'on es realizada por una entrada LVDS de la FPGA utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima basado en que cuando no hay entrada, la salida Vq oscilar\'a entre el estado bajo y alto en cada clk, y la ganancia del comparador ser\'ia :
@@ -708,7 +708,7 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 
 El filtro FIR busca ecualizar la transferencia en la banda de paso del CIC (la cual no es plana), y eliminar el ruido de cuantizaci\'on fuera de esta antes de la decimaci\'on final. Se lo dise\~n\'o por el m\'etodo de sampleo y ventaneo con una ventana Kaiser, donde en la banda de paso se samplea la inversa del filtro CIC usado y fuera de esta ceros. 
 Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multiplicador-Acumulador que posee el bloque DSP de la FPGA. Se utiliz\'o un filtro FIR sim\'etrico de 256 coeficientes  con frecuencia de corte normalizada de 0.22. Al ser sim\'etrico, s\'olo es necesario almacenar la mitad de los coeficientes y tambi\'en se reduce a la mitad el c\'alculo al poder utilizar el preadder.  Posteriormente, se realiza una \'ultima decimaci\'on por un factor de 4, dando como resultante una decimaci\'on total de 2048.
-En la Fig.9 se ve que el filtro FIR tienen una atenuaci\'on de
+En la Fig.10 se ve que el filtro FIR tienen una atenuaci\'on de más de 80 db.
 
 
 \begin{figure}[!t]
@@ -748,10 +748,10 @@ Frec. entrada & Frec. Fiteo & ENOB\\
 \end{table}
 
 \section{Simulaci\'on}
-Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab.
+Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab$\textregistered$.
 Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
 Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits.
-A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto obtuvimos la se\~nal que mejor aproxima a los puntos obtenidos. Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y la de la señal de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits.
+A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto se obtuvo la se\~nal que mejor aproxima a los puntos obtenidos. Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y la de la señal de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits.
 \begin{align}
 SINAD=6.02 \times ENOB + 1.73
 \end{align}
@@ -795,8 +795,8 @@ El THD se calcul\'o sumando la potencia de las arm\'onicas. En el gr\'afico se v
 \label{fig_14}
 \end{figure}
 
-\section{Conclusi\'ones}
-La realización obtenida del proyecto logr\'o cumplir parcialmente los objetivos. Se logr\'o una implementaci\'on sencilla y de bajo costo, ocupando bajos recursos en la fpga (ver tabla2). De las \textit{block RAM} de 16kB no se uso toda la memoria, pero solo pueden ser divididas en bloques de 8kB, la que se uso como ROM le quedo un bloque disponible. El mayor problema en la implementaci\'on fue la distorsi\'on en el modulador. Los algoritmos de simulaci\'on y bancos de prueba usados, facilitaran la implementaci\'on de posibles mejoras.
+\section{Conclusiones}
+La realización obtenida del proyecto logr\'o cumplir parcialmente los objetivos. Se logr\'o una implementaci\'on sencilla y de bajo costo, ocupando bajos recursos en la fpga (ver tabla2). De las \textit{block RAM} de 16kB no se uso toda la memoria, pero solo pueden ser divididas en bloques de 8kB, la que se uso como ROM le quedo un bloque disponible. El mayor problema en la implementaci\'on fue la distorsi\'on en el modulador. Los algoritmos de simulaci\'on y bancos de prueba usados, facilitar\'an la implementaci\'on de posibles mejoras.
 \begin{table}
 \renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
