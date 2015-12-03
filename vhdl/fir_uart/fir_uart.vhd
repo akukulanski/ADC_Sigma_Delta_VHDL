@@ -37,7 +37,7 @@ architecture RTL of fir_uart is
 	type state_type is (IDLE, FIRST, SECOND, WAITING);
 	signal state, state_i : state_type;
 
-	type estado_t is (REPOSO, PRIMERO, SEGUNDO);
+	type estado_t is (PRIMERO, SEGUNDO, WAITING, WAITING2);
 	signal estado, estado_i : estado_t;
 
 	signal output_rx : std_logic_vector(Bits_UART - 1 downto 0) := (others => '0');
@@ -46,12 +46,14 @@ architecture RTL of fir_uart is
 	signal cnt                : std_logic_vector(log2(cuentas) - 1 downto 0);
 	signal rst_cnt, rst_cnt_i : std_logic := '1';
 
-	signal oe_rx     : std_logic := '0';
-	signal input_fir : std_logic_vector(N - 1 downto 0);
+	signal oe_rx     	: std_logic := '0';
+	signal input_fir 	: std_logic_vector(N - 1 downto 0) := (others => '0');
+	signal input_fir_i 	: std_logic_vector(N - 1 downto 0) := (others => '0');
 
-	signal we_fir : std_logic := '0';
-	signal ce_fir : std_logic := '1';
-	signal aux    : std_logic := '0';
+	signal we_fir 	: std_logic := '0';
+	signal we_fir_i	: std_logic:='0';
+	signal ce_fir 	: std_logic := '1';
+	signal aux   	: std_logic := '0';
 
 begin
 	-- No hay PLL, un unico clock
@@ -128,44 +130,44 @@ begin
 	begin
 		if rising_edge(clk_90) then
 			if rst = '1' then
-				estado <= REPOSO;
+				estado <= PRIMERO;
+				we_fir <= '0';
+				input_fir <= (others => '0');
 			else
 				estado <= estado_i;
+				we_fir <= we_fir_i;
+				input_fir <= input_fir_i;
 			end if;
 		end if;
 	end process;
 
 	IN_PROC : process(estado, oe_rx, output_rx)
 	begin
-		we_fir <='0';
+		we_fir_i <='0';
 		case estado is
-			-- espera recibir dos bytes para enviárselos al fir, para ello
-			-- detecta dos flancos ascendentes seguidos de oe_rx
-			-- oe_rx : señal que indica que se recibió un nuevo byte en la uart
-		when REPOSO =>
-				if (oe_rx = '1') then
-					estado_i                          <= PRIMERO;
-					input_fir(Bits_UART - 1 downto 0) <= output_rx;
-				else
-					estado_i  <= REPOSO;
-					input_fir <= (others => '0');
-				end if;
 			when PRIMERO =>
-				if (oe_rx='0') then
-					estado_i <= SEGUNDO ;
-				else
-					estado_i <=PRIMERO;
+				input_fir_i(Bits_UART-1 downto 0) <= (others => '0');
+				if(oe_rx ='1') then
+					estado_i <= WAITING;
+					input_fir_i(Bits_UART - 1 downto 0) <= output_rx;
 				end if;
-			when SEGUNDO => 
-				if (oe_rx ='1') then
-					input_fir(N - 1 downto Bits_UART) <= output_rx;
-					we_fir<='1';
-					estado_i<=REPOSO;
-				else
+			when WAITING =>
+				if(oe_rx='0') then
 					estado_i <= SEGUNDO;
 				end if;
-			end case;
+			when SEGUNDO =>
+				if(oe_rx='1') then
+					estado_i <= WAITING2;
+					input_fir_i(N - 1 downto Bits_UART) <= output_rx;
+					we_fir_i <= '1';
+				end if;	
+			when WAITING2 =>
+				if(oe_rx='0') then
+					estado_i <= PRIMERO;
+				end if;
+		end case;
 	end process IN_PROC;
+
 
 	-- Envía por la UART
 	OUT_PROC : process(tx_busy, oe, state, output_i, tx_start, tx_load)

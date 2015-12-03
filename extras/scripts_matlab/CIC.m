@@ -1,20 +1,23 @@
-
+close all;
+clear;
 %%%%%% CIC parametros %%%%%%
 M=1;%retardo antes de restar(en el comb)
 N=6;%etapas CIC
-R=512;%decimaci�n
-fs=4096*20e3;%frec sampling
+R=512;%decimacion
+fs=90.6e6/2;%4096*10e3;%frec sampling
 %frec salida 160e3
-fp=20e3/fs;%frec corte normalizada a fs; en este caso fs=4096*20e3, fp=20e3
+fp=10e3/fs;%frec corte normalizada a fs; en este caso fs=4096*20e3, fp=20e3
 fo=1/R;%centro primer zona de alias normalizada a fs (es el M-esimo cero)
 f1=1/(M*R);%primer cero
 Fs = fs; % frec sampling
 Bin=1; %bits entrada
 Bout=16; %bits salida recortado
 
+Fo = 0.99*R*fp; % frecuencia de corte normalizada a fs/R
+
 %%%%%%% fir2 parametros %%%%%%
 B = 16; % Cantidad bits coeficientes
-L = 256; % Orden filtro
+L = 255; % Orden filtro
 Window=kaiser(L+1,9); %ventana usada en el filtro fir
 %con estos parametros atenua 87dB a partir de 22.2KHz
 %otras ventanas: chebwin(L+1,90)
@@ -90,7 +93,6 @@ desvio_error= sqrt(sum((E.*[F 1]).^2/12))/2^Bt
 %% Filtro de compensaci�n FIR
 p = 2e3; % Granularity
 s = 0.25/p; % Step size
-Fo = R*fp; % frecuencia de corte normalizada a fs/R
 
 fpass = 0:s:Fo; % banda de paso
 fstop = (Fo+s):s:0.5; % banda de atenuacion

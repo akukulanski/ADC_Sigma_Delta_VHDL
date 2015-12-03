@@ -8,11 +8,11 @@ entity Rx_uart is
 	generic(
 		BITS : natural :=8;
 		CORE : natural := 100000000;
-		BAUDRATE : natural := 912600 
+		BAUDRATE : natural := 921600 
 	);
 	port (
 		rx : in std_logic;
-		oe : out std_logic;
+		oe : out std_logic:='0';
 		output : out std_logic_vector(BITS-1 downto 0);
 		clk : in std_logic;
 		rst : in std_logic

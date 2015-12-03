@@ -14,7 +14,7 @@ architecture RTL of FIR_UART_TB is
 	signal rst    : std_logic;
 	signal rx, tx : std_logic := '0';
 
-	-- Un periodo de reloj arbitrario
+	-- Un periodo de reloj CONSISTENTE con 'Core' en uart
 	constant PERI_CLK : time := 10 ns;
 
 begin
@@ -28,7 +28,7 @@ begin
 			M_DSP     => DSP_OUTPUT_BITS,
 			Bits_UART => 8,
 			Baudrate  => 921600,
-			Core      => 50000000
+			Core      => 100000000--50000000
 		)
 		port map(
 			clk => clk,
@@ -39,20 +39,24 @@ begin
 
 	CLOCK : process is
 	begin
-		wait for PERI_CLK;
+		wait for PERI_CLK/2;
 		clk <= '1';
-		wait for PERI_CLK;
+		wait for PERI_CLK/2;
 		clk <= '0';
 	end process;
 
-	rst <= '1', '0' after PERI_CLK * 3 / 2;
+	--rst <= '1', '0' after PERI_CLK * 3 / 2;
 
 	RX_PROC : process is
 		variable i : integer := 0;
 		variable j : integer := 0;
 		variable aux : integer :=0;
 	begin
+		--NOTA: LLEGA PRIMERO EL LSB
 		rx <= '1';
+		rst <= '1';
+		wait for PERI_CLK*3/2;
+		rst <='0';
 		wait for 100 us;                -- 01110011
 		rx <= '0';                      -- StartBit
 		wait for 1.085 us;
@@ -75,6 +79,7 @@ begin
 		rx <= '1';                      -- Stop Bit
 		wait for 1.085 us;
 	
+		wait for 3 us;
 		rx <= '0';                      -- StartBit
 		wait for 1.085 us;
 		rx <= '0';
@@ -95,7 +100,7 @@ begin
 		wait for 1.085 us;
 		rx <= '1';                      -- Stop Bit
 		wait for 1.085 us;
-	
+		wait for 3 us;
 
 		for j in 0 to (256 - 1) loop
 			rx <= '0';                  -- StartBit

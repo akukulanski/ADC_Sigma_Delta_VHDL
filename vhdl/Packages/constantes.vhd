@@ -28,7 +28,7 @@ package constantes is
 	--El orden filtro FIR es = 2*FIR_HALF_N_COEFF+1
 	constant FIR_HALF_TAPS   : natural := 128; --4
 	constant FIR_OUTPUT_BITS : natural := 16; --cantidad bits salida fir
-	constant FIR_MSB_OUT     : natural := 34; --bit m�s significativo de la salida (contando desde el bit 0)
+	constant FIR_MSB_OUT     : natural := 33; --bit m�s significativo de la salida (contando desde el bit 0)
 	constant FIR_R           : natural := 4; --decimacion en el fir
 	constant DSP_INPUT_BITS  : natural := 18; --cantidad de bits de entrada al dsp
 	constant DSP_OUTPUT_BITS : natural := 48; --cantidad de bits salida del dsp
@@ -48,16 +48,15 @@ package constantes is
 --	);
 
 -- TESTING:
-	constant FIR_COEFFICIENTS : integer_array(0 to FIR_HALF_TAPS - 1) := (
-		-7,-31,-12,-10,2,13,17,13,0,-15,-24,-21,-5,15,31,32,14,-13,-37,-44,
-		-27,7,40,57,44,4,-41,-70,-63,-22,37,82,86,45,-26,-89,-111,-74,8,93,
-		135,109,21,-87,-158,-149,-59,72,176,193,108,-44,-184,-238,-167,1,181,279,233,59,
-		-162,-314,-308,-135,124,337,384,228,-63,-344,-460,-337,-23,327,528,459,137,-282,-582,-591,
-		-281,204,616,728,456,-84,-619,-864,-661,-84,583,990,894,308,-495,-1098,-1157,-594,340,1176,
-		1449,960,-99,-1209,-1773,-1426,-261,1180,2140,2037,797,-1051,-2576,-2889,-1632,757,3156,4229,3100,-108,
-		-4131,-6932,-6504,-1745,6922,17517,27093,32767
-	);
-
+	constant FIR_COEFFICIENTS : integer_array(0 to FIR_HALF_TAPS - 1) :=
+		(0,0,0,-1,-1,-1,0,2,2,2,1,-2,-4,-4,-3,1,5,8,7,2,
+		-6,-11,-12,-7,3,14,20,17,4,-13,-26,-29,-17,6,29,42,35,10,-25,-53,
+		-58,-35,10,56,81,69,20,-46,-98,-107,-65,16,100,144,123,37,-78,-168,-185,-113,
+		24,165,241,206,66,-123,-273,-304,-188,33,261,385,332,111,-189,-426,-478,-301,42,399,
+		596,520,181,-279,-649,-736,-472,50,598,907,802,293,-409,-981,-1129,-738,54,900,1392,1251,
+		481,-608,-1517,-1780,-1196,46,1412,2247,2074,849,-964,-2553,-3102,-2181,-12,2543,4285,4191,1922,-1896,
+		-5759,-7762,-6303,-755,8159,18463,27498,32767
+		);
 --	constant FIR_COEFFICIENTS : integer_array(0 to FIR_HALF_TAPS - 1) := ( 4,3,2,1 );
 
 end package constantes;
