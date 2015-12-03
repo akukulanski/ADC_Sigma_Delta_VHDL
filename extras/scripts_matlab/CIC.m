@@ -114,7 +114,6 @@ for i=1:1:length(hz)
     end
 end
 
-hz = hz*4;
 
 if abs_max_positive==1 %caso positivo(o ambos iguales)
     hz = round(hz*(power(2,B-1)-1));
