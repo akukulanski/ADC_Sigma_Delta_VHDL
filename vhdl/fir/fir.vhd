@@ -95,10 +95,10 @@ begin
 			else
 				oe <= oe_i;
 				oe_i <= oe_ii;
-				--dsp_output <= std_logic_vector(signed(dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1 downto 3) )+signed(dsp_output_ii));
-				--dsp_output_ii <= std_logic_vector(signed(dsp_output_i(M_DSP - 1) & dsp_output_i(M_DSP - 1 downto 1) )+signed(dsp_output_i(M_DSP - 2 downto 0) & '0'));
-				dsp_output <= dsp_output_ii;
-				dsp_output_ii <= dsp_output_i;
+				dsp_output <= std_logic_vector(signed(dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1 downto 3) )+signed(dsp_output_ii(M_DSP - 1)& dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1) & dsp_output_ii(M_DSP - 1 downto 4)) + signed(dsp_output_ii));
+				dsp_output_ii <= std_logic_vector(signed( dsp_output_i(M_DSP - 1) & dsp_output_i(M_DSP - 1 downto 1) )+signed(dsp_output_i(M_DSP - 1 downto 0) ));
+--				dsp_output <= dsp_output_ii;
+--				dsp_output_ii <= dsp_output_i;
 			end if;
 		end if;
 	end process;

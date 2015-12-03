@@ -36,17 +36,15 @@ end entity adc;
 architecture RTL of adc is
 	signal out_lvds_i, out_lvds, oe_cic, oe_fir : std_logic := '0'; -- senial de salida del LVDS
 	signal ce_in                    : std_logic := '1';
-	--signal oe_i,oe_ii                    : std_logic := '1';
+	signal oe_i,oe_ii,oe_iii        : std_logic := '0';
 	signal out_cic                  : std_logic_vector(CIC_OUTPUT_BITS - 1 downto 0);
 	signal output_fir : std_logic_vector(BIT_OUT-1 downto 0);
-	signal output_fir_i : std_logic_vector(BIT_OUT -1 downto 0);
-	 signal oe_fir_dec,oe_i: std_logic:='0';
-	--signal rst : std_logic:='0';
+	signal output_fir_i,output_fir_iii : std_logic_vector(BIT_OUT -1 downto 0);
 begin
 	--rst <= not nrst;
 	feedback <= not out_lvds_i; 
-	output <= output_fir_i;
-	oe <= oe_i;
+	output <= output_fir_iii;
+	oe <= oe_iii;
 	
 	IBUFDS_inst : IBUFDS
 		generic map(
@@ -93,33 +91,45 @@ begin
 			rst      => rst
 		);
 
---	fir : entity work.filterM
---		port map(
---			clk        => clk,
---			clk_enable => oe_cic,
---			reset      => rst,
---			filter_in  => out_cic,
---			filter_out => output_fir,
---			ce_out     => oe_fir
---		);
-
-	process(clk) is
+	
+	
+--	process(clk) is
+--	begin
+--		if rising_edge(clk) then
+--			if rst = '1' then
+--				oe <= '0';
+--				out_lvds_i <= '0';
+--				output_fir_i <= (others => '0');
+--			else
+--				out_lvds_i <=  out_lvds;
+--				oe <= oe_ii;
+--				oe_ii <= oe_i;
+--				if (oe_ii= '1') then
+--					output_fir_i <= output_fir;
+--				end if; 
+--				
+--			end if;
+--		end if;
+--	end process;
+	
+		process(clk) is
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then
-				oe <= '0';
 				out_lvds_i <= '0';
 				output_fir_i <= (others => '0');
+				output_fir_iii<= (others=>'0');
+				oe_iii <= '0';
+				
 			else
 				out_lvds_i <=  out_lvds;
-				oe <= oe_fir_dec;
+				oe_i <= oe_fir;
 				output_fir_i <= output_fir;
-				--oe <= oe_ii;
-				--oe_ii <= oe_i;
-				--if (oe_ii= '1') then
-					--output_fir_i <= output_fir;
-				--end if; 
+				oe_iii<= oe_ii;
 				
+				if(oe_ii='1') then
+					output_fir_iii<= output_fir_i;
+				end if;
 			end if;
 		end if;
 	end process;
@@ -130,8 +140,8 @@ begin
 			R => FIR_R
 		)
 		port map(
-			ce_in  => oe_fir,
-			ce_out => oe_fir_dec,
+			ce_in  => oe_i,--oe_fir,
+			ce_out => oe_ii,--oe_i,
 			clk    => clk,
 			rst    => rst
 		);

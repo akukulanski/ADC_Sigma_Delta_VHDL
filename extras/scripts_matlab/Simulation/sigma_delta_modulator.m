@@ -48,8 +48,8 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     k1 = R2/(R1+R2);
     k2 = R1/(R1+R2);
     w0= (1/R1+1/R2)/C;
-    a=2/dt-w0; %número mágico 1
-    b=2/dt+w0; %número mágico 2
+    a=2/dt-w0; %nï¿½mero mï¿½gico 1
+    b=2/dt+w0; %nï¿½mero mï¿½gico 2
     for i=3:numel(t)
         
         aux= k1*(s(i)+s(i-1))+k2*(q(i-1)+q(i-2));
@@ -88,20 +88,21 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
             
     end
     
-%     a(1)= subplot(411);
-%     plot(t,s);
-%     title('Signal');
-%     a(2)= subplot(412);
-%     plot(t,y);
-%     title('Filter Output');
-%     a(3)= subplot(413);
-%     stem(t,output);
-%     title('Sigma Delta Output');
+     a(1)= subplot(311);
+     plot(t,s);
+     title('Signal');
+     a(2)= subplot(312);
+     plot(t,y);
+     title('Filter Output');
+     a(3)= subplot(313);
+     plot(t,output);
+     ylim([-0.5 1.5]);
+     title('Sigma Delta Output');
 %     a(4)= subplot(414);
 %     stem(t,edge);
 %     title('Rising Clock Edge');
 %         
-%     linkaxes(a, 'x');    
+     linkaxes(a, 'x');    
 %     
 %     figure;
 %      
