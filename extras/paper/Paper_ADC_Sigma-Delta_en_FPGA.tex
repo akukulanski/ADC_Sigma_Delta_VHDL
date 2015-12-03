@@ -120,8 +120,8 @@
 % The documentation is contained in the cite.sty file itself.
 
 
-
-
+%% TILDES
+\usepackage[utf8]{inputenc}
 
 
 % *** GRAPHICS RELATED PACKAGES ***
@@ -140,7 +140,7 @@
   % driver is specified.
   \usepackage[dvips]{graphicx}
   % declare the path(s) where your graphic files are
-  \graphicspath{{../eps/}}
+  \graphicspath{{./eps/}}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
   \DeclareGraphicsExtensions{.eps}
@@ -440,7 +440,7 @@ Se realiza un ADC en una FPGA, usando una topología Sigma-Delta para mantener a
 
 \section{Introducci\'on}
 % no \IEEEPARstart
-Un ADC sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en muestrear a una frecuencia mayor que la de Nyquist, por lo que el ruido de cuantizaci\'on pasa a distribuirse en un ancho de banda m\'as grande, y al pasar luego por un filtro pasa bajos se lo disminuye. El \textit{Noise Shaping} consiste en redistribuir el ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, logr\'andose una reducción mayor del ruido de cuantizaci\'on al pasar por un filtro pasabajos (ver Fig.1).
+Un ADC sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en muestrear a una frecuencia mayor que la de Nyquist, por lo que el ruido de cuantizaci\'on pasa a distribuirse en un ancho de banda m\'as grande, y al pasar luego por un filtro pasa bajos se lo disminuye. El \textit{Noise Shaping} consiste en redistribuir el ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, logr\'andose una reducción mayor del mismo al pasar por un filtro pasabajos (ver Fig.1).
 
 \begin{figure}[!b]
 \centering
@@ -617,7 +617,7 @@ Partiendo del modulador de primer orden en tiempo discreto y con la anterior tra
  H(s)&=\frac{1}{sT_s}\\
  H_x(e^{sT_s})&= \frac{1-e^{-sT_s}}{s}
 \end{align}
-Donde el filtro antes del cuantizador es un integrador, y la trasferencia para la se\~nal es un pasabajos con ceros en multiplos de $f_s$, lo cual reduce notablemente el alias en la banda de paso.
+Donde el filtro antes del cuantizador es un integrador, y la trasferencia para la se\~nal es un pasabajos con ceros en múltiplos de $f_s$, lo cual reduce notablemente el alias en la banda de paso.
 \subsection{Implementaci\'on}
 
 \begin{figure}[!t]
@@ -641,7 +641,7 @@ Donde el filtro antes del cuantizador es un integrador, y la trasferencia para l
 \caption{Arriba: Respuesta banda de paso de la se\~nal (derecha), y ruido (izquierda). Abajo: Respuesta se\~nal completa}
 \label{fig_5}
 \end{figure}
-La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC. La cuantificaci\'on es realizada por una entrada LVDS de la FPGA utilizada com\'unmente para comunicaci\'ones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que lo hace posible funcionar, ya que el filtro debe tener ganancia mayor a uno. Generalmente se la estima basado en que cuando no hay entrada, la salida Vq oscilar\'a entre el estado bajo y alto en cada clk, y la ganancia del comparador ser\'ia .
+La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC. La cuantificaci\'on es realizada por una entrada LVDS de la FPGA utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima basado en que cuando no hay entrada, la salida Vq oscilar\'a entre el estado bajo y alto en cada clk, y la ganancia del comparador ser\'ia :
 \begin{align}
 G=\frac{1}{|H(j\pi fs)|}
 \end{align}
@@ -679,7 +679,7 @@ Se simul\'o un comparador, incluy\'endose efectos de hist\'eresis y ruido sobre 
 \section{Filtro decimador CIC}
 El filtro CIC (Cascaded Integrator-Comb) presentado por Hogenauer en 1981,  es un filtro pasa bajos que tiene como principal caracter\'istica su eficiente implementaci\'on, logrando bajar la frecuencia de trabajo con un filtro sencillo que presenta poco alias.
 
-Se puede observar que cada par acumulador (a la izquierda decimador), y \textit{comb} (a la derecha), forman un filtro de media m\'ovil con ventana de ancho R*M. La transferencia de \'este es:
+Se puede observar que cada par acumulador (a la izquierda del decimador), y \textit{comb} (a la derecha), forman un filtro de media m\'ovil con ventana de ancho R*M. La transferencia de \'este es:
 \begin{align}
 H_{CIC}(z)= \left( H_I(z) H_c(z)\right)& ^{N}=\left( \frac{1-z^{-RM}}{1-z^{-1}}\right) ^N\\
 \left| H_{CIC}(e^{j2\pi\frac{f}{R}})\right| &=\left| \frac{\sin(\pi M\,f)}{\sin(\pi \frac{f}{R})}\right| ^{N}
@@ -688,7 +688,7 @@ Siendo f normalizada a la downsampling rate.
 Se observa que los ceros del CIC se producen en los m\'ultiplos de la low sampling rate, es decir, las zonas de alias. El m\'aximo alias se da en f=1-fp, y se puede tener s\'olo en cuenta este valor ya que el aporte de los siguientes l\'obulos es mucho menor.
 
 \subsection{Implementaci\'on y simulaci\'on}
-El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadores de 55 bits. Para reducir el tiempo combinacional y poder tener una frecuencia de trabajo mayor, cada etapa fue registrada. A su vez, se implement\'o, entre las etapas, el bloque de decimaci\'on con un factor de 512. El retraso en los \textit{comb} se determin\'o de M=1.  Las salidas del CIC son almacenadas en una Dual-Port BlockRam la cual tiene la caracter\'istica de poder realizar la lectura de dos datos de manera simultanea. En la Fig.8 se ve la respuesta en la banda de paso, y la primer zona de alias.
+El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadores de 55 bits. Para reducir el tiempo combinacional y poder tener una frecuencia de trabajo mayor, cada etapa fue registrada. A su vez, se implement\'o, entre las etapas, el bloque de decimaci\'on con un factor de 512. El retraso en los \textit{comb} se determin\'o de M=1.  Las salidas del CIC son almacenadas en una Dual-Port BlockRam la cual tiene la caracter\'istica de poder realizar la lectura de dos datos de manera simultánea. En la Fig.8 se ve la respuesta en la banda de paso, y la primer zona de alias.
 
 \begin{figure}[!t]
 \centering
@@ -751,7 +751,7 @@ Frec. entrada & Frec. Fiteo & ENOB\\
 Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab.
 Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
 Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits.
-A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto obtuvimos la se\~nal que mejor aproxima a los puntos obtenidos. Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y de la de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits.
+A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto obtuvimos la se\~nal que mejor aproxima a los puntos obtenidos. Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y la de la señal de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits.
 \begin{align}
 SINAD=6.02 \times ENOB + 1.73
 \end{align}
@@ -777,7 +777,7 @@ Para obtener los resultados de las mediciones se realiz\'o una comunicaci\'on UA
 En la medici\'on de linealidad se obtuvo una distorsi\'on en valores de entrada cercanos a la referencia de tensi\'on. La linealidad fue corregida digitalmente, aunque de momento la corrección fue s\'olo implementada en Matlab$\textregistered$ y no en la FPGA.
  
 Luego se realiz\'o el c\'alculo de la cantidad efectiva de bits mediante el mismo m\'etodo que el usado en la simulaci\'on. En la imagen se puede comparar el resultado para el ADC linealizado digitalmente y sin linealizar.
-La presencia de arm\'onicos disminuye el ENOB cuando no se lo linealiza (curva roja Fig.13 Fig.14). Al subir en frecuencia, los arm\'onicos quedan fuera de la banda de paso y son filtrados, por lo que el ENOB sube. Al linealizar (curva azul), mejora el ENOB a bajas frecuencias, ya que en ellas la correcci\'on agrega distorisi\'on que no hab\'ia.
+La presencia de arm\'onicos disminuye el ENOB cuando no se lo linealiza (curva roja Fig.13 Fig.14). Al subir en frecuencia, los arm\'onicos quedan fuera de la banda de paso y son filtrados, por lo que el ENOB sube. Al linealizar (curva azul), mejora el ENOB a bajas frecuencias, pero empeora en las altas, ya que en estas últimas la distorsión es filtrada, no debiendo corregirse.
 
 El THD se calcul\'o sumando la potencia de las arm\'onicas. En el gr\'afico se ve c\'omo la THD disminuye al linealizar. A bajas frecuencias y sin linealizar, result\'o de 0.003$\%$ , equivalente a -45dB. Teniendo en cuenta que la SINAD era de 45dB se ve que \'esta estaba dominada por el contenido arm\'onico.
 
