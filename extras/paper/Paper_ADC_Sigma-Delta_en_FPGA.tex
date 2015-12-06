@@ -140,7 +140,7 @@
   % driver is specified.
   \usepackage[dvips]{graphicx}
   % declare the path(s) where your graphic files are
-  \graphicspath{{./eps/}}
+  \graphicspath{{./eps/}
   % and their extensions so you won't have to specify these with
   % every instance of \includegraphics
   \DeclareGraphicsExtensions{.eps}
@@ -465,9 +465,16 @@ donde $H_x$ y $H_n$ son las transferencias para la señal y para el ruido respec
 \label{fig:SDTD}
 \end{figure}
 
-Para el desarrollo del proyecto se uso el kit de desarrollo Mojo v3 el cual posee una fpga Spartan6.
+Para el desarrollo del proyecto se uso el kit de desarrollo Mojo v3 el cual posee una fpga Spartan6. En la Fig.~\ref{fig:DBADC} se resume el sistema completo, donde el el filtro CIC realiza una decimación de 2048 veces y la salida del fir es decimada 4 veces.
 %\hfill mds
 %\hfill January 11, 2007
+
+\begin{figure}[!b]
+\centering
+\includegraphics[width=4in]{Diagrama_Sistema_ADC.eps}
+\caption{Diagrama bloques del ADC}
+\label{fig:DBADC}
+\end{figure}
 
 \subsection{Modulador $\Sigma\Delta$ en tiempo discreto}
 Basado en el diagrama en bloques anterior, un modulador primer orden consiste en un acumulador:
@@ -728,9 +735,9 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 \label{fig:FIR_top}
 \end{figure}
 
-El filtro FIR busca ecualizar la transferencia en la banda de paso del CIC (la cual no es plana), y eliminar el ruido de cuantizaci\'on fuera de esta antes de la decimaci\'on final. Se lo dise\~n\'o por el m\'etodo de sampleo y ventaneo con una ventana Kaiser, donde en la banda de paso se samplea la inversa de la respuesta en frecuencia del filtro CIC usado y fuera de esta ceros\cite{FIR_Comp}. 
-Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multiplicador-Acumulador (Fig.~\ref{fig:FIR_top}) que posee el bloque DSP de la FPGA\cite{Sp6-DSP}. Se utiliz\'o un filtro FIR sim\'etrico de 256 coeficientes  con frecuencia de corte normalizada de 0.22. Al ser sim\'etrico, s\'olo es necesario almacenar la mitad de los coeficientes y tambi\'en se reduce a la mitad el c\'alculo al poder utilizar el preadder.  Posteriormente, se realiza una \'ultima decimaci\'on por un factor de 4, dando como resultante una decimaci\'on total de 2048.
-En la Fig.~\ref{fig:FIR_res} se ve que el filtro FIR tienen una atenuaci\'on de 80dB.
+El filtro FIR busca ecualizar la transferencia en la banda de paso del CIC (la cual no es plana), y eliminar el ruido de cuantizaci\'on fuera de esta antes de la decimaci\'on final. Se lo dise\~n\'o por el m\'etodo de sampleo y ventaneo con una ventana Kaiser, donde en la banda de paso se samplea la inversa de la respuesta en frecuencia del filtro CIC usado y fuera de esta ceros\cite{FIR_Comp}. En la Fig.~\ref{fig:FIR_res} se ve que el filtro FIR tienen una atenuaci\'on de 80dB.
+Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multiplicador-Acumulador (Fig.~\ref{fig:FIR_top}) que posee el bloque DSP de la FPGA\cite{Sp6-DSP}. Se utiliz\'o un filtro FIR sim\'etrico de 256 coeficientes  con frecuencia de corte normalizada de 0.22. Al ser sim\'etrico, s\'olo es necesario almacenar la mitad de los coeficientes y tambi\'en se reduce a la mitad el c\'alculo al poder utilizar el preadder.  Posteriormente, se realiza una \'ultima decimaci\'on por un factor de 4, dando como resultante una decimaci\'on total de 2048. El resultado final fue truncado a 16 bits.
+
 
 
 \begin{figure}[!t]
@@ -769,16 +776,6 @@ Frec. entrada & Frec. Fiteo & ENOB\\
 \end{tabular}
 \end{table}
 
-\section{Simulaci\'on}
-Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
-Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
-Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits.
-A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto obtuvimos la se\~nal que mejor aproxima a los puntos obtenidos (ej. en Fig.~\ref{fig:fit}). Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y la de la señal de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits.
-\begin{align}
-SINAD=6.02 \times ENOB + 1.73
-\end{align}
-Los resultados obtenidos en la simulaci\'on se los resume en la Tabla~\ref{Tabla:sim}.
-
 \begin{figure}[!b]
 \centering
 \includegraphics[width=2.5in]{Simulacion_fiteo}
@@ -786,24 +783,56 @@ Los resultados obtenidos en la simulaci\'on se los resume en la Tabla~\ref{Tabla
 \label{fig:fit}
 \end{figure}
 
+\section{Simulaci\'on}
+Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
+Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
+Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits.
+A los datos obtenidos se les aplic\'o un \textit{fitting} con una senoidal de tres grados de libertad (Amplitud, frecuencia y fase). Con esto obtuvimos la se\~nal que mejor aproxima a los puntos obtenidos (ej. en Fig.~\ref{fig:fit}). Luego se calcula la potencia de la se\~al de error. El SINAD (Relaci\'on Se\~nal a ruido + distorsi\'on) se lo estima como raz\'on entre la potencia de la se\~nal obtenida en la regresi\'on y la de la señal de error. El ENOB (cantidad de bits efectivos) se lo define a partir de la relaci\'on se\~nal a ruido de cuantizaci\'on de un ADC de N bits:
+\begin{align}
+SINAD=6.02 \times ENOB + 1.73
+\end{align}
+Los resultados obtenidos en la simulaci\'on se los resume en la Tabla~\ref{Tabla:sim}.
+
 \section{Mediciones}
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=3in]{Medicion_Linealidad}
+\includegraphics[width=3.5in]{Medicion_Linealidad}
 \caption{A la izquierda con la correcci\'on linealidad, a la derecha sin. En ambos casos de arriba a abajo: respuesta entrada a salida y \textit{fitting}, desvio estandar, error en el \textit{fitting}}
 \label{fig:lin}
 \end{figure}
 
-Para obtener los resultados de las mediciones se realiz\'o una comunicaci\'on UART entre la FPGA y la PC. El set de medici\'on const\'o de un generador de funciones Agilent 3352A\cite{AgilentWG}, controlado v\'ia ETHERNET desde la computadora. Luego se analizaron los datos medidos mediante scripts realizados en Matlab\textregistered.
+\begin{table}[t]
+\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+\caption{Agilent 3352A}
+\label{Tabla:WG}
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+Bloque & Usados & Disponibles & $\%$ \\
+\hline
+Slices FF & 1113 & 11440 & 9\\
+\hline
+Slices Luts & 932 & 5720 & 16\\
+\hline
+Block RAM(16kB) & 2 & 32 & 6\\
+\hline
+DSP48A1 & 1 & 16 & 6\\
+\hline
+\end{tabular}
+\end{table}
+
+Para obtener los resultados de las mediciones se realiz\'o una comunicaci\'on UART entre la FPGA y la PC. El set de medici\'on const\'o de un generador de funciones Agilent 3352A (ver Tabla)\cite{AgilentWG}, controlado v\'ia ETHERNET desde la computadora. Luego se analizaron los datos medidos mediante scripts realizados en Matlab\textregistered.
 En la medici\'on de linealidad se obtuvo una distorsi\'on en valores de entrada cercanos a la referencia de tensi\'on (Fig.~\ref{fig:lin}). La linealidad fue corregida digitalmente, aunque de momento la corrección fue s\'olo implementada en Matlab\textregistered y no en la FPGA.
  
 Luego se realiz\'o el c\'alculo de la cantidad efectiva de bits mediante el mismo m\'etodo que el usado en la simulaci\'on. En la imagen se puede comparar el resultado para el ADC linealizado digitalmente y sin linealizar.
 La presencia de arm\'onicos disminuye el ENOB cuando no se lo linealiza (ver curvas rojas Fig.~\ref{fig:ENOB} en Fig.~\ref{fig:THD}). Al subir en frecuencia, los arm\'onicos quedan fuera de la banda de paso y son filtrados, por lo que el ENOB sube. Al linealizar (curvas en azul), mejora el ENOB a bajas frecuencias, pero empeora en las altas, ya que en estas últimas la distorsión es filtrada, no debiendo corregirse.
 
-El THD se calcul\'o sumando la potencia de las arm\'onicas. En el gr\'afico se ve c\'omo la THD disminuye al linealizar. A bajas frecuencias y sin linealizar, result\'o de 0.003$\%$ , equivalente a -45dB. Teniendo en cuenta que la SINAD era de 45dB se ve que \'esta estaba dominada por el contenido arm\'onico.
+El THD se calcul\'o sumando la potencia de las arm\'onicas. En el gr\'afico se ve c\'omo la THD disminuye al linealizar. A bajas frecuencias y sin linealizar, result\'o de 0.003$\%$ , equivalente a -45dB. Teniendo en cuenta que la SINAD era de 45dB se ve que \'esta estaba dominada por el contenido arm\'onico. Habrá que tener en cuenta en posteriores caracterizaciones que el THD del generador de funciones usados era de 0.04\% lo que enmascara a los resultados obtenidos.
 
-\begin{figure}[!b]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=2.5in]{Medicion_ENOB}
 \caption{ENOB seg\'un la frecuencia}
@@ -817,10 +846,7 @@ El THD se calcul\'o sumando la potencia de las arm\'onicas. En el gr\'afico se v
 \label{fig:THD}
 \end{figure}
 
-\section{Conclusi\'ones}
-La realización obtenida del proyecto logr\'o cumplir parcialmente los objetivos. Se logr\'o una implementaci\'on sencilla y de bajo costo, ocupando bajos recursos en la fpga por el ADC (ver Tabla~\ref{Tabla:rescursos}). El mayor problema en la implementaci\'on fue la distorsi\'on en el modulador, la cual no es tenida en cuenta en el modelo linealizado usado de este y fue la mayor limitaci\'on del sistema. Los algoritmos de simulaci\'on y bancos de prueba usados, facilitaran la implementaci\'on de posibles mejoras en el sistema. Además la implementación en la puede ser reutilizada ya que todos los parametros del diseño son totalmente configurables, pudiendose hacer facilmente pruebas con distintas frecuencias clock, OSR, parametros filtros CIC y coeficientes FIR. Por lo que a partir de esta primer implementaci\'on se podra mejorar facilmente el sistema.
-
-\begin{table}
+\begin{table}[!t]
 \renewcommand{\arraystretch}{1.3}
 % if using array.sty, it might be a good idea to tweak the value of
 % \extrarowheight as needed to properly center the text within the cells
@@ -841,6 +867,10 @@ DSP48A1 & 1 & 16 & 6\\
 \hline
 \end{tabular}
 \end{table}
+
+\section{Conclusi\'ones}
+La realización obtenida del proyecto logr\'o cumplir parcialmente los objetivos. Se logr\'o una implementaci\'on sencilla y de bajo costo, ocupando bajos recursos en la fpga por el ADC (ver Tabla~\ref{Tabla:rescursos}). El mayor problema en la implementaci\'on fue la distorsi\'on en el modulador, la cual no es tenida en cuenta en el modelo linealizado usado de este y fue la mayor limitaci\'on del sistema. Los algoritmos de simulaci\'on y bancos de prueba usados, facilitaran la implementaci\'on de posibles mejoras en el sistema. Además la implementación en la puede ser reutilizada ya que todos los parametros del diseño son totalmente configurables, pudiendose hacer facilmente pruebas con distintas frecuencias clock, OSR, parametros filtros CIC y coeficientes FIR. Por lo que a partir de esta primer implementaci\'on se podra mejorar facilmente el sistema.
+
 
 
 % conference papers do not normally have an appendix
