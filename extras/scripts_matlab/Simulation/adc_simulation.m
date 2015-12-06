@@ -4,7 +4,7 @@ function [sig_delt,res_cic,res_fir] = adc_simulation(dt,time,fclk,func,Vhist)
         %% Parámetros del modulador 
         R1 = 150e3;
         R2 = 150e3;
-        C = .1e-9;
+        C = 470e-12;
         Vth = 1.65;
 
 

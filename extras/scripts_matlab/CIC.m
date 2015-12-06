@@ -4,16 +4,17 @@ clear;
 M=1;%retardo antes de restar(en el comb)
 N=6;%etapas CIC
 R=512;%decimacion
-fs=90.6e6/2;%4096*10e3;%frec sampling
+fs=45.3125e6;%frec sampling
 %frec salida 160e3
-fp=10e3/fs;%frec corte normalizada a fs; en este caso fs=4096*20e3, fp=20e3
+fp=11e3/fs;%frec corte normalizada a fs;
 fo=1/R;%centro primer zona de alias normalizada a fs (es el M-esimo cero)
 f1=1/(M*R);%primer cero
 Fs = fs; % frec sampling
 Bin=1; %bits entrada
 Bout=16; %bits salida recortado
 
-Fo = 0.99*R*fp; % frecuencia de corte normalizada a fs/R
+Fo = 0.99*R*20e3/90.6e6; % frecuencia de corte normalizada a fs/R
+%la formula es 0.22, se la puso asi para concuerde con FIR usado.
 
 %%%%%%% fir2 parametros %%%%%%
 B = 16; % Cantidad bits coeficientes
@@ -25,16 +26,22 @@ Window=kaiser(L+1,9); %ventana usada en el filtro fir
 %% Graficos(comentar si molestan)
 F=linspace(0,fp,1000);
 Hmax=N*20*log(M*R)/log(10);
-H=N*10*log((sin(pi*F*M*R)./sin(pi*F)).^2)/log(10);
+H=N*10*log((sin(pi*F*M*R)./sin(pi*F)).^2)/log(10)-Hmax;
 figure(1);
-subplot(2,1,1), plot(fs*F,H) %banda paso
+subplot(2,1,1), plot(fs*F/1e3,H) %banda paso
+xlabel('frec[kHz]','FontSize',12,'FontWeight','bold');
+ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',12,'FontWeight','bold');
+set(gca,'fontsize',12);
 Fa=linspace(fo-fp,fo+fp,1000);
 Ha=N*10*log((sin(pi*Fa*M*R)./sin(pi*Fa)).^2)/log(10)-Hmax;
-subplot(2,1,2), plot(fs*Fa,Ha) %primer zona alias, relativa a ganancia banda paso
+subplot(2,1,2), plot(fs*Fa/1e3,Ha) %primer zona alias, relativa a ganancia banda paso
+xlabel('frec[kHz]','FontSize',12,'FontWeight','bold');
+ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',12,'FontWeight','bold');
+set(gca,'fontsize',12);
 F2=linspace(f1,2*f1,1000);
 H2=N*10*log((sin(pi*F2*M*R)./sin(pi*F2)).^2)/log(10)-Hmax;
-figure(2);
-plot(F2,H2)%segundo lobulo, relativo a ganancia banda paso
+%figure(2);
+%plot(F2,H2)%segundo lobulo, relativo a ganancia banda paso
 
 %% calculo del alias
 Fali=fo-fp;

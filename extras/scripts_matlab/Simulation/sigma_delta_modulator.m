@@ -48,8 +48,8 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     k1 = R2/(R1+R2);
     k2 = R1/(R1+R2);
     w0= (1/R1+1/R2)/C;
-    a=2/dt-w0; %n�mero m�gico 1
-    b=2/dt+w0; %n�mero m�gico 2
+    a=2/dt-w0; %numero magico 1
+    b=2/dt+w0; %numero magico 2
     for i=3:numel(t)
         
         aux= k1*(s(i)+s(i-1))+k2*(q(i-1)+q(i-2));
@@ -88,26 +88,55 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
             
     end
     
-     a(1)= subplot(311);
-     plot(t,s);
-     title('Signal');
-     a(2)= subplot(312);
-     plot(t,y);
-     title('Filter Output');
-     a(3)= subplot(313);
-     plot(t,output);
-     ylim([-0.5 1.5]);
-     title('Sigma Delta Output');
-%     a(4)= subplot(414);
-%     stem(t,edge);
-%     title('Rising Clock Edge');
-%         
-     linkaxes(a, 'x');    
-%     
-%     figure;
-%      
-%     plot(conv(output,ones(1,1000)));
     output = output (edge==1);
+
+%% Poteo para presentacion
+    
+    t=t(edge==1);
+    s=s(edge==1);
+    y=y(edge==1);
+    
+    a(1)= subplot(4,2,[1,2]);
+    plot(t,s);
+    %title('Señal');
+    xlabel('t[s]','FontSize',12,'FontWeight','bold');
+    ylabel('Entrada[V]','FontSize',12,'FontWeight','bold');
+    set(gca,'fontsize',12);
+    a(2)= subplot(4,2,[3,4]);
+    plot(t,y);
+    %title('Salida Integrador');
+    xlabel('t[s]','FontSize',12,'FontWeight','bold');
+    ylabel('Salida Int.[V]','FontSize',12,'FontWeight','bold');
+    set(gca,'fontsize',12);
+    a(3)= subplot(4,2,[5,6]);
+    plot(t,output);
+    ylim([-0.5 1.5]);
+    %title('Sigma Delta Output');
+    xlabel('t[s]','FontSize',12,'FontWeight','bold');
+    ylabel('Salida Mod. [V]','FontSize',12,'FontWeight','bold');
+    set(gca,'fontsize',12);
+    linkaxes(a, 'x');
+    
+    N= numel(output);
+    %ts = 1/fclk;
+    %t = ts*(0:N-1);
+    per_sig = abs(fft(output)).^2/N;
+    fs = fclk;
+    f = 0:fs/N:(N-1)*fs/N;
+    fp= 0:fs/N:11e3;
+    per_sig_fp= per_sig(1:numel(fp));
+    
+    subplot(427);
+    plot(f/1e6,db(per_sig/max(per_sig)));
+    xlabel('f[MHz]','FontSize',12,'FontWeight','bold');
+    ylabel('Salida Mod.[dB]','FontSize',12,'FontWeight','bold');
+    set(gca,'fontsize',12);
+    subplot(428);
+    plot(fp/1e3,db(per_sig_fp/max(per_sig)));
+    xlabel('f[kHz]','FontSize',12,'FontWeight','bold');
+    ylabel('Salida Mod.[dB]','FontSize',12,'FontWeight','bold');
+    set(gca,'fontsize',12);
+
     
 end
     
