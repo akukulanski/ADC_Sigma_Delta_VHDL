@@ -682,7 +682,7 @@ H(s)=\frac{1}{2+sCR}
 La transferencia a lazo abierto por lo tanto es $G*H(s)$. 
 Se obtiene la transferencia de lazo equivalente como:
 \begin{align}
-H_{eq}(z)=\frac{1}{2}\frac{1-e^{-\frac{2}{RC}T_s}}{1-e^{-\frac{2}{RC}T_s}z^{-1}}
+H_{eq}(z)=\frac{z^{-1}}{2}\frac{1-e^{-\frac{2}{RC}T_s}}{1-e^{-\frac{2}{RC}T_s}z^{-1}}
 \end{align}
 El PLL de la fpga fue ajustado a 45.3125MHz, y al sistema digital se lo hizo decimar 2048 veces, por lo que a la salida se tendrán 22.13 Ksps. El valor de resistencia usada fue de 150k, y el capacitor de 470pF (corte en 4.3kHz).
 Con esto se puede graficar las transferencias para la señal y para el ruido con las fórmulas antes indicadas (Fig.~\ref{fig:Resp_mod}). Observando la transferencia para la señal, se ve que el ripple es despreciable. Luego con la transferencia para el ruido en la banda de paso, se estimó el ENOB realizando una integraci\'on num\'erica que dio como resultado 13,6. Por último, se observa que la primer zona de alias tiene un m\'aximo de -72dB.
