@@ -414,8 +414,12 @@
 
 \begin{abstract}
 %\boldmath
-En el desarrollo de esta publicación, se presenta un conversor analógico digital en una \textit{FPGA}, implementado bajo una topología Sigma-Delta la cual permite una realización con una cantidad muy pequeña de hardware externo. También, se buscaron distintas topologías de filtrado digital para aprovechar los recursos propios de la \textit{FPGA}. Finalmente, se desarrollaron simulaciones y metodologías de medición para poder caracterizarlo y poder realizar la comparación con los resultados ideales. \\
-Como resultado del trabajo se ha obtenido un conversor analógico digital de 9 bits efectivos en bajas frecuencias, con una frecuencia de muestreo de 22KHz.    
+En el desarrollo de esta publicación, se presenta un conversor analógico digital en una \textit{FPGA}, implementado bajo una topología Sigma-Delta la cual permite una realización con una cantidad muy pequeña de hardware externo. Se utiliza el buffer diferencial \textit{LVDS} como entrada y se emplean topologías de filtrado digital que aprovechan los recursos propios de la \textit{FPGA} buscando así obtener un conversor de bajo costo y consumiendo pocos recursos. Se desarrollan simulaciones y metodologías de medición para caracterizarlo y poder realizar la comparación con los resultados ideales. Como resultado del trabajo se ha obtenido un conversor analógico digital de 9 bits efectivos en bajas frecuencias, con una frecuencia de muestreo de 22KHz. 
+
+
+
+%En el desarrollo de esta publicación, se presenta un conversor analógico digital en una \textit{FPGA}, implementado bajo una topología Sigma-Delta la cual permite una realización con una cantidad muy pequeña de hardware externo. También, se buscaron distintas topologías de filtrado digital para aprovechar los recursos propios de la \textit{FPGA}. Finalmente, se desarrollaron simulaciones y metodologías de medición para poder caracterizarlo y poder realizar la comparación con los resultados ideales. \\
+
 
 \end{abstract}
 % IEEEtran.cls defaults to using nonbold math in the Abstract.
@@ -444,7 +448,7 @@ Como resultado del trabajo se ha obtenido un conversor analógico digital de 9 b
 
 \section{Introducci\'on}
 % no \IEEEPARstart
-Un conversor analógico digital sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist, logrando distribuir la potencia de ruido de cuantización (considerada constante) en un ancho de banda mayor. El \textit{Noise Shaping} consiste en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el anterior caso (ver Fig.~\ref{fig:NS}). Estos dos efectos permiten la eliminación de la mayor parte del ruido de cuantización con un filtro pasabajos.
+Un conversor analógico digital sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist, logrando distribuir la potencia de ruido de cuantización (considerada constante) en un ancho de banda mayor. El \textit{Noise Shaping} se basa en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el caso anterior (ver Fig.~\ref{fig:NS}). Estos dos efectos permiten eliminar la mayor parte del ruido de cuantización con un filtro pasabajos.
 % El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist que, al considerar que la potencia de ruido de cuantización es constante y no depende de la frecuencia de muestreo, el ruido de cuantizaci\'on se distribuye en un ancho de banda mayor, permitiendo que este pueda ser posteriormente disminuido por medio de un filtro digital. El \textit{Noise Shaping} consiste en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el anterior caso (ver Fig.~\ref{fig:NS}).
 
 \begin{figure}[!b]
@@ -482,7 +486,7 @@ Para el desarrollo del proyecto, se utilizó el kit de desarrollo Mojo v3 el cua
 \end{figure}
 
 \subsection{Modulador $\Sigma\Delta$ en tiempo discreto}
-Basado en el diagrama en bloques de la figura \ref{fig:SDTD} , un modulador de primer orden puede modelizarse con la siguiente transferencia:
+Basado en el diagrama en bloques de la figura \ref{fig:SDTD}, un modulador de primer orden puede modelizarse con la siguiente transferencia:
 
 \begin{align}
 H(z)=\frac{z^{-1}}{1-z^{-1}}
@@ -494,7 +498,7 @@ H_n(z)=1-z^{-1}
 \end{align}
 
 Por lo tanto, la transferencia para la señal es simplemente un retardo, y la del ruido consta de la diferencia entre la muestra actual y la anterior.
-Para implementar un filtro de \'orden k se suele recurrir a que su transferencia estará dada por:
+Para implementar un filtro de orden k se suele recurrir a que su transferencia esté dada por:
 
 \begin{align}
 H_n(z)=\left( 1-z^{-1}\right)^{k}
@@ -624,7 +628,9 @@ En la Fig.~\ref{fig:SQNR} se ilustra el resultado.
 
 \section{Modulador $\Sigma\Delta$ en tiempo continuo}
 
-En la Fig.~\ref{fig:SDTC} donde se reemplazó el cuantizador por su modelo de ruido aditivo, las transferencias para la se\~nal y para el ruido quedan:
+A diferencia del modulador $\Sigma\Delta$ en tiempo discreto, el muestreo se realiza luego del modulador. Dicho cambio se aprecia en la Fig.~\ref{fig:SDTC} de la cual que se puede obtener la siguiente transferencia para la señal y para el ruido:
+
+%En la Fig.~\ref{fig:SDTC} donde se reemplazó el cuantizador por su modelo de ruido aditivo, las transferencias para la se\~nal y para el ruido quedan:
 
 \begin{align}
 H_x(e^{sT_s}) &= \frac{H(s)}{1+H_{eq}(e^{sT_s})} \\
@@ -657,14 +663,14 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 
 \subsection{Implementaci\'on}
 
-\begin{figure}[!b]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Sigma-Delta_RC}
 \caption{Diag. bloques $\Sigma\Delta$ RC}
 \label{fig_SDRC}
 \end{figure}
 
-La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
+La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada posee un rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
 \begin{align}
 G=\frac{1}{|H(j\pi fs)|}
 \end{align}
@@ -691,7 +697,7 @@ Con esto se puede graficar las transferencias para la señal y para el ruido con
 \subsection{Simulaci\'on}
 
 
-Para realizar la simulación del modulador, se modelizó el comparador incluyendo efectos de histéresis y adición de ruido sobre la tensión de referencia. En la simulaci\'on no se incluyeron las caracter\'isticas el\'ectricas de los buffers de entrada y salida de la \textit{FPGA}. En la Fig.~\ref{fig:Sim_mod} se ve una simulaci\'on de la respuesta para una señal de 1kHz. En esta se ve que la salida integrador RC tiene una oscilación pico a pico 2mV, lo que es una ganancia señal G=1650. Al resimular el ENOB del modulador RC con esta ganancia se obtiene un resultado de 10.93 (el alias se mantiene en -72dB).
+Para realizar la simulación del modulador, se modelizó el comparador incluyendo efectos de histéresis y adición de ruido sobre la tensión de referencia. En la simulaci\'on no se incluyeron las caracter\'isticas el\'ectricas de los buffers de entrada y salida de la \textit{FPGA}. En la Fig.~\ref{fig:Sim_mod} se ve una simulaci\'on de la respuesta para una señal de 1kHz. En esta se ve que la salida del integrador RC tiene una oscilación pico a pico 2mV, lo que significa una ganancia de señal G=1650. Al resimular el ENOB del modulador RC con esta ganancia se obtiene un resultado de 10.93 (el alias se mantiene en -72dB).
 
 \begin{figure}[!t]
 \centering
@@ -700,12 +706,7 @@ Para realizar la simulación del modulador, se modelizó el comparador incluyend
 \label{fig:Sim_mod}
 \end{figure}
 
-\begin{figure}[!b]
-\centering
-\includegraphics[width=3.5in]{CIC_Topologia}
-\caption{Estructura de un filtro CIC}
-\label{fig:CIC_top}
-\end{figure}
+
 
 \section{Filtro decimador CIC}
 El filtro CIC (Cascaded Integrator-Comb) presentado por Hogenauer en 1981\cite{CIC:Hog},  es un filtro pasa bajos que tiene como principal caracter\'istica su eficiente implementaci\'on (ver Fig.~\ref{fig:CIC_top}), logrando bajar la frecuencia de trabajo con un filtro sencillo que presenta poco alias en el ancho de banda de interés.
@@ -717,11 +718,19 @@ H_{CIC}(z)= \left( H_I(z) H_c(z)\right)& ^{N}=\left( \frac{1-z^{-RM}}{1-z^{-1}}\
 \left| H_{CIC}(e^{j2\pi\frac{f}{R}})\right| &=\left| \frac{\sin(\pi M\,f)}{\sin(\pi \frac{f}{R})}\right| ^{N}
 \end{align}
 
-, siendo f la frecuencia normalizada al downsampling rate.\\
+siendo f la frecuencia normalizada al downsampling rate.\\
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=3.5in]{CIC_Topologia}
+	\caption{Estructura de un filtro CIC}
+	\label{fig:CIC_top}
+\end{figure}
+
 Se observa que los ceros del CIC se producen en los m\'ultiplos de la low sampling rate, es decir, las zonas de alias. El m\'aximo alias es en f=1-fp (normalizado), y se puede tener s\'olo en cuenta este valor ya que el aporte de los siguientes l\'obulos es mucho menor, considerando fp como el ancho de banda del filtro ideal que va a continuación del filtro CIC.
 
 \subsection{Implementaci\'on y simulaci\'on}
-El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadores de 55 bits. Para reducir el tiempo combinacional y poder tener una frecuencia de trabajo mayor, cada etapa fue registrada. A su vez, se implement\'o, entre las etapas, el bloque de decimaci\'on con un factor de 512. El retraso en los \textit{comb} se determin\'o M=1. Las salidas del CIC son almacenadas en una Dual-Port BlockRam\cite{Sp6-BR} la cual tiene la caracter\'istica de poder realizar la lectura de dos datos de manera simultánea. Los datos almacenados en la misma fueron truncados a 16 bits para optimizar la síntesis. En la Fig.~\ref{fig:CIC_resp} se muestra la respuesta en la banda de paso, y la primer zona de alias. Se puede observar que hay una atenuación de 1.5dB en la banda de paso, y el alias que se producirá es de -100dB.
+El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadores de 55 bits. Para reducir el tiempo combinacional y poder tener una frecuencia de trabajo mayor, cada etapa fue registrada. A su vez, se implement\'o entre las etapas el bloque de decimaci\'on con un factor de 512. El retraso en los \textit{comb} se determin\'o M=1. Las salidas del CIC son almacenadas en una Dual-Port BlockRam\cite{Sp6-BR} la cual tiene la caracter\'istica de poder realizar la lectura de dos datos de manera simultánea. Los datos almacenados en la misma fueron truncados a 16 bits para optimizar la síntesis. En la Fig.~\ref{fig:CIC_resp} se muestra la respuesta en la banda de paso, y la primer zona de alias. Se puede observar que hay una atenuación de 1.5dB en la banda de paso, y el alias que se producirá es de -100dB.
 
 \begin{figure}[!t]
 \centering
@@ -755,7 +764,7 @@ Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multipli
 
 
 \section{Simulaci\'on}
-Se simul\'o el modulador descrito previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
+Se simul\'o el modulador descripto previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
 Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
 Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits. Sabiendo que los mismos estan definidos por: 
 \begin{align}
@@ -802,21 +811,21 @@ se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la
 \label{fig:lin}
 	\centering
 	\includegraphics[width=3.5in]{Linealidad_codo}
-	\caption{Ampliación del codo en la curva de linealidad. Linealidad (azul), regresión lineal (rojo)}
+	\caption{Ampliación del codo en la curva de linealidad. Curva de linealidad (azul), regresión lineal (rojo)}
 	
 	\label{fig:lincodo}
 \end{figure}
 
-Para realizar las mediciones se implementó una comunicaci\'on UART entre la \textit{FPGA} y la PC a 921600 baudios. El set de medici\'on const\'o de un generador de funciones Agilent 3352A\cite{AgilentWG}, controlado v\'ia TCP desde la computadora. La adquisición de datos, su almacenamiento y posterior análisis de los datos se realizan mediante la herramienta de cálculo Matlab\textregistered. Principalmente, se realizaron tres mediciones: Linealidad, THD y ENOB.\\
-Para realizar la medición de linealidad, se procedió a barrer todo el rango de tensión (0 a 3.3v) con un paso de 3mV para los cuales se obtuvieron 1000 muestras para cada uno. Posteriormente, se realizó una regresión lineal de las muestras obteniendo las curvas representadas en la figura \ref{fig:lin}. Como se puede ver en la figura \ref{fig:lincodo}, la curva presenta una alinealidad muy importante. Para posteriores análisis, se procedió a generar una curva de corrección para contrarrestar este efecto. Para ello, se genero una interpolación de la señal de error para poder tener $2^{16}$ valores para corregir.\\
-Para el cálculo de THD y ENOB, se procedió a excitar el sistema con señales senoidales \textit{full-range} y se hizo un barrido en frecuencia entre 0 y 11KHz con pasos logarítmicos para los cuales se adquirieron un mínimo de 1000 muestras y con la restricción de tener un numero entero de periodos de la señal senoidal para evitar futuros problemas.
-Una vez adquiridas las muestras, se procedió mediante el uso del periodograma con ventana de Kaiser, a realizar las mediciones del THD. Para ello, conociendo la frecuencia de la fundamental (con la cual se excitó el sistema), se identificaron las armónicas y se determinó su potencia. Se calculó el THD como:
+Para realizar las mediciones se implementó una comunicaci\'on UART entre la \textit{FPGA} y la PC a 921600 baudios. El set de medici\'on const\'o de un generador de funciones Agilent 3352A\cite{AgilentWG}, controlado v\'ia TCP desde la computadora. La adquisición de datos, su almacenamiento y posterior análisis se realizó mediante la herramienta de cálculo Matlab\textregistered. \\Se llevaron a cabo tres mediciones: Linealidad, THD y ENOB.\\
+Para realizar la medición de linealidad, se procedió a barrer todo el rango de tensión (0 a 3.3v) con un paso de 3mV obteniendo 1000 muestras por cada uno. Posteriormente, se realizó una regresión lineal de las muestras obteniendo las curvas representadas en la figura \ref{fig:lin}. Como se aprecia en la figura \ref{fig:lincodo}, la curva presenta una alinealidad significativa. Para análisis posteriores, se procedió a generar una curva de corrección para contrarrestar este efecto. Con tal fin, se generó una interpolación de la señal de error para poder tener $2^{16}$ valores para corregir.\\
+Para el cálculo de THD y ENOB, se procedió a excitar el sistema con señales senoidales \textit{full-range} y se hizo un barrido en frecuencia entre 0 y 11KHz con pasos logarítmicos para los cuales se adquirieron un mínimo de 1000 muestras y con la restricción de tener un número entero de períodos de la señal senoidal, así evitar futuros problemas.
+Una vez adquiridas las muestras, mediante el uso del periodograma con ventana de Kaiser, se realizaron las mediciones del THD. Para ello, conociendo la frecuencia de la fundamental (con la cual se excitó el sistema), se identificaron las armónicas y se determinó su potencia. Las cuales se reemplazaron en la siguiente expresión:
 \begin{align}
 THD = \dfrac{\sum_{i=1}^{M}P_i }{P_0}\cdot100
 \end{align}
 Siendo $P_0$ la potencia de la fundamental y $P_i$ la potencia de los respectivos armónicos.\\
-Para la medición del ENOB, se realizó de la misma forma que se hizo en la simulación pero en este caso, con datos adquiridos.\\
-Estas mismas mediciones también se realizaron para los datos aplicando previamente la corrección obtenida durante el \textit{test} de linealidad. Luego de estas mediciones, se obtuvieron las curvas de ENOB y THD representadas en las figuras \ref{fig:ENOB} y \ref{fig:THD} respectivamente, en azul representando las curvas con corrección y en rojo sin ella.
+Para la medición del ENOB, se realizó el mismo procedimiento llevado acabo en la simulación pero en este caso con datos adquiridos.\\
+Estas mismas mediciones (ENOB y THD) se realizaron una segunda vez pero para los datos aplicando previamente la corrección obtenida durante el \textit{test} de linealidad. Como resultado, se obtuvieron las curvas trazadas en las figuras \ref{fig:ENOB} y \ref{fig:THD}, en azul representando las curvas con corrección y en rojo sin ella.
 \begin{figure}[!b]
 \centering
 \includegraphics[width=3.33in]{Medicion_ENOB}
@@ -834,7 +843,7 @@ Estas mismas mediciones también se realizaron para los datos aplicando previame
 
 
 \section{Discusión y Conclusi\'ones}
-Analizando las curvas obtenidas, podemos notar que el limitante de nuestro proyecto es la distorsión armónica generada en el modulador. Esta distorsión no fue percibida durante las simulaciones debido a que en la misma no se tuvieron en cuenta las características eléctricas de los componentes y de la \textit{FPGA}. Si se aplica la corrección digital al sistema, los resultados son prometedores en las bajas frecuencias alcanzando los 9 bits efectivos. Para frecuencias mayores a 100 Hz, esta corrección empieza a perder efectividad debido a que se están compensando armónicos que ya han sido eliminados por los filtros digitales.\\
+Analizando las curvas obtenidas, podemos notar que el limitante de nuestro proyecto es la distorsión armónica generada en el modulador. Esta distorsión no fue percibida durante las simulaciones debido a que en la misma no se tuvieron en cuenta las características eléctricas de los componentes y de la \textit{FPGA}. Si se aplica la corrección digital al sistema, los resultados son prometedores en las bajas frecuencias alcanzando los 9 bits efectivos. Para frecuencias mayores a 100 Hz, esta corrección empieza a perder efectividad debido a que se compensan armónicos que ya han sido eliminados por los filtros digitales.\\
 La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se logr\'o una implementaci\'on de un conversor analógico digital de 9 bits y 22KHz de frecuencia de muestreo que se puede considerar sencilla y de bajo costo y consumiendo pocos recursos en la \textit{FPGA} (ver Tabla~\ref{Tabla:rescursos}). 
 \begin{table}[!t]
 	\renewcommand{\arraystretch}{1.3}
@@ -857,8 +866,8 @@ La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se log
 		\hline
 	\end{tabular}
 \end{table}
-Los algoritmos de simulaci\'on y bancos de prueba utilizados, facilitaran la implementaci\'on de posibles mejoras en el sistema y su comprobación de funcionamiento. Además la implementación en la \textit{FPGA} puede ser reutilizada ya que todos los parámetros del diseño son totalmente configurables, pudiéndose hacer fácilmente pruebas con distintas frecuencias de clock, OSR, parametros filtros CIC y coeficientes FIR. Por lo que a partir de esta primer implementaci\'on se podrá mejorar fácilmente el sistema.
- En próximos desarrollos, se llevará  la corrección digital dentro de la \textit{FPGA}, específicamente luego del CIC. Con esto, se logrará corregir la señal previamente al filtrado con lo cual se espera obtener una mayor planicitud en la curva de ENOB. También, se pretende tener mejores modelos de simulación para poder asi identificar el causante de la alinealidad y poder atenuar su influencia. Se simularán e implementarán moduladores de mayor orden para que, con este mismo diseño digital, poder obtener mayor ENOB y, en lo posible, mayor frecuencia de muestreo.  
+Los algoritmos de simulaci\'on y bancos de prueba utilizados, facilitarán la implementaci\'on de posibles mejoras en el sistema y la comprobación de su funcionamiento. Además, la implementación en la \textit{FPGA} puede ser reutilizada ya que todos los parámetros del diseño son totalmente configurables, pudiéndose hacer fácilmente pruebas con distintas frecuencias de clock, OSR, parámetros del filtro CIC y coeficientes del FIR. Por lo que a partir de esta primer implementaci\'on se podrá mejorar fácilmente el sistema.
+ En próximos desarrollos, se llevará  la corrección digital dentro de la \textit{FPGA}, específicamente luego del CIC. Con esto, se logrará corregir la señal previamente al filtrado con lo cual se espera obtener una mayor planicitud en la curva de ENOB. También, se pretende tener mejores modelos de simulación para poder así identificar el causante de la alinealidad y poder atenuar su influencia. Se simularán e implementarán moduladores de mayor orden para que, con este mismo diseño digital, poder obtener mayor ENOB y, en lo posible, mayor frecuencia de muestreo.  
 
 
 
