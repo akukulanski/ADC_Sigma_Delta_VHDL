@@ -124,6 +124,8 @@
 \usepackage[utf8]{inputenc}
 %\usepackage[spanish]{babel}
 
+\renewcommand{\tablename}{Tabla}
+
 % *** GRAPHICS RELATED PACKAGES ***
 %
 
@@ -442,7 +444,8 @@ Como resultado del trabajo se ha obtenido un conversor analógico digital de 9 b
 
 \section{Introducci\'on}
 % no \IEEEPARstart
-Un conversor analógico digital sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist que, al considerar que la potencia de ruido de cuantización es constante y no depende de la frecuencia de muestreo, el ruido de cuantizaci\'on se distribuye en un ancho de banda mayor, permitiendo que este pueda ser posteriormente disminuido por medio de un filtro digital. El \textit{Noise Shaping} consiste en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el anterior caso (ver Fig.~\ref{fig:NS}).
+Un conversor analógico digital sigma delta est\'a basado en los conceptos de \textit{Oversampling} y \textit{Noise Shaping} (distribuci\'on del ruido). El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist, logrando distribuir la potencia de ruido de cuantización (considerada constante) en un ancho de banda mayor. El \textit{Noise Shaping} consiste en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el anterior caso (ver Fig.~\ref{fig:NS}). Estos dos efectos permiten la eliminación de la mayor parte del ruido de cuantización con un filtro pasabajos.
+% El \textit{Oversampling} consiste en el muestreo de una señal a una frecuencia mayor que la frecuencia de Nyquist que, al considerar que la potencia de ruido de cuantización es constante y no depende de la frecuencia de muestreo, el ruido de cuantizaci\'on se distribuye en un ancho de banda mayor, permitiendo que este pueda ser posteriormente disminuido por medio de un filtro digital. El \textit{Noise Shaping} consiste en la redistribución del ruido de cuantizaci\'on de forma tal que quede fuera de la banda de inter\'es, pudiendo ser disminuido como en el anterior caso (ver Fig.~\ref{fig:NS}).
 
 \begin{figure}[!b]
 \centering
@@ -451,7 +454,7 @@ Un conversor analógico digital sigma delta est\'a basado en los conceptos de \t
 \label{fig:NS}
 \end{figure}
 
-La topolog\'ia de un ADC sigma delta es representado en el diagrama en bloques de la Fig.~\ref{fig:SDTD}. La adición de ruido $N(z)$ es la modelización del ruido de cuantización. Analizando el diagrama, se puede obtener que:
+La topolog\'ia de un ADC sigma delta está representada en el diagrama en bloques de la Fig.~\ref{fig:SDTD}. La adición de ruido $N(z)$ es la modelización del ruido de cuantización. Analizando el diagrama, se puede obtener que:
 
 \begin{align}
 H_x(z)=\frac{H(z)}{1+H(z)} \qquad
@@ -467,7 +470,7 @@ donde $H_x$ y $H_n$ son las transferencias para la señal y para el ruido respec
 \label{fig:SDTD}
 \end{figure}
 
-Para el desarrollo del proyecto, se utilizó el kit de desarrollo Mojo v3 el cual posee una \textit{FPGA Xilinx Spartan6}. En la Fig.~\ref{fig:DBADC} se resume el sistema completo, donde el el filtro CIC es una implementación de un filtro de decimación que utiliza pocos recursos de la FPGA. Este, fue implementado realizando una decimación de 512 veces y posteriormente, se implementó un filtro FIR con un factor de decimación de 4. Dando una decimación total de 2048 veces.
+Para el desarrollo del proyecto, se utilizó el kit de desarrollo Mojo v3 el cual posee una \textit{FPGA Xilinx Spartan6}. En la Fig.~\ref{fig:DBADC} se resume el sistema completo, donde el filtro CIC es un filtro de decimación que utiliza pocos recursos de la FPGA. Este realiza una decimación de 512 veces, mientras que el filtro FIR decima 4, dando un factor de decimación total de 2048 veces.
 %\hfill mds
 %\hfill January 11, 2007
 
@@ -511,7 +514,7 @@ Teniendo en cuenta un filtro digital ideal con corte en $f_p$, y un modulador de
 {
 Se lo obtiene teniendo en cuenta que en el integrando para $OSR\gg 1$ es $f\leq f_p\ll f_s$ y $|H_n(e^{j2 \pi \frac{f}{f_s}})|^{2}= \sin(\pi \frac{f}{f_s})^{2k} \approx (\pi\frac{f}{f_s})^{2k}$ y que la potencia un seno de plena escala es $P_{sin}=\frac{1}{2} [(2^N-1)\frac{\Delta}{2}]^{2}$.
 Usualmente aparece la formula con $2^{N}-1\approx2^N$.
-}:
+} es:
 
 \begin{align}
 SQNR &\approx 1.76+20\,log_{10}(2N-1)+10\,(2k+1)\,log_{10}OSR\nonumber\\
@@ -621,8 +624,7 @@ En la Fig.~\ref{fig:SQNR} se ilustra el resultado.
 
 \section{Modulador $\Sigma\Delta$ en tiempo continuo}
 
-En la Fig.~\ref{fig:SDTC} donde se ve reemplazado el cuantizador por su modelo de ruido aditivo:
-Las transferencias para la se\~nal y para el ruido quedan:
+En la Fig.~\ref{fig:SDTC} donde se reemplazó el cuantizador por su modelo de ruido aditivo, las transferencias para la se\~nal y para el ruido quedan:
 
 \begin{align}
 H_x(e^{sT_s}) &= \frac{H(s)}{1+H_{eq}(e^{sT_s})} \\
@@ -644,7 +646,7 @@ Partiendo del modulador de primer orden en tiempo discreto y con la anterior tra
  H_x(e^{sT_s})&= \frac{1-e^{-sT_s}}{s}
 \end{align}
 
-Considerando el filtro $H(s)$ es un integrador, la trasferencia para la se\~nal es un pasabajos con ceros en múltiplos de $f_s$, lo cual reduce notablemente el alias en la banda de paso.
+Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~nal es un pasabajos con ceros en múltiplos de $f_s$, lo cual reduce notablemente el alias en la banda de paso.
 
 \begin{figure}[!t]
 \centering
@@ -662,11 +664,12 @@ Considerando el filtro $H(s)$ es un integrador, la trasferencia para la se\~nal 
 \label{fig_SDRC}
 \end{figure}
 
-La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. la ganancia del comparador ser\'ia :
+La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada va en el rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
 \begin{align}
 G=\frac{1}{|H(j\pi fs)|}
 \end{align}
-Realmente, esta ganancia está correlacionada con Vin provocando alinealidades en el sistema. La transferencia del filtro RC es:
+Realmente, esta ganancia está correlacionada con Vin provocando alinealidades en el sistema.\\
+La transferencia del filtro RC es:
 \begin{align}
 H(s)=\frac{1}{2+sCR}
 \end{align}
@@ -676,11 +679,11 @@ Se obtiene la transferencia de lazo equivalente como:
 H_{eq}(z)=\frac{1}{2}\frac{1-e^{-\frac{2}{RC}T_s}}{1-e^{-\frac{2}{RC}T_s}z^{-1}}
 \end{align}
 El PLL de la fpga fue ajustado a 45.3125MHz, y al sistema digital se lo hizo decimar 2048 veces, por lo que a la salida se tendrán 22.13 Ksps. El valor de resistencia usada fue de 150k, y el capacitor de 470pF (corte en 4.3kHz).
-Con esto se puede graficar las transferencias para la señal y para el ruido con las fórmulas antes indicadas (Fig.~\ref{fig:Resp_mod}). En las im\'agenes se ve arriba la transferencia se\~nal banda de paso, donde el ripple es despreciable. En la segunda se ve la transferencia para el ruido en la banda de paso. Con esto se puede estimar en forma te\'orica el ENOB realizando una integraci\'on num\'erica, dando como resultado 13.6. En la \'ultima imagen se ve la primer zona de alias, donde el alias m\'aximo es de -72dB.
+Con esto se puede graficar las transferencias para la señal y para el ruido con las fórmulas antes indicadas (Fig.~\ref{fig:Resp_mod}). Observando la transferencia para la señal, se ve que el ripple es despreciable. Luego con la transferencia para el ruido en la banda de paso, se estimó el ENOB realizando una integraci\'on num\'erica que dio como resultado 13,6. Por último, se observa que la primer zona de alias tiene un m\'aximo de -72dB.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[height=2.5in,width=3.5in]{Respuesta_Modulador_Combinada}
+\includegraphics[width=3.5in]{Respuesta_Modulador_Combinada}
 \caption{Arriba: Respuesta banda de paso de la se\~nal. Abajo: Respuesta ruido (izquierda). Primer zona alias se\~nal}
 \label{fig:Resp_mod}
 \end{figure}
@@ -692,7 +695,7 @@ Para realizar la simulación del modulador, se modelizó el comparador incluyend
 
 \begin{figure}[!t]
 \centering
-\includegraphics[height=3in,width=3.5in]{Simulacion_Modulador}
+\includegraphics[width=3.5in]{Simulacion_Modulador}
 \caption{De arriba hacia abajo: entrada, respuesta a salida integrador, respuesta a salida modulador,  espectro de la salida donde se visualiza el \textit{Noise Shaping}(izquierda), zoom sobre banda paso (derecha).}
 \label{fig:Sim_mod}
 \end{figure}
@@ -714,7 +717,7 @@ H_{CIC}(z)= \left( H_I(z) H_c(z)\right)& ^{N}=\left( \frac{1-z^{-RM}}{1-z^{-1}}\
 \left| H_{CIC}(e^{j2\pi\frac{f}{R}})\right| &=\left| \frac{\sin(\pi M\,f)}{\sin(\pi \frac{f}{R})}\right| ^{N}
 \end{align}
 
-Siendo f la frecuencia normalizada al downsampling rate.
+, siendo f la frecuencia normalizada al downsampling rate.\\
 Se observa que los ceros del CIC se producen en los m\'ultiplos de la low sampling rate, es decir, las zonas de alias. El m\'aximo alias es en f=1-fp (normalizado), y se puede tener s\'olo en cuenta este valor ya que el aporte de los siguientes l\'obulos es mucho menor, considerando fp como el ancho de banda del filtro ideal que va a continuación del filtro CIC.
 
 \subsection{Implementaci\'on y simulaci\'on}
@@ -758,7 +761,7 @@ Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la can
 \begin{align}
 ENOB = \dfrac{SINAD-1.73}{6.02}
 \end{align}
-Se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la Se\~nal y el ruido en conjunto con la distorsi\'on). Para ello, se excitó el sistema con una señal senoidal y se almacenaron los datos de la salida de la simulación. Posteriormente, se les realizó un \textit{fitting} con una función senoidal con tres grados de libertad (Amplitud, frecuencia y fase). Con esto, se obtuvo la función que más aproxima y se realizó una resta punto a punto para así, poder determinar la potencia del ruido y con ello, el SINAD. Con esto, se obtuvieron los bits efectivos resumidos en la Tabla~\ref{Tabla:sim}.
+se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la Se\~nal y el ruido en conjunto con la distorsi\'on). Para ello, se excitó el sistema con una señal senoidal y se almacenaron los datos de la salida de la simulación. Posteriormente, se les realizó un \textit{fitting} con una función senoidal con tres grados de libertad (Amplitud, frecuencia y fase). Con esto, se obtuvo la función que mejor la aproxima la señal obtneida y se realizó una resta punto a punto para así, poder determinar la potencia del ruido y con ello, el SINAD. Con esto, se obtuvieron los bits efectivos resumidos en la Tabla~\ref{Tabla:sim}.
 
 \begin{table}[!h]
 	%% increase table row spacing, adjust to taste
@@ -805,9 +808,9 @@ Se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la
 \end{figure}
 
 Para realizar las mediciones se implementó una comunicaci\'on UART entre la \textit{FPGA} y la PC a 921600 baudios. El set de medici\'on const\'o de un generador de funciones Agilent 3352A\cite{AgilentWG}, controlado v\'ia TCP desde la computadora. La adquisición de datos, su almacenamiento y posterior análisis de los datos se realizan mediante la herramienta de cálculo Matlab\textregistered. Principalmente, se realizaron tres mediciones: Linealidad, THD y ENOB.\\
-Para realizar la medición de linealidad, se procedió a barrer todo el rango de tensión (0 a 3.3v) con un paso de 3mV para los cuales se obtuvieron 1000 muestras para cada uno. Posteriormente, se realizó una regresión lineal de las muestras obteniendo las curvas representadas en la figura \ref{fig:lin}. Como se puede ver en la figura \ref{fig:lincodo}, la curva de linealidad presenta una alinealidad muy importante. Para posteriores análisis, se procedió a generar una curva de corrección para contrarrestar este efecto. Para ello, se genero una interpolación de la señal de error para poder tener $2^{16}$ valores para corregir.\\
+Para realizar la medición de linealidad, se procedió a barrer todo el rango de tensión (0 a 3.3v) con un paso de 3mV para los cuales se obtuvieron 1000 muestras para cada uno. Posteriormente, se realizó una regresión lineal de las muestras obteniendo las curvas representadas en la figura \ref{fig:lin}. Como se puede ver en la figura \ref{fig:lincodo}, la curva presenta una alinealidad muy importante. Para posteriores análisis, se procedió a generar una curva de corrección para contrarrestar este efecto. Para ello, se genero una interpolación de la señal de error para poder tener $2^{16}$ valores para corregir.\\
 Para el cálculo de THD y ENOB, se procedió a excitar el sistema con señales senoidales \textit{full-range} y se hizo un barrido en frecuencia entre 0 y 11KHz con pasos logarítmicos para los cuales se adquirieron un mínimo de 1000 muestras y con la restricción de tener un numero entero de periodos de la señal senoidal para evitar futuros problemas.
-Una vez adquiridas las muestras, se procedió mediante el uso del periodograma con ventana de Kaiser, a realizar las mediciones del THD. Para ello, conociendo la frecuencia de la fundamental (con la cual se excito el sistema), se identificaron las armónicas y se determinó su potencia. Se calculó el THD como:
+Una vez adquiridas las muestras, se procedió mediante el uso del periodograma con ventana de Kaiser, a realizar las mediciones del THD. Para ello, conociendo la frecuencia de la fundamental (con la cual se excitó el sistema), se identificaron las armónicas y se determinó su potencia. Se calculó el THD como:
 \begin{align}
 THD = \dfrac{\sum_{i=1}^{M}P_i }{P_0}\cdot100
 \end{align}
@@ -831,7 +834,7 @@ Estas mismas mediciones también se realizaron para los datos aplicando previame
 
 
 \section{Discusión y Conclusi\'ones}
-Analizando las curvas obtenidas, podemos notar que el limitante de nuestro proyecto es la distorsión armónica generada en el modulador. Esta distorsión no fue percibida durante las simulaciones debido a que en el mismo no se tuvo en cuenta las características eléctricas de los componentes y de la \textit{FPGA}. Si se aplica la corrección digital al sistema, los resultados son prometedores en las bajas frecuencias alcanzando los 9 bits efectivos. Para frecuencias mayores a 100 Hz, esta corrección empieza a perder efectividad debido a que la corrección esta agregando armónicos que han sido sacados por los filtros digitales.\\
+Analizando las curvas obtenidas, podemos notar que el limitante de nuestro proyecto es la distorsión armónica generada en el modulador. Esta distorsión no fue percibida durante las simulaciones debido a que en la misma no se tuvieron en cuenta las características eléctricas de los componentes y de la \textit{FPGA}. Si se aplica la corrección digital al sistema, los resultados son prometedores en las bajas frecuencias alcanzando los 9 bits efectivos. Para frecuencias mayores a 100 Hz, esta corrección empieza a perder efectividad debido a que se están compensando armónicos que ya han sido eliminados por los filtros digitales.\\
 La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se logr\'o una implementaci\'on de un conversor analógico digital de 9 bits y 22KHz de frecuencia de muestreo que se puede considerar sencilla y de bajo costo y consumiendo pocos recursos en la \textit{FPGA} (ver Tabla~\ref{Tabla:rescursos}). 
 \begin{table}[!t]
 	\renewcommand{\arraystretch}{1.3}
