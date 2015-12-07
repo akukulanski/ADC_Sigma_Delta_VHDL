@@ -99,22 +99,22 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     a(1)= subplot(4,2,[1,2]);
     plot(t,s);
     %title('Señal');
-    xlabel('t[s]','FontSize',12,'FontWeight','bold');
-    ylabel('Entrada[V]','FontSize',12,'FontWeight','bold');
-    set(gca,'fontsize',12);
+    xlabel('t[s]','FontSize',16);%,12,'FontWeight','bold');
+    ylabel('Entrada[V]','FontSize',16);%'FontWeight','bold');
+    set(gca,'fontsize',16);
     a(2)= subplot(4,2,[3,4]);
     plot(t,y);
     %title('Salida Integrador');
-    xlabel('t[s]','FontSize',12,'FontWeight','bold');
-    ylabel('Salida Int.[V]','FontSize',12,'FontWeight','bold');
-    set(gca,'fontsize',12);
+    xlabel('t[s]','FontSize',16);%'FontWeight','bold');
+    ylabel('Salida Int.[V]','FontSize',16);%,'FontWeight','bold');
+    set(gca,'fontsize',16);
     a(3)= subplot(4,2,[5,6]);
     plot(t,output);
     ylim([-0.5 1.5]);
     %title('Sigma Delta Output');
-    xlabel('t[s]','FontSize',12,'FontWeight','bold');
-    ylabel('Salida Mod. [V]','FontSize',12,'FontWeight','bold');
-    set(gca,'fontsize',12);
+    xlabel('t[s]','FontSize',16);%,'FontWeight','bold');
+    ylabel('Salida Mod. [V]','FontSize',16);%,'FontWeight','bold');
+    set(gca,'fontsize',16);
     linkaxes(a, 'x');
     
     N= numel(output);
@@ -128,14 +128,14 @@ function [ output ] = sigma_delta_modulator(func,fclk,dt,time,R1,R2,C,Vth,Vhist)
     
     subplot(427);
     plot(f/1e6,db(per_sig/max(per_sig)));
-    xlabel('f[MHz]','FontSize',12,'FontWeight','bold');
-    ylabel('Salida Mod.[dB]','FontSize',12,'FontWeight','bold');
-    set(gca,'fontsize',12);
+    xlabel('f[MHz]','FontSize',16);%,'FontWeight','bold');
+    ylabel('Salida Mod.[dB]','FontSize',16);%,'FontWeight','bold');
+    set(gca,'fontsize',16);
     subplot(428);
     plot(fp/1e3,db(per_sig_fp/max(per_sig)));
-    xlabel('f[kHz]','FontSize',12,'FontWeight','bold');
-    ylabel('Salida Mod.[dB]','FontSize',12,'FontWeight','bold');
-    set(gca,'fontsize',12);
+    xlabel('f[kHz]','FontSize',16);%,'FontWeight','bold');
+    %ylabel('Salida Mod.[dB]','FontSize',16);%,'FontWeight','bold');
+    set(gca,'fontsize',16);
 
     
 end
