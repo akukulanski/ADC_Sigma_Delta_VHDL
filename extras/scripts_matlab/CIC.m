@@ -29,15 +29,15 @@ Hmax=N*20*log(M*R)/log(10);
 H=N*10*log((sin(pi*F*M*R)./sin(pi*F)).^2)/log(10)-Hmax;
 figure(1);
 subplot(2,1,1), plot(fs*F/1e3,H) %banda paso
-xlabel('frec[kHz]','FontSize',12,'FontWeight','bold');
-ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',12,'FontWeight','bold');
-set(gca,'fontsize',12);
+xlabel('frec[kHz]','FontSize',16);%,'FontWeight','bold');
+ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',16);%,'FontWeight','bold');
+set(gca,'fontsize',16);
 Fa=linspace(fo-fp,fo+fp,1000);
 Ha=N*10*log((sin(pi*Fa*M*R)./sin(pi*Fa)).^2)/log(10)-Hmax;
 subplot(2,1,2), plot(fs*Fa/1e3,Ha) %primer zona alias, relativa a ganancia banda paso
-xlabel('frec[kHz]','FontSize',12,'FontWeight','bold');
-ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',12,'FontWeight','bold');
-set(gca,'fontsize',12);
+xlabel('frec[kHz]','FontSize',16);%,'FontWeight','bold');
+ylabel('(H_{CIC}/H_{MAX})[dB]','FontSize',16);%,'FontWeight','bold');
+set(gca,'fontsize',16);
 F2=linspace(f1,2*f1,1000);
 H2=N*10*log((sin(pi*F2*M*R)./sin(pi*F2)).^2)/log(10)-Hmax;
 %figure(2);

@@ -23,7 +23,8 @@ for m=1:3
     sqnr_aprox(m,:)=(10*log(1.5)+20*log(2-1)+10*log(2*m+1)+10*(2*m+1)*log(OSR)-20*m*log(pi))/log(10);
     plot(OSR,sqnr_aprox(m,:),style_a(m,:));
 end
-    xlabel('OSR');
-    ylabel('SQNR');
+    xlabel('OSR','FontSize',16);
+    ylabel('SQNR','FontSize',16);
+    set(gca,'fontsize',16);
     legend('k=1','k=2','k=3','k=4','location','north');
     hold off;
