@@ -453,7 +453,7 @@ Un conversor analógico digital sigma delta est\'a basado en los conceptos de \t
 
 \begin{figure}[!b]
 \centering
-\includegraphics[width=2in]{Noise_Shaping.eps}
+\includegraphics[width=1.7in]{Noise_Shaping.eps}
 \caption{Arriba Oversampling. Abajo Oversampling+Noise Shapping}
 \label{fig:NS}
 \end{figure}
@@ -469,7 +469,7 @@ donde $H_x$ y $H_n$ son las transferencias para la señal y para el ruido respec
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=3.5in]{Sigma-Delta_Tiempo_Discreto.eps}
+\includegraphics[height=1in]{Sigma-Delta_Tiempo_Discreto.eps}
 \caption{Diagrana en bloques del modulador $\Sigma\Delta$}
 \label{fig:SDTD}
 \end{figure}
@@ -656,7 +656,7 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=3.6in]{Sigma-Delta_Tiempo_Continuo}
+\includegraphics[height=1in]{Sigma-Delta_Tiempo_Continuo}
 \caption{Diag. en bloques del modulador $\Sigma\Delta$ en tiempo continuo}
 \label{fig:SDTC}
 \end{figure}
@@ -665,7 +665,7 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 
 \begin{figure}[!t]
 \centering
-\includegraphics[width=3.5in]{Sigma-Delta_RC}
+\includegraphics[width=3in]{Sigma-Delta_RC}
 \caption{Circuito utilizado para el modulador $\Sigma\Delta$}
 \label{fig_SDRC}
 \end{figure}
@@ -709,6 +709,14 @@ Para realizar la simulación del modulador, se modelizó el comparador incluyend
 
 
 \section{Filtro decimador CIC}
+
+\begin{figure}[!b]
+	\centering
+	\includegraphics[width=3.5in]{CIC_Topologia}
+	\caption{Estructura de un filtro CIC}
+	\label{fig:CIC_top}
+\end{figure}
+
 El filtro CIC (Cascaded Integrator-Comb) presentado por Hogenauer en 1981\cite{CIC:Hog},  es un filtro pasa bajos que tiene como principal caracter\'istica su eficiente implementaci\'on (ver Fig.~\ref{fig:CIC_top}), logrando bajar la frecuencia de trabajo con un filtro sencillo que presenta poco alias en el ancho de banda de interés.
 
 Se puede observar que cada par de acumulador (a la izquierda del decimador), y \textit{comb} (a la derecha), forman un filtro de media m\'ovil con ventana de ancho R*M. La transferencia de \'este es:
@@ -720,12 +728,6 @@ H_{CIC}(z)= \left( H_I(z) H_c(z)\right)& ^{N}=\left( \frac{1-z^{-RM}}{1-z^{-1}}\
 
 siendo f la frecuencia normalizada al downsampling rate.\\
 
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=3.5in]{CIC_Topologia}
-	\caption{Estructura de un filtro CIC}
-	\label{fig:CIC_top}
-\end{figure}
 
 Se observa que los ceros del CIC se producen en los m\'ultiplos de la low sampling rate, es decir, las zonas de alias. El m\'aximo alias es en f=1-fp (normalizado), y se puede tener s\'olo en cuenta este valor ya que el aporte de los siguientes l\'obulos es mucho menor, considerando fp como el ancho de banda del filtro ideal que va a continuación del filtro CIC.
 
@@ -741,24 +743,23 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 
 \section{Filtro FIR}
 
+El filtro FIR busca ecualizar la transferencia en la banda de paso del CIC (la cual no es plana), y eliminar el ruido de cuantizaci\'on fuera de la banda de interés antes de la 
+decimaci\'on final. Se lo dise\~n\'o por el m\'etodo de sampleo y ventaneo con una ventana Kaiser, donde en la banda de paso se muestrea la inversa de la respuesta en frecuencia del filtro CIC usado y fuera de esta se determina con ceros\cite{FIR_Comp}. En la Fig.~\ref{fig:FIR_res} se muestra la respuesta del filtro FIR diseñado, que posee una atenuaci\'on de 80dB.
+Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multiplicador-Acumulador (Fig.~\ref{fig:FIR_top}) que posee los bloques \textit{DSP} de la \textit{FPGA}\cite{Sp6-DSP}. Se utiliz\'o un filtro FIR sim\'etrico de 256 coeficientes  con frecuencia de corte normalizada de 0.22. Al ser sim\'etrico, s\'olo es necesario almacenar la mitad de los coeficientes y tambi\'en se reduce a la mitad el c\'alculo al poder utilizar el preadder.  Posteriormente, se realiza una \'ultima decimaci\'on por un factor de 4, dando como resultante una decimaci\'on total de 2048. El resultado final fue truncado a 16 bits.
+
+
+\newpage
+
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=3.5in]{Respuesta_FIR}
 	\caption{Respuesta del FIR}
 	\label{fig:FIR_res}
-\end{figure}
-
-
-\begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{FIR_Topologia}
 \caption{Topolog\'ia usada en la implementaci\'on del FIR}
 \label{fig:FIR_top}
 \end{figure}
-
-El filtro FIR busca ecualizar la transferencia en la banda de paso del CIC (la cual no es plana), y eliminar el ruido de cuantizaci\'on fuera de la banda de interés antes de la 
-decimaci\'on final. Se lo dise\~n\'o por el m\'etodo de sampleo y ventaneo con una ventana Kaiser, donde en la banda de paso se muestrea la inversa de la respuesta en frecuencia del filtro CIC usado y fuera de esta se determina con ceros\cite{FIR_Comp}. En la Fig.~\ref{fig:FIR_res} se muestra la respuesta del filtro FIR diseñado, que posee una atenuaci\'on de 80dB.
-Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multiplicador-Acumulador (Fig.~\ref{fig:FIR_top}) que posee los bloques \textit{DSP} de la \textit{FPGA}\cite{Sp6-DSP}. Se utiliz\'o un filtro FIR sim\'etrico de 256 coeficientes  con frecuencia de corte normalizada de 0.22. Al ser sim\'etrico, s\'olo es necesario almacenar la mitad de los coeficientes y tambi\'en se reduce a la mitad el c\'alculo al poder utilizar el preadder.  Posteriormente, se realiza una \'ultima decimaci\'on por un factor de 4, dando como resultante una decimaci\'on total de 2048. El resultado final fue truncado a 16 bits.
 
 
 
@@ -828,14 +829,11 @@ Para la medición del ENOB, se realizó el mismo procedimiento llevado acabo en 
 Estas mismas mediciones (ENOB y THD) se realizaron una segunda vez pero para los datos aplicando previamente la corrección obtenida durante el \textit{test} de linealidad. Como resultado, se obtuvieron las curvas trazadas en las figuras \ref{fig:ENOB} y \ref{fig:THD}, en azul representando las curvas con corrección y en rojo sin ella.
 \begin{figure}[!b]
 \centering
-\includegraphics[width=3.33in]{Medicion_ENOB}
+\includegraphics[height=2in]{Medicion_ENOB}
 \caption{ENOB en funcion de la frecuencia. Azul: Corregida. Rojo: Sin Corregir}
 \label{fig:ENOB}
-\end{figure}
-
-\begin{figure}[!t]
 \centering
-\includegraphics[width=3.5in]{Medicion_THD}
+\includegraphics[height=2in]{Medicion_THD}
 \caption{THD en función de la frecuencia. Azul: Corregida. Rojo: Sin Corregir}
 \label{fig:THD}
 \end{figure}
@@ -844,8 +842,8 @@ Estas mismas mediciones (ENOB y THD) se realizaron una segunda vez pero para los
 
 \section{Discusión y Conclusi\'ones}
 Analizando las curvas obtenidas, podemos notar que el limitante de nuestro proyecto es la distorsión armónica generada en el modulador. Esta distorsión no fue percibida durante las simulaciones debido a que en la misma no se tuvieron en cuenta las características eléctricas de los componentes y de la \textit{FPGA}. Si se aplica la corrección digital al sistema, los resultados son prometedores en las bajas frecuencias alcanzando los 9 bits efectivos. Para frecuencias mayores a 100 Hz, esta corrección empieza a perder efectividad debido a que se compensan armónicos que ya han sido eliminados por los filtros digitales.\\
-La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se logr\'o una implementaci\'on de un conversor analógico digital de 9 bits y 22KHz de frecuencia de muestreo que se puede considerar sencilla y de bajo costo y consumiendo pocos recursos en la \textit{FPGA} (ver Tabla~\ref{Tabla:rescursos}). 
-\begin{table}[!t]
+La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se logr\'o una implementaci\'on de un conversor analógico digital de 9 bits y 22KHz de frecuencia de muestreo que se puede considerar sencilla y de bajo costo y consumiendo pocos recursos en la \textit{FPGA} (ver Tabla~\ref{Tabla:rescursos}). \\
+\begin{table}[!h]
 	\renewcommand{\arraystretch}{1.3}
 	% if using array.sty, it might be a good idea to tweak the value of
 	% \extrarowheight as needed to properly center the text within the cells
@@ -866,6 +864,7 @@ La implementación del proyecto logr\'o cumplir los objetivos propuestos. Se log
 		\hline
 	\end{tabular}
 \end{table}
+
 Los algoritmos de simulaci\'on y bancos de prueba utilizados, facilitarán la implementaci\'on de posibles mejoras en el sistema y la comprobación de su funcionamiento. Además, la implementación en la \textit{FPGA} puede ser reutilizada ya que todos los parámetros del diseño son totalmente configurables, pudiéndose hacer fácilmente pruebas con distintas frecuencias de clock, OSR, parámetros del filtro CIC y coeficientes del FIR. Por lo que a partir de esta primer implementaci\'on se podrá mejorar fácilmente el sistema.
  En próximos desarrollos, se llevará  la corrección digital dentro de la \textit{FPGA}, específicamente luego del CIC. Con esto, se logrará corregir la señal previamente al filtrado con lo cual se espera obtener una mayor planicitud en la curva de ENOB. También, se pretende tener mejores modelos de simulación para poder así identificar el causante de la alinealidad y poder atenuar su influencia. Se simularán e implementarán moduladores de mayor orden para que, con este mismo diseño digital, poder obtener mayor ENOB y, en lo posible, mayor frecuencia de muestreo.  
 
