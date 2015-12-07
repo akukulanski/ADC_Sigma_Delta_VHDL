@@ -363,7 +363,7 @@
 % affiliations
 \author{
 \IEEEauthorblockN{Carducci, Nahuel \\ Demski, Andr\'es\\  Kukulanski, Ariel\\  Paunovic, Iv\'an }
-\IEEEauthorblockA{Departamento de Ingenier\'ia Electr\'onica,\\Facultad Regional Buenos Aires, Universidad Tecnol\'ogica Nacional.}
+\IEEEauthorblockA{Departamento de Ingenier\'ia Electr\'onica,\\Universidad Tecnol\'ogica Nacional, Facultad Regional Buenos Aires.}
 }
 %\and
 %\IEEEauthorblockN{Homer Simpson}
@@ -470,7 +470,7 @@ donde $H_x$ y $H_n$ son las transferencias para la señal y para el ruido respec
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Sigma-Delta_Tiempo_Discreto.eps}
-\caption{Diag. bloques modulador $\Sigma\Delta$}
+\caption{Diagrana en bloques del modulador $\Sigma\Delta$}
 \label{fig:SDTD}
 \end{figure}
 
@@ -481,7 +481,7 @@ Para el desarrollo del proyecto, se utilizó el kit de desarrollo Mojo v3 el cua
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Diagrama_Sistema_ADC.eps}
-\caption{Diagrama bloques del ADC}
+\caption{Diagrama en bloques del ADC}
 \label{fig:DBADC}
 \end{figure}
 
@@ -531,13 +531,13 @@ En la Fig.~\ref{fig:SQNR} se ilustra el resultado.
 
 \begin{figure}[!t]
 \centering
-\includegraphics[height=2in]{SQNR_ideal_segun_OSR}
+\includegraphics[width=3.5in]{SQNR_ideal_segun_OSR}
 %\def\svgwidth{2.5in}
 %\input{Noise_Shaping2.eps}
 % where an .eps filename suffix will be assumed under latex, 
 % and a .pdf suffix will be assumed for pdflatex; or what has been declared
 % via \DeclareGraphicsExtensions.
-\caption{SQNR en funci\'on OSR para diferentes ordenes}
+\caption{SQNR en funci\'on de OSR para moduladores de diferente orden}
 \label{fig:SQNR}
 \end{figure}
 %\subsubsection{Subsubsection Heading Here}
@@ -657,7 +657,7 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.6in]{Sigma-Delta_Tiempo_Continuo}
-\caption{Diag. bloques $\Sigma\Delta$ tiempo continuo}
+\caption{Diag. en bloques del modulador $\Sigma\Delta$ en tiempo continuo}
 \label{fig:SDTC}
 \end{figure}
 
@@ -666,11 +666,11 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Sigma-Delta_RC}
-\caption{Diag. bloques $\Sigma\Delta$ RC}
+\caption{Circuito utilizado para el modulador $\Sigma\Delta$}
 \label{fig_SDRC}
 \end{figure}
 
-La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada posee un rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
+La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada posee un rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on en la entrada del comparador tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
 \begin{align}
 G(s)=\frac{1}{|H(j\pi fs)|}
 \end{align}
@@ -690,7 +690,7 @@ Con esto se puede graficar las transferencias para la señal y para el ruido con
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Respuesta_Modulador_Combinada}
-\caption{Arriba: Respuesta banda de paso de la se\~nal. Abajo: Respuesta ruido (izquierda). Primer zona alias se\~nal}
+\caption{Arriba: Transferencia para la se\~nal en la banda de paso. Abajo: Transferencia para el ruido (izquierda) y primer zona de alias para la se\~nal}
 \label{fig:Resp_mod}
 \end{figure}
 
@@ -702,7 +702,7 @@ Para realizar la simulación del modulador, se modelizó el comparador incluyend
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Simulacion_Modulador}
-\caption{De arriba hacia abajo: entrada, respuesta a salida integrador, respuesta a salida modulador,  espectro de la salida donde se visualiza el \textit{Noise Shaping}(izquierda), zoom sobre banda paso (derecha).}
+\caption{De arriba hacia abajo: Señal de entrada, señal en la entrada del comparador, señal de salida del modulador,  espectro de la salida donde se visualiza el \textit{Noise Shaping} (izquierda), zoom en la banda de paso (derecha).}
 \label{fig:Sim_mod}
 \end{figure}
 
@@ -735,7 +735,7 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Respuesta_CIC}
-\caption{Respuesta CIC. Arriba: Banda de paso, Abajo: Primer zona de alias}
+\caption{Respuesta del CIC: Banda de paso (Arriba) y primer zona de alias (Abajo)}
 \label{fig:CIC_resp}
 \end{figure}
 
@@ -744,7 +744,7 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 \begin{figure}[!t]
 	\centering
 	\includegraphics[width=3.5in]{Respuesta_FIR}
-	\caption{Respuesta FIR}
+	\caption{Respuesta del FIR}
 	\label{fig:FIR_res}
 \end{figure}
 
@@ -752,7 +752,7 @@ El filtro CIC se determin\'o de 6 etapas, para el cual se utilizaron 12 sumadore
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{FIR_Topologia}
-\caption{Topolog\'ia usada en implementaci\'on FIR}
+\caption{Topolog\'ia usada en la implementaci\'on del FIR}
 \label{fig:FIR_top}
 \end{figure}
 
@@ -806,7 +806,7 @@ se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la
 \begin{figure}[!b]
 \centering
 \includegraphics[width=3.5in]{Linealidad}
-\caption{Arriba: Curva de linealidad (azul) y regresión lineal (roja). Medio: Desvio Estandar de las mediciones. Abajo: Error entre la curva de linealidad y regresión lineal}
+\caption{Arriba: Curva de linealidad (azul) y regresión lineal (roja). Medio: Desvío Estándar de las mediciones. Abajo: Error entre la curva de linealidad y regresión lineal}
 
 \label{fig:lin}
 	\centering
@@ -836,7 +836,7 @@ Estas mismas mediciones (ENOB y THD) se realizaron una segunda vez pero para los
 \begin{figure}[!t]
 \centering
 \includegraphics[width=3.5in]{Medicion_THD}
-\caption{THD en funcion de la frecuencia. Azul: Corregida. Rojo: Sin Corregir}
+\caption{THD en función de la frecuencia. Azul: Corregida. Rojo: Sin Corregir}
 \label{fig:THD}
 \end{figure}
 
