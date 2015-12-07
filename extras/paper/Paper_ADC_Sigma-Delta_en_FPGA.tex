@@ -638,7 +638,7 @@ H_n(z) &= \frac{1}{1+H_{eq}(z)} \\
 h_{eq}[n] &= (h\ast h_{DAC})(nT_s)
 \end{align}
 
-Donde la respuesta de lazo equivalente en tiempo discreto $H_{eq}(z)$ se la obtiene por la transformaci\'on de invarianza al impulso\cite{DSP:Pro-Man} de $H(z)H_{DAC}(z)$ dada por (11). Para un retenedor de orden cero queda como:
+Donde la respuesta de lazo equivalente en tiempo discreto $H_{eq}(z)$ se la obtiene por la transformaci\'on de invarianza al impulso\cite{DSP:Pro-Man} de $H(s)H_{DAC}(s)$ dada por (11). Para un retenedor de orden cero queda como:
 
 \begin{align}
  H_{DAC}(s)&=\frac{1-e^{-sT_s}}{s}\\
@@ -672,7 +672,7 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 
 La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada posee un rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on $V_{int}$ tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
 \begin{align}
-G=\frac{1}{|H(j\pi fs)|}
+G(s)=\frac{1}{|H(j\pi fs)|}
 \end{align}
 Realmente, esta ganancia está correlacionada con Vin provocando alinealidades en el sistema.\\
 La transferencia del filtro RC es:
