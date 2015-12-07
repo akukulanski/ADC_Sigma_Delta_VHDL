@@ -628,7 +628,7 @@ En la Fig.~\ref{fig:SQNR} se ilustra el resultado.
 
 \section{Modulador $\Sigma\Delta$ en tiempo continuo}
 
-A diferencia del modulador $\Sigma\Delta$ en tiempo discreto, el muestreo se realiza luego del modulador. Dicho cambio se aprecia en la Fig.~\ref{fig:SDTC} de la cual que se puede obtener la siguiente transferencia para la señal y para el ruido:
+A diferencia del modulador $\Sigma\Delta$ en tiempo discreto, el muestreo se realiza dentro del modulador, luego de la cuantización. Dicho cambio se aprecia en la Fig.~\ref{fig:SDTC} de la cual que se puede obtener la siguiente transferencia para la señal y para el ruido:
 
 %En la Fig.~\ref{fig:SDTC} donde se reemplazó el cuantizador por su modelo de ruido aditivo, las transferencias para la se\~nal y para el ruido quedan:
 
@@ -672,7 +672,7 @@ Considerando que el filtro $H(s)$ es un integrador, la trasferencia para la se\~
 
 La topolog\'ia m\'as sencilla para la implementaci\'on es el modulador RC (Fig.\ref{fig_SDRC}). La cuantificaci\'on es realizada por una entrada LVDS de la FPGA\cite{Sp6-IO} utilizada com\'unmente para comunicaciones diferenciales y posteriormente la discretizaci\'on temporal es realizada por un flip-flop. La tensi\'on de entrada posee un rango de 0v a la alimentación de la fpga (3.3v), y la referencia está a mitad de escala (1.65v).  Haciendo un breve an\'alisis del circuito, se ve que la tensi\'on en la entrada del comparador tomar\'a valores cercanos a la referencia, y como respecto a \'esta la amplitud de la salida ser\'a 1.65v, el comparador presenta una ganancia para la se\~nal. Esto es lo que hace posible funcionar al modulador pasivo, ya que el filtro debe tener ganancia mayor a uno. Generalmente a esta ganancia se la estima pasivando la entrada de señal, lo cual provoca una oscilación de la mitad de la frecuencia de \textit{clk}. La ganancia del comparador ser\'ia :
 \begin{align}
-G(s)=\frac{1}{|H(j\pi fs)|}
+G(s)=\frac{1}{|H(j\pi f_s)|}
 \end{align}
 Realmente, esta ganancia está correlacionada con Vin provocando alinealidades en el sistema.\\
 La transferencia del filtro RC es:
@@ -762,18 +762,7 @@ Para la implementación del FIR, se utiliz\'o la estructura de PreAdder-Multipli
 \end{figure}
 
 
-
-
-\section{Simulaci\'on}
-Se simul\'o el modulador descripto previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
-Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
-Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits. Sabiendo que los mismos estan definidos por: 
-\begin{align}
-ENOB = \dfrac{SINAD-1.73}{6.02}
-\end{align}
-se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la Se\~nal y el ruido en conjunto con la distorsi\'on). Para ello, se excitó el sistema con una señal senoidal y se almacenaron los datos de la salida de la simulación. Posteriormente, se les realizó un \textit{fitting} con una función senoidal con tres grados de libertad (Amplitud, frecuencia y fase). Con esto, se obtuvo la función que mejor la aproxima la señal obtneida y se realizó una resta punto a punto para así, poder determinar la potencia del ruido y con ello, el SINAD. Con esto, se obtuvieron los bits efectivos resumidos en la Tabla~\ref{Tabla:sim}.
-
-\begin{table}[!h]
+\begin{table}[!b]
 	%% increase table row spacing, adjust to taste
 	\renewcommand{\arraystretch}{1.3}
 	% if using array.sty, it might be a good idea to tweak the value of
@@ -802,6 +791,16 @@ se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la
 	\end{tabular}
 \end{table}
 
+\section{Simulaci\'on}
+Se simul\'o el modulador descripto previamente, as\'i como el filtro CIC y el FIR en Matlab\textregistered.
+Durante las simulaciones, se realizaron pruebas de linealidad barriendo la entrada con una rampa de muy baja frecuencia y se pudo ver que el sistema posee un comportamiento totalmente lineal.
+Tambi\'en se realizaron simulaciones barriendo en frecuencia para obtener la cantidad efectiva de bits. Sabiendo que los mismos estan definidos por: 
+\begin{align}
+ENOB = \dfrac{SINAD-1.73}{6.02}
+\end{align}
+se procedió a buscar un estimador para el SINAD (Razón entre la potencia de la Se\~nal y el ruido en conjunto con la distorsi\'on). Para ello, se excitó el sistema con una señal senoidal y se almacenaron los datos de la salida de la simulación. Posteriormente, se les realizó un \textit{fitting} con una función senoidal con tres grados de libertad (Amplitud, frecuencia y fase). Con esto, se obtuvo la función que mejor la aproxima la señal obtneida y se realizó una resta punto a punto para así, poder determinar la potencia del ruido y con ello, el SINAD. Con esto, se obtuvieron los bits efectivos resumidos en la Tabla~\ref{Tabla:sim}.
+
+
 \section{Mediciones}
 
 \begin{figure}[!b]
@@ -827,7 +826,7 @@ THD = \dfrac{\sum_{i=1}^{M}P_i }{P_0}\cdot100
 Siendo $P_0$ la potencia de la fundamental y $P_i$ la potencia de los respectivos armónicos.\\
 Para la medición del ENOB, se realizó el mismo procedimiento llevado acabo en la simulación pero en este caso con datos adquiridos.\\
 Estas mismas mediciones (ENOB y THD) se realizaron una segunda vez pero para los datos aplicando previamente la corrección obtenida durante el \textit{test} de linealidad. Como resultado, se obtuvieron las curvas trazadas en las figuras \ref{fig:ENOB} y \ref{fig:THD}, en azul representando las curvas con corrección y en rojo sin ella.
-\begin{figure}[!b]
+\begin{figure}[!t]
 \centering
 \includegraphics[height=2in]{Medicion_ENOB}
 \caption{ENOB en funcion de la frecuencia. Azul: Corregida. Rojo: Sin Corregir}
